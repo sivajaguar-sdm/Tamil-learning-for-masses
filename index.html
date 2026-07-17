@@ -217,8 +217,30 @@ function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.
 document.querySelectorAll(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $("continueBtn").onclick=()=>showView("learnView");
 function renderWord(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";$("wordCounter").textContent=`${idx+1} / ${filtered.length}`;const c=$("lessonContent");c.classList.remove("slideIn");void c.offsetWidth;c.classList.add("slideIn");const n=words.indexOf(w);recent=[n,...recent.filter(x=>x!==n)].slice(0,6);if(!viewed.has(n)){viewed.add(n);xp+=5;save()}else{save();updateStats()}renderRecent();renderAchievements()}
-function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found. Using device fallback voice."}
-function speak(w,example=false){if(!("speechSynthesis"in window))return alert("Speech is not supported.");speechSynthesis.cancel();const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));const u=new SpeechSynthesisUtterance();u.rate=slow?.5:.75;if(tv){u.voice=tv;u.lang=tv.lang;u.text=example?w.exTa:w.ta}else{u.lang="en-IN";u.text=example?w.exEn:w.roman}speechSynthesis.speak(u)}
+function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found. Tamil sentences will use the device’s ta-IN fallback voice."}
+function speak(w,example=false){
+ if(!("speechSynthesis"in window))return alert("Speech is not supported.");
+ speechSynthesis.cancel();
+ const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));
+ const u=new SpeechSynthesisUtterance();
+ u.rate=slow?.5:.75;
+
+ if(example){
+   // Sentence audio must always use the Tamil example sentence.
+   u.text=w.exTa;
+   u.lang="ta-IN";
+   if(tv)u.voice=tv;
+ }else if(tv){
+   u.voice=tv;
+   u.lang=tv.lang||"ta-IN";
+   u.text=w.ta;
+ }else{
+   // Keep the readable transliteration fallback for individual words.
+   u.lang="en-IN";
+   u.text=w.roman;
+ }
+ speechSynthesis.speak(u);
+}
 $("hearWord").onclick=()=>speak(filtered[idx]);$("hearExample").onclick=()=>speak(filtered[idx],true);
 $("prev").onclick=()=>{idx=(idx-1+filtered.length)%filtered.length;renderWord()};$("next").onclick=()=>{idx=(idx+1)%filtered.length;renderWord()};
 $("category").onchange=e=>{filtered=e.target.value==="All"?[...words]:words.filter(w=>w.cat===e.target.value);idx=0;renderWord()};
