@@ -405,12 +405,20 @@ input,select,textarea{border-radius:14px!important;border:1px solid var(--v7-lin
  .v7Hero h1{font-size:1.55rem}
 }
 
+
+/* Version 7.0 complete revision */
+.teacherStatus{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+.teacherStatus span{padding:5px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:.75rem;font-weight:850}
+.galleryPager{display:flex;justify-content:center;align-items:center;gap:10px;margin:14px 0}
+.galleryPager button{min-width:44px}
+.performanceNote{padding:9px 12px;border-radius:13px;background:#eff6ff;color:#1e3a8a;font-size:.82rem;margin:8px 0}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
- <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Premium Learning Experience · Version 7.0</div></div>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Revised Performance Edition · Version 7.0</div></div>
  <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
 </header>
 
@@ -422,7 +430,7 @@ input,select,textarea{border-radius:14px!important;border:1px solid var(--v7-lin
     <h1>வணக்கம்! Continue your Tamil journey</h1>
     <p>Learn words, explore knowledge, practise speaking, and strengthen memory through guided lessons and games.</p>
    </div>
-   <div class="v7LevelChip">Version 7.0 · Premium UI</div>
+   <div class="v7LevelChip">Version 7.0 · Revised</div>
   </div>
   <div class="v7HeroStats">
    <div class="v7HeroStat"><b id="v7Xp">0</b><small>Total XP</small></div>
@@ -770,7 +778,7 @@ input,select,textarea{border-radius:14px!important;border:1px solid var(--v7-lin
 <section class="view" id="teacherView">
  <div class="teacherHero">
   <h2>🧑‍🏫 Tamil Teacher</h2>
-  <p class="muted">Search a Tamil or English word, hear it, understand it, and test yourself — fully offline.</p>
+  <p class="muted">Search a Tamil or English word, hear it, understand it, and test yourself — fully offline.</p><div class="teacherStatus"><span>✓ Offline database</span><span>✓ Tamil & English search</span><span>✓ Intent-aware replies</span></div>
   <div class="teacherStats">
    <div class="teacherStat"><b id="teacherQuestions">0</b><small>Questions</small></div>
    <div class="teacherStat"><b id="teacherWordsExplained">0</b><small>Words learned</small></div>
@@ -987,7 +995,7 @@ $("newMatch").onclick=makeMatch;
 function renderProgress(){if(!$("progressList"))return;const cats=[...new Set(words.map(w=>w.cat))];$("progressList").innerHTML=cats.map(c=>{const list=words.filter(w=>w.cat===c),done=list.filter(w=>viewed.has(words.indexOf(w))).length;return `<div class="row"><span><b>${c}</b><br><span class="muted">${done}/${list.length} viewed</span></span><span>${Math.round(done/list.length*100)}%</span></div>`}).join("");const f=[...favs].map(i=>words[i]);$("favList").innerHTML=f.length?f.map(w=>`<div class="row"><span>${w.ta} — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Open</button></div>`).join(""):'<p class="muted">No favorites yet.</p>'}
 window.openWord=i=>{filtered=[...words];$("category").value="All";idx=i;renderWord();showView("learnView")};
 $("searchBtn").onclick=searchWords;$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchWords()});
-function searchWords(){const q=$("searchInput").value.trim().toLowerCase();const r=words.filter(w=>w.ta.includes(q)||w.en.toLowerCase().includes(q)||w.roman.toLowerCase().includes(q));$("searchResults").innerHTML=r.length?r.map(w=>`<div class="searchItem"><span><b>${w.ta}</b> — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Learn</button></div>`).join(""):'<p class="muted">No matching words found.</p>'}
+function searchWords(){const q=$("searchInput").value.trim().toLowerCase();const r=words.filter(w=>w.ta.includes(q)||w.en.toLowerCase().includes(q)||(w.roman||"").toLowerCase().includes(q)).slice(0,60);$("searchResults").innerHTML=r.length?r.map(w=>`<div class="searchItem"><span><b>${w.ta}</b> — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Learn</button></div>`).join(""):'<p class="muted">No matching words found.</p>'}
 
 $("picturePanel").onclick=()=>speak(filtered[idx]);
 
@@ -1338,7 +1346,7 @@ function k62ShowSubjects(){k62Subject=null;k62Category=null;$("kSubjectScreen").
 function k62OpenSubject(s){if(!s)return;k62Subject=s;k62Category=s.cats.find(c=>k62CatWords(c).length)||null;$("kSubjectScreen").style.display="none";$("kCategoryScreen").style.display="block";$("kSubjectTitle").textContent=`${s.icon} ${s.title}`;$("kSearch").value="";$("kSort").value="learning";k62RenderSubcategories();k62Apply();k62Breadcrumb()}
 function k62RenderSubcategories(){const cats=k62Subject.cats.filter(c=>k62CatWords(c).length).sort((a,b)=>k62CategoryMeta[a].order-k62CategoryMeta[b].order);$("kSubGrid").innerHTML=cats.map(c=>`<button class="k62Sub ${c===k62Category?"active":""}" data-k62-cat="${c}"><b>${k62CategoryMeta[c].icon} ${c}</b><small>${k62CatWords(c).length} entries · ${k62Progress(k62CatWords(c))}% complete</small></button>`).join("");$("kCategoryList").innerHTML=cats.map(c=>`<button class="${c===k62Category?"active":""}" data-k62-listcat="${c}"><b>${k62CategoryMeta[c].icon} ${c}</b><small>${k62Progress(k62CatWords(c))}% complete</small></button>`).join("");document.querySelectorAll("[data-k62-cat],[data-k62-listcat]").forEach(b=>b.onclick=()=>{k62Category=b.dataset.k62Cat||b.dataset.k62Listcat;kIndex=0;k62RenderSubcategories();k62Apply();k62Breadcrumb()})}
 function k62Apply(){if(!k62Category)return;let list=[...k62CatWords(k62Category)];const q=String($("kSearch").value||"").toLowerCase().trim();if(q)list=list.filter(w=>[w.ta,w.en,w.roman,w.cat].some(v=>String(v||"").toLowerCase().includes(q)));const sort=$("kSort").value;if(sort==="tamil")list.sort((a,b)=>a.ta.localeCompare(b.ta,"ta"));else if(sort==="english")list.sort((a,b)=>a.en.localeCompare(b.en));else if(sort==="recent")list.sort((a,b)=>{const ai=k62Recent.indexOf(kGi(a)),bi=k62Recent.indexOf(kGi(b));return(ai<0?999:ai)-(bi<0?999:bi)});else if(sort==="mastery")list.sort((a,b)=>Number(kMastered.has(kGi(a)))-Number(kMastered.has(kGi(b))));kList=list;kIndex=Math.min(kIndex,Math.max(0,kList.length-1));kRender()}
-function kRender(){if(!kList.length)return;const w=kList[kIndex],m=k62CategoryMeta[w.cat],gi=kGi(w);k62Recent=[gi,...k62Recent.filter(x=>x!==gi)];kSave();$("kEmoji").textContent=w.emoji||m.icon;$("kTa").textContent=w.ta;$("kRoman").textContent=w.roman||"";$("kEn").textContent=w.en;$("kPathBadge").textContent=`${k62Subject.title} › ${w.cat}`;$("kFacts").innerHTML=[["Subject",k62Subject.title],["Category",m.label],["Learning order",`${k62CatWords(w.cat).indexOf(w)+1} of ${k62CatWords(w.cat).length}`],["Mastery",kMastered.has(gi)?"Mastered":"Learning"]].map(x=>`<div class="k62Info"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");$("kExample").innerHTML=`<b>${w.exTa||w.ta}</b><br><span class="muted">${w.exEn||m.note}</span>`;$("kCount").textContent=`${kIndex+1} / ${kList.length}`;$("kFav").textContent=kFavs.has(gi)?"★":"☆";$("kMaster").textContent=kMastered.has(gi)?"✓ Mastered":"✓ Mark mastered";const next=kList.find(x=>!kMastered.has(kGi(x)));$("kContinue").innerHTML=next?`Continue with <b>${next.ta}</b><br><span class="muted">${next.en}</span>`:"Category completed 🎉";kStats();k62RenderSubjects()}
+function kRender(){if(!kList.length)return;const w=kList[kIndex],m=k62CategoryMeta[w.cat],gi=kGi(w);k62Recent=[gi,...k62Recent.filter(x=>x!==gi)];kSave();$("kEmoji").textContent=w.emoji||m.icon;$("kTa").textContent=w.ta;$("kRoman").textContent=w.roman||"";$("kEn").textContent=w.en;$("kPathBadge").textContent=`${k62Subject.title} › ${w.cat}`;$("kFacts").innerHTML=[["Subject",k62Subject.title],["Category",m.label],["Learning order",`${k62CatWords(w.cat).indexOf(w)+1} of ${k62CatWords(w.cat).length}`],["Mastery",kMastered.has(gi)?"Mastered":"Learning"]].map(x=>`<div class="k62Info"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");$("kExample").innerHTML=`<b>${w.exTa||w.ta}</b><br><span class="muted">${w.exEn||m.note}</span>`;$("kCount").textContent=`${kIndex+1} / ${kList.length}`;$("kFav").textContent=kFavs.has(gi)?"★":"☆";$("kMaster").textContent=kMastered.has(gi)?"✓ Mastered":"✓ Mark mastered";const next=kList.find(x=>!kMastered.has(kGi(x)));$("kContinue").innerHTML=next?`Continue with <b>${next.ta}</b><br><span class="muted">${next.en}</span>`:"Category completed 🎉";kStats()}
 $("kBackSubjects").onclick=k62ShowSubjects;$("kSearch").oninput=()=>{kIndex=0;k62Apply()};$("kSort").onchange=()=>{kIndex=0;k62Apply()};$("kPrev").onclick=()=>{if(kList.length){kIndex=(kIndex-1+kList.length)%kList.length;kRender()}};$("kNext").onclick=()=>{if(kList.length){kIndex=(kIndex+1)%kList.length;kRender()}};$("kRandom").onclick=()=>{if(kList.length){kIndex=Math.floor(Math.random()*kList.length);kRender()}};$("kSpeak").onclick=()=>kList[kIndex]&&speakTamilText(kList[kIndex].ta,.72);$("kSlow").onclick=()=>kList[kIndex]&&speakTamilText(kList[kIndex].ta,.46);$("kFav").onclick=()=>{const gi=kGi(kList[kIndex]);kFavs.has(gi)?kFavs.delete(gi):kFavs.add(gi);kSave();kRender()};$("kMaster").onclick=()=>{const gi=kGi(kList[kIndex]);if(kMastered.has(gi))kMastered.delete(gi);else{kMastered.add(gi);xp+=5;save()}kSave();kRender();k62RenderSubcategories()};
 function kShuffle(a){return[...a].sort(()=>Math.random()-.5)}
 function kNewQ(){const pool=k62CatWords(k62Category),ans=pool[Math.floor(Math.random()*pool.length)];kAnswer=ans.en;const opts=kShuffle([ans.en,...kShuffle(pool.filter(w=>w.en!==ans.en)).slice(0,3).map(w=>w.en)]);kQ++;$("kQNum").textContent=`Question ${kQ}`;$("kQuestion").textContent=`What is the English meaning of “${ans.ta}”?`;$("kOpts").innerHTML=opts.map(o=>`<button class="kOpt" data-ka="${o}">${o}</button>`).join("");$("kResult").textContent="";$("kNextQ").style.display="none";document.querySelectorAll("[data-ka]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-ka]").forEach(x=>x.disabled=true);if(b.dataset.ka===kAnswer){b.classList.add("correct");$("kResult").textContent="Correct! அருமை!";kScore++;xp+=3;save()}else{$("kResult").textContent=`Correct answer: ${kAnswer}`}kSave();kStats();$("kNextQ").style.display="block"})}
@@ -1394,7 +1402,7 @@ function v51MasteryFor(w){return v51Mastery[words.indexOf(w)]||"Never learned"}
 function v51SetMastery(w,state){
  const i=words.indexOf(w);
  if(v51Mastery[i]===state)delete v51Mastery[i];else v51Mastery[i]=state;
- v51MarkToday(w);v51Save();v51RenderLearnEnhancements();renderGallery();
+ v51MarkToday(w);v51Save();v51RenderLearnEnhancements();if($("pictureView")?.classList.contains("active"))renderGallery();
 }
 function v51RenderLearnEnhancements(){
  const w=filtered[idx];if(!w)return;
@@ -1573,325 +1581,9 @@ v51RenderLearnEnhancements=function(){
 };
 
 // Replace gallery renderer so core cards include built-in pictures.
-renderGallery=function(){
- const grid=$("galleryGrid");
- $("galleryShown").textContent=galleryFiltered.length;
- $("galleryImages").textContent=v51ImageFound.size+v52CoreLimit;
- $("galleryMastered").textContent=Object.values(v51Mastery).filter(x=>x==="Mastered").length;
- $("galleryToday").textContent=v51Today.words.length;
- if(!galleryFiltered.length){grid.innerHTML='<div class="galleryEmpty" style="grid-column:1/-1">No words match these filters.</div>';return}
- grid.innerHTML=galleryFiltered.map(w=>{
-  const gi=words.indexOf(w),level=v51Level(w),state=v51MasteryFor(w);
-  return `<article class="galleryCard" data-gallery-index="${gi}">
-   <div class="galleryVisual" data-gallery-parent="${gi}">
-    <img data-gallery-img="${gi}" alt="${v52Escape(w.en)}" loading="lazy">
-    <div class="galleryBuiltin" data-gallery-builtin="${gi}"></div>
-    <span class="galleryEmoji">${w.emoji||"📘"}</span>
-   </div>
-   <div class="galleryInfo"><b>${w.ta}</b><small>${w.en} · ${w.roman||""}</small>
-    <div class="galleryMeta"><span class="levelBadge ${v51LevelClass(level)}">${level}</span><small>${state}</small></div>
-   </div></article>`;
- }).join("");
- document.querySelectorAll("[data-gallery-img]").forEach(img=>{
-  const gi=Number(img.dataset.galleryImg),w=words[gi];
-  v52LoadVisual(img,document.querySelector(`[data-gallery-builtin="${gi}"]`),document.querySelector(`[data-gallery-parent="${gi}"]`),w,true);
- });
- document.querySelectorAll("[data-gallery-index]").forEach(card=>card.onclick=()=>{
-  const gi=Number(card.dataset.galleryIndex);filtered=[...words];$("category").value="All";idx=gi;renderWord();showView("learnView");
- });
-};
-
-// Replace slide rendering for built-in artwork.
-v51RenderSlide=function(){
- if(!slideList.length)return;
- const w=slideList[slideIndex];
- $("slideTamil").textContent=w.ta;$("slideRoman").textContent=w.roman||"";$("slideEnglish").textContent=w.en;
- $("slideCategory").textContent=`${w.cat} · ${v51Level(w)}`;$("slideEmoji").textContent=w.emoji||"📘";
- $("slideCounter").textContent=`${slideIndex+1} / ${slideList.length}`;
- $("slideVisual")?.classList.remove("hasBuiltin");
- v52LoadVisual($("slideImage"),$("slideBuiltin"),$("slideVisual"),w,false);
- v51MarkToday(w);speakTamilText(w.ta,.72);
-};
-
-renderGallery();
-
-
-
-// ---------- Version 7.0 Zodiac Pictures and Country Flags ----------
-const v541CountryCodes={
- 'India':'IN',
- 'Sri Lanka':'LK',
- 'Nepal':'NP',
- 'Bhutan':'BT',
- 'Bangladesh':'BD',
- 'Pakistan':'PK',
- 'Afghanistan':'AF',
- 'China':'CN',
- 'Japan':'JP',
- 'South Korea':'KR',
- 'North Korea':'KP',
- 'Mongolia':'MN',
- 'Myanmar':'MM',
- 'Thailand':'TH',
- 'Malaysia':'MY',
- 'Singapore':'SG',
- 'Indonesia':'ID',
- 'Philippines':'PH',
- 'Vietnam':'VN',
- 'Cambodia':'KH',
- 'Laos':'LA',
- 'Brunei':'BN',
- 'Maldives':'MV',
- 'Iran':'IR',
- 'Iraq':'IQ',
- 'Saudi Arabia':'SA',
- 'United Arab Emirates':'AE',
- 'Qatar':'QA',
- 'Kuwait':'KW',
- 'Oman':'OM',
- 'Yemen':'YE',
- 'Israel':'IL',
- 'Jordan':'JO',
- 'Lebanon':'LB',
- 'Turkey':'TR',
- 'Russia':'RU',
- 'United Kingdom':'GB',
- 'Ireland':'IE',
- 'France':'FR',
- 'Germany':'DE',
- 'Italy':'IT',
- 'Spain':'ES',
- 'Portugal':'PT',
- 'Netherlands':'NL',
- 'Belgium':'BE',
- 'Switzerland':'CH',
- 'Austria':'AT',
- 'Poland':'PL',
- 'Czech Republic':'CZ',
- 'Greece':'GR',
- 'Norway':'NO',
- 'Sweden':'SE',
- 'Finland':'FI',
- 'Denmark':'DK',
- 'Iceland':'IS',
- 'Ukraine':'UA',
- 'Romania':'RO',
- 'Hungary':'HU',
- 'Serbia':'RS',
- 'Croatia':'HR',
- 'United States':'US',
- 'Canada':'CA',
- 'Mexico':'MX',
- 'Cuba':'CU',
- 'Jamaica':'JM',
- 'Brazil':'BR',
- 'Argentina':'AR',
- 'Chile':'CL',
- 'Peru':'PE',
- 'Colombia':'CO',
- 'Venezuela':'VE',
- 'Uruguay':'UY',
- 'Paraguay':'PY',
- 'Bolivia':'BO',
- 'Ecuador':'EC',
- 'Australia':'AU',
- 'New Zealand':'NZ',
- 'Fiji':'FJ',
- 'Papua New Guinea':'PG',
- 'Egypt':'EG',
- 'South Africa':'ZA',
- 'Nigeria':'NG',
- 'Kenya':'KE',
- 'Ethiopia':'ET',
- 'Ghana':'GH',
- 'Tanzania':'TZ',
- 'Uganda':'UG',
- 'Sudan':'SD',
- 'Morocco':'MA',
- 'Algeria':'DZ',
- 'Tunisia':'TN',
- 'Libya':'LY',
- 'Somalia':'SO',
- 'Zimbabwe':'ZW',
- 'Zambia':'ZM',
- 'Botswana':'BW',
- 'Madagascar':'MG',
- 'Mauritius':'MU',
- 'Seychelles':'SC'
-};
-const v541Zodiac={
- 'Aries':{symbol:'♈',picture:'🐏',label:'Ram'},
- 'Taurus':{symbol:'♉',picture:'🐂',label:'Bull'},
- 'Gemini':{symbol:'♊',picture:'👯',label:'Twins'},
- 'Cancer':{symbol:'♋',picture:'🦀',label:'Crab'},
- 'Leo':{symbol:'♌',picture:'🦁',label:'Lion'},
- 'Virgo':{symbol:'♍',picture:'👩',label:'Maiden'},
- 'Libra':{symbol:'♎',picture:'⚖️',label:'Scales'},
- 'Scorpio':{symbol:'♏',picture:'🦂',label:'Scorpion'},
- 'Sagittarius':{symbol:'♐',picture:'🏹',label:'Archer'},
- 'Capricorn':{symbol:'♑',picture:'🐐',label:'Goat'},
- 'Aquarius':{symbol:'♒',picture:'🏺',label:'Water bearer'},
- 'Pisces':{symbol:'♓',picture:'🐟',label:'Fish'}
-};
-function v541FlagFromCode(code){
- return String(code||"").toUpperCase().replace(/[A-Z]/g,c=>String.fromCodePoint(127397+c.charCodeAt(0)));
-}
-words.forEach(w=>{
- if(w.cat==="World Countries"&&v541CountryCodes[w.en]){
-  w.countryCode=v541CountryCodes[w.en];
-  w.emoji=v541FlagFromCode(w.countryCode);
- }
- if(w.cat==="Tamil Zodiac"&&v541Zodiac[w.en]){
-  const z=v541Zodiac[w.en];
-  w.zodiacSymbol=z.symbol;
-  w.zodiacPicture=z.picture;
-  w.zodiacLabel=z.label;
-  w.emoji=z.picture;
- }
-});
-
-// ---------- Version 7.0 Complete Knowledge Picture Pack ----------
-const v53KnowledgeStart=Math.min(220,words.length);
-const v53FactsViewed=new Set(JSON.parse(localStorage.getItem("tl_v53_facts_viewed")||"[]"));
-let v53Segment="All";
-
-function v53IsKnowledge(w){return words.indexOf(w)>=v53KnowledgeStart}
-function v53Save(){localStorage.setItem("tl_v53_facts_viewed",JSON.stringify([...v53FactsViewed]))}
-function v53CategoryKind(cat){
- const c=String(cat||"").toLowerCase();
- if(c.includes("country"))return "country";
- if(c.includes("ocean"))return "ocean";
- if(c.includes("continent"))return "continent";
- if(c.includes("river"))return "river";
- if(c.includes("bird"))return "bird";
- if(c.includes("district"))return "district";
- if(c.includes("month"))return "month";
- if(c.includes("zodiac"))return "zodiac";
- if(c.includes("sangam")||c.includes("book"))return "book";
- if(c.includes("religion"))return "religion";
- return "knowledge";
-}
-function v53Fact(w){
- if(w.fact)return w.fact;
- const kind=v53CategoryKind(w.cat);
- const facts={
-  country:`${w.en} is included in the world-countries learning collection.`,
-  ocean:`${w.en} is one of the major ocean-related topics in the world geography collection.`,
-  continent:`${w.en} is studied as part of the continents of the world.`,
-  river:`${w.en} is included in the world-rivers knowledge collection.`,
-  bird:`${w.en} is included in the birds vocabulary and nature collection.`,
-  district:`${w.en} is one of the districts included in the Tamil Nadu knowledge collection.`,
-  month:`${w.en} is part of the traditional Tamil calendar sequence.`,
-  zodiac:`${w.en} is one of the twelve Tamil zodiac signs.`,
-  book:`${w.en} belongs to the Tamil Sangam literature learning collection.`,
-  religion:`${w.en} is included for respectful general knowledge about world religions.`,
-  knowledge:`${w.en} is part of the extended knowledge explorer.`
- };
- return facts[kind];
-}
-function v53Symbol(kind,w){
- const map={
-  country:w.emoji||"🏳️",ocean:"🌊",continent:"🗺️",river:"🏞️",bird:w.emoji||"🐦",
-  district:"📍",month:"📅",zodiac:w.emoji||"♈",book:"📜",religion:"🕊️",knowledge:w.emoji||"💡"
- };
- return map[kind]||"💡";
-}
-function v53KnowledgeSVG(w,compact=false){
- const i=Math.max(0,words.indexOf(w)),kind=v53CategoryKind(w.cat),p=v52Palette[i%v52Palette.length];
- const width=compact?420:720,height=compact?300:460;
- const ta=v52Escape(w.ta),en=v52Escape(w.en),category=v52Escape(w.cat),symbol=v52Escape(v53Symbol(kind,w));
- const type=v52Escape(kind.toUpperCase());
- let motif="";
- if(kind==="ocean") motif=`<path d="M0 ${height*.58} Q ${width*.18} ${height*.47} ${width*.36} ${height*.58} T ${width*.72} ${height*.58} T ${width} ${height*.58} V ${height} H0Z" fill="#fff" opacity=".22"/>`;
- else if(kind==="river") motif=`<path d="M${width*.05} ${height*.15} C${width*.35} ${height*.3},${width*.18} ${height*.55},${width*.55} ${height*.64} S${width*.88} ${height*.78},${width*.96} ${height*.92}" stroke="#fff" stroke-width="${compact?18:28}" fill="none" opacity=".24"/>`;
- else if(kind==="country"||kind==="continent"||kind==="district") motif=`<path d="M${width*.18} ${height*.19} l${width*.2} ${height*.05} ${width*.08} ${height*.16} ${width*.18} ${height*.03} ${width*.08} ${height*.18} -${width*.18} ${height*.12} -${width*.22} -${height*.04} -${width*.12} -${height*.2}z" fill="#fff" opacity=".2"/>`;
- else if(kind==="month") motif=`<rect x="${width*.1}" y="${height*.12}" width="${width*.8}" height="${height*.5}" rx="26" fill="#fff" opacity=".15"/><path d="M${width*.1} ${height*.25} H${width*.9}" stroke="#fff" stroke-width="8" opacity=".24"/>`;
- else if(kind==="zodiac") motif=`<circle cx="${width*.5}" cy="${height*.38}" r="${height*.27}" fill="none" stroke="#fff" stroke-width="8" opacity=".18"/><circle cx="${width*.5}" cy="${height*.38}" r="${height*.18}" fill="none" stroke="#fff" stroke-width="4" opacity=".18"/>`;
- else if(kind==="book") motif=`<path d="M${width*.18} ${height*.18} Q${width*.36} ${height*.1} ${width*.5} ${height*.22} Q${width*.64} ${height*.1} ${width*.82} ${height*.18} V${height*.62} Q${width*.64} ${height*.54} ${width*.5} ${height*.66} Q${width*.36} ${height*.54} ${width*.18} ${height*.62}Z" fill="#fff" opacity=".17"/>`;
- else if(kind==="religion") motif=`<circle cx="${width*.5}" cy="${height*.36}" r="${height*.21}" fill="#fff" opacity=".12"/><path d="M${width*.5} ${height*.17} V${height*.55} M${width*.34} ${height*.36} H${width*.66}" stroke="#fff" stroke-width="10" opacity=".16"/>`;
- else motif=`<circle cx="${width*.22}" cy="${height*.22}" r="${height*.16}" fill="#fff" opacity=".16"/><circle cx="${width*.82}" cy="${height*.34}" r="${height*.24}" fill="#fff" opacity=".12"/>`;
-
- return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="100%" height="100%" role="img" aria-label="${en}">
-  <defs>
-   <linearGradient id="kg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>
-   <filter id="ks${i}"><feDropShadow dx="0" dy="9" stdDeviation="8" flood-opacity=".18"/></filter>
-  </defs>
-  <rect width="${width}" height="${height}" rx="34" fill="url(#kg${i})"/>
-  ${motif}
-  <rect x="${width*.07}" y="${height*.07}" width="${width*.36}" height="${height*.105}" rx="${height*.052}" fill="#fff" opacity=".88"/>
-  <text x="${width*.25}" y="${height*.124}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?13:18}" font-weight="800" fill="${p[2]}">${category}</text>
-  <rect x="${width*.73}" y="${height*.07}" width="${width*.2}" height="${height*.105}" rx="${height*.052}" fill="#0f172a" opacity=".72"/>
-  <text x="${width*.83}" y="${height*.124}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?11:15}" font-weight="800" fill="#fff">${type}</text>
-  <text x="${width/2}" y="${height*.43}" text-anchor="middle" dominant-baseline="middle" font-size="${compact?86:136}" filter="url(#ks${i})">${symbol}</text>
-  <rect x="${width*.07}" y="${height*.69}" width="${width*.86}" height="${height*.23}" rx="${height*.055}" fill="#fff" opacity=".9"/>
-  <text x="${width/2}" y="${height*.79}" text-anchor="middle" dominant-baseline="middle" font-family="'Noto Sans Tamil','Latha',sans-serif" font-size="${compact?27:41}" font-weight="900" fill="#3b0764">${ta}</text>
-  <text x="${width/2}" y="${height*.875}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?17:24}" font-weight="750" fill="#475569">${en}</text>
- </svg>`;
-}
-function v53ArtSVG(w,compact=false){
- return v53IsKnowledge(w)?v53KnowledgeSVG(w,compact):v52ArtSVG(w,compact);
-}
-function v53ShowBuiltin(container,w,compact=false){
- if(!container){return false}
- container.innerHTML=v53ArtSVG(w,compact);container.classList.add("show");return true;
-}
-function v53LoadVisual(img,builtinContainer,parent,w,compact,onResult){
- parent?.classList.remove("hasBuiltin");
- builtinContainer?.classList.remove("show");
- if(builtinContainer)builtinContainer.innerHTML="";
- let paths=v51ImageCandidates(w),i=0;
- img.classList.remove("loaded");img.removeAttribute("src");
- const tryNext=()=>{
-  if(i>=paths.length){
-   const built=v53ShowBuiltin(builtinContainer,w,compact);
-   parent?.classList.add("hasBuiltin");
-   onResult&&onResult(built,"builtin");return;
-  }
-  const path=paths[i++];
-  img.onload=()=>{img.classList.add("loaded");v51ImageFound.add(words.indexOf(w));v51Save();onResult&&onResult(true,path)};
-  img.onerror=tryNext;img.src=path;
- };
- tryNext();
-}
-
-// Complete visual coverage on main card.
-v51RenderLearnEnhancements=function(){
- const w=filtered[idx];if(!w)return;
- const level=v51Level(w),badge=$("levelBadge");
- badge.textContent=level;badge.className=`levelBadge ${v51LevelClass(level)}`;
- $("wordImage").alt=`${w.en} — ${w.ta}`;
- $("picture").classList.remove("hasImage","hasBuiltin");
- $("imageHint").textContent="Loading picture…";
- $("corePackBadge").style.display="none";
- $("knowledgeTypeBadge").style.display="none";
- v53LoadVisual($("wordImage"),$("builtinArt"),$("picture"),w,false,(ok,source)=>{
-  $("picture").classList.toggle("hasImage",ok&&source!=="builtin");
-  $("imageHint").textContent=source==="builtin"?(v53IsKnowledge(w)?"Knowledge illustration":"Built-in illustration"):ok?"Picture available":"Emoji illustration";
-  $("corePackBadge").style.display=source==="builtin"&&!v53IsKnowledge(w)?"inline-flex":"none";
-  $("knowledgeTypeBadge").style.display=source==="builtin"&&v53IsKnowledge(w)?"inline-flex":"none";
- });
- document.querySelectorAll("[data-mastery]").forEach(b=>b.classList.toggle("active",b.dataset.mastery===v51MasteryFor(w)));
- v51MarkToday(w);
- if(v53IsKnowledge(w)){v53FactsViewed.add(words.indexOf(w));v53Save()}
-};
-
-// Segment filtering
-document.querySelectorAll("[data-segment]").forEach(b=>b.onclick=()=>{
- v53Segment=b.dataset.segment;
- document.querySelectorAll("[data-segment]").forEach(x=>x.classList.toggle("active",x===b));
- v51ApplyGalleryFilters();
-});
-const v53OldQueueWords=v51QueueWords;
-v51QueueWords=function(queue){
- let arr=v53OldQueueWords(queue);
- if(v53Segment==="Core")arr=arr.filter(w=>!v53IsKnowledge(w));
- if(v53Segment==="Knowledge")arr=arr.filter(w=>v53IsKnowledge(w));
- return arr;
-};
-
-// Complete gallery renderer
-renderGallery=function(){
- const grid=$("galleryGrid");
+let v70GalleryPage=0;
+const v70GalleryPageSize=48;
+function v70GalleryStats(){
  $("galleryShown").textContent=galleryFiltered.length;
  $("galleryImages").textContent=words.length;
  $("galleryMastered").textContent=Object.values(v51Mastery).filter(x=>x==="Mastered").length;
@@ -1900,12 +1592,24 @@ renderGallery=function(){
  $("knowledgeCoverage").textContent=`${Math.max(0,words.length-v53KnowledgeStart)}/${Math.max(0,words.length-v53KnowledgeStart)}`;
  $("factsLearned").textContent=v53FactsViewed.size;
  $("knowledgeMastered").textContent=words.filter(w=>v53IsKnowledge(w)&&v51MasteryFor(w)==="Mastered").length;
- if(!galleryFiltered.length){grid.innerHTML='<div class="galleryEmpty" style="grid-column:1/-1">No words match these filters.</div>';return}
- grid.innerHTML=galleryFiltered.map(w=>{
+}
+renderGallery=function(){
+ const grid=$("galleryGrid");
+ if(!grid)return;
+ v70GalleryStats();
+ if(!galleryFiltered.length){
+  grid.innerHTML='<div class="galleryEmpty" style="grid-column:1/-1">No words match these filters.</div>';
+  return;
+ }
+ const pages=Math.max(1,Math.ceil(galleryFiltered.length/v70GalleryPageSize));
+ v70GalleryPage=Math.min(v70GalleryPage,pages-1);
+ const from=v70GalleryPage*v70GalleryPageSize;
+ const shown=galleryFiltered.slice(from,from+v70GalleryPageSize);
+ grid.innerHTML=shown.map(w=>{
   const gi=words.indexOf(w),level=v51Level(w),state=v51MasteryFor(w),knowledge=v53IsKnowledge(w);
   return `<article class="galleryCard" data-gallery-index="${gi}">
    <div class="galleryVisual" data-gallery-parent="${gi}">
-    <img data-gallery-img="${gi}" alt="${v52Escape(w.en)}" loading="lazy">
+    <img data-gallery-img="${gi}" alt="${v52Escape(w.en)}" loading="lazy" decoding="async">
     <div class="galleryBuiltin" data-gallery-builtin="${gi}"></div>
     <span class="galleryEmoji">${w.emoji||"📘"}</span>
     ${knowledge?'<span class="knowledgeTypeBadge">Knowledge</span>':''}
@@ -1913,14 +1617,29 @@ renderGallery=function(){
    <div class="galleryInfo"><b>${w.ta}</b><small>${w.en} · ${w.roman||""}</small>
     <div class="galleryMeta"><span class="levelBadge ${v51LevelClass(level)}">${level}</span><small>${state}</small></div>
    </div></article>`;
- }).join("");
- document.querySelectorAll("[data-gallery-img]").forEach(img=>{
-  const gi=Number(img.dataset.galleryImg),w=words[gi];
-  v53LoadVisual(img,document.querySelector(`[data-gallery-builtin="${gi}"]`),document.querySelector(`[data-gallery-parent="${gi}"]`),w,true);
+ }).join("")+`<div class="galleryPager" style="grid-column:1/-1">
+   <button class="btn soft" id="v70GalleryPrev" ${v70GalleryPage===0?"disabled":""}>←</button>
+   <b>Page ${v70GalleryPage+1} of ${pages}</b>
+   <button class="btn soft" id="v70GalleryNext" ${v70GalleryPage>=pages-1?"disabled":""}>→</button>
+ </div>`;
+ const cards=[...grid.querySelectorAll("[data-gallery-index]")];
+ const loadCard=card=>{
+  const gi=Number(card.dataset.galleryIndex),w=words[gi];
+  const img=card.querySelector("[data-gallery-img]");
+  if(!img||img.dataset.loaded)return;
+  img.dataset.loaded="1";
+  v53LoadVisual(img,card.querySelector("[data-gallery-builtin]"),card.querySelector("[data-gallery-parent]"),w,true);
+ };
+ if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){loadCard(e.target);io.unobserve(e.target)}}),{rootMargin:"180px"});
+  cards.forEach(c=>io.observe(c));
+ }else cards.forEach(loadCard);
+ cards.forEach(card=>card.onclick=()=>{
+  const gi=Number(card.dataset.galleryIndex);
+  filtered=[...words];$("category").value="All";idx=gi;renderWord();showView("learnView");
  });
- document.querySelectorAll("[data-gallery-index]").forEach(card=>card.onclick=()=>{
-  const gi=Number(card.dataset.galleryIndex);filtered=[...words];$("category").value="All";idx=gi;renderWord();showView("learnView");
- });
+ $("v70GalleryPrev").onclick=()=>{v70GalleryPage--;renderGallery();grid.scrollIntoView({behavior:"smooth",block:"start"})};
+ $("v70GalleryNext").onclick=()=>{v70GalleryPage++;renderGallery();grid.scrollIntoView({behavior:"smooth",block:"start"})};
 };
 
 // Knowledge-aware slideshow
@@ -2130,191 +1849,191 @@ v53KnowledgeSVG=function(w,compact=false){
 renderGallery();
 
 
-// ---------- Version 7.0 Offline Tamil Teacher ----------
+// ---------- Version 7.0 Revised Offline Tamil Teacher ----------
+function t70Norm(s){
+ return String(s||"").toLocaleLowerCase().normalize("NFKC")
+  .replace(/[?!.,;:()[\]{}"'“”‘’]/g," ").replace(/\s+/g," ").trim();
+}
+const t70Stop=new Set(["what","is","the","meaning","of","tell","me","about","explain","word","please","how","do","i","say","in","tamil","english","a","an","show","give","for"]);
+const t70Exact=new Map(),t70Tokens=new Map(),t70Categories=new Map();
+words.forEach((w,i)=>{
+ [w.ta,w.en,w.roman].filter(Boolean).forEach(v=>{
+  const n=t70Norm(v);if(n&&!t70Exact.has(n))t70Exact.set(n,i);
+  n.split(" ").filter(x=>x.length>1&&!t70Stop.has(x)).forEach(tok=>{
+   if(!t70Tokens.has(tok))t70Tokens.set(tok,new Set());
+   t70Tokens.get(tok).add(i);
+  });
+ });
+ const c=t70Norm(w.cat);
+ if(!t70Categories.has(c))t70Categories.set(c,[]);
+ t70Categories.get(c).push(i);
+});
 
-function t61WordType(w){
- const c=String(w.cat||"").toLowerCase();
- if(c.includes("action")||c.includes("verb"))return "Verb / action word";
- if(c.includes("place")||c.includes("country")||c.includes("district")||c.includes("river"))return "Proper noun / place name";
- if(c.includes("month")||c.includes("zodiac"))return "Calendar or cultural term";
- if(c.includes("bird")||c.includes("animal")||c.includes("fruit")||c.includes("vegetable"))return "Common noun";
- return "Vocabulary or knowledge term";
+function t70WordType(w){
+ const c=t70Norm(w.cat),e=t70Norm(w.en);
+ if(c.includes("action"))return "Verb / action word";
+ if(c.includes("place")||c.includes("country")||c.includes("district")||c.includes("river")||c.includes("month"))return "Proper noun or named term";
+ if(["red","blue","green","yellow","black","white","orange","purple"].includes(e))return "Adjective / colour word";
+ return "Noun or knowledge term";
 }
-function t61UsageTip(w){
- return v53IsKnowledge(w)?`Use “${w.ta}” when naming or discussing ${w.cat.toLowerCase()}.`:`Say “${w.ta}” clearly, then use it in a short sentence. Repeat it three times.`;
+function t70Related(w){
+ return words.filter(x=>x!==w&&x.cat===w.cat).slice(0,4);
 }
-function t61RelatedWords(w){
- const r=words.filter(x=>x!==w&&x.cat===w.cat).slice(0,3);
- return r.length?r.map(x=>`${x.ta} (${x.en})`).join(", "):"No related words available.";
+function t70Examples(w){
+ const list=[];
+ if(w.exTa||w.exEn)list.push({ta:w.exTa||`${w.ta} என்பது ${w.en}.`,en:w.exEn||`${w.ta} means ${w.en}.`});
+ list.push({ta:`${w.ta} என்ற சொல்லை தெளிவாகச் சொல்லுங்கள்.`,en:`Say the word ${w.ta} clearly.`});
+ list.push({ta:`இந்தச் சொல்: ${w.ta}.`,en:`This word is ${w.en}.`});
+ return list;
 }
-function t61PronunciationTip(w){
- return `Say it slowly as “${w.roman||w.ta}”. Listen once, repeat twice, then say it at normal speed.`;
-}
-function t61ExtraInfo(w){
- const kind=v53CategoryKind(w.cat);
- if(kind==="country")return `${w.en} is in the world-countries section. Its national flag is shown on the visual card.`;
- if(kind==="zodiac")return `${w.en} is one of the twelve zodiac signs, represented by ${w.zodiacLabel||"a traditional symbol"}.`;
- if(kind==="month")return `${w.en} belongs to the traditional Tamil calendar.`;
- if(kind==="book")return `${w.en} is part of the Tamil Sangam literature collection.`;
- return v53IsKnowledge(w)?v53Fact(w):`This word belongs to the ${w.cat} category.`;
-}
-function t61TopicText(topic){
- const t={
-  alphabet:"Tamil has 12 Uyir letters, 18 Mei letters and combined Uyirmei letters. Learn vowels first, consonants next, and combinations last.",
-  pronunciation:"Separate words into clear sound groups. Listen slowly, copy the sound, and then repeat at normal speed. Notice short and long vowels.",
-  grammar:"Start with nouns and verbs. A basic Tamil sentence expresses who or what is involved and what happens. Add describing and location words gradually.",
-  conversation:"Begin with greetings, introductions, requests, directions, food and family phrases. Listen, repeat and then replace one word.",
-  culture:"Tamil language learning includes Tamil months, Sangam literature, festivals, geography and traditional expressions."
- };
- return t[topic]||"Select a topic.";
-}
-
-const t61State=JSON.parse(localStorage.getItem("tl_v61_teacher")||'{"questions":0,"explained":[],"quizCorrect":0,"sessions":0,"history":[]}');
-let t61Current=null,t61LastReply="";
-t61State.sessions++;t61Save();
-
-function t61Save(){
- localStorage.setItem("tl_v61_teacher",JSON.stringify(t61State));
-}
-function t61Norm(s){
- return String(s||"").toLowerCase().trim().replace(/[?!.,;:()[\]{}"']/g," ").replace(/\s+/g," ");
-}
-function t61FindWord(query){
- const q=t61Norm(query);
+function t70Find(query){
+ const q=t70Norm(query);
  if(!q)return null;
- let exact=words.find(w=>[w.ta,w.en,w.roman].filter(Boolean).some(v=>t61Norm(v)===q));
- if(exact)return exact;
- exact=words.find(w=>[w.ta,w.en,w.roman].filter(Boolean).some(v=>q.includes(t61Norm(v))||t61Norm(v).includes(q)));
- if(exact)return exact;
- const tokens=q.split(" ").filter(x=>x.length>1);
- return words.find(w=>tokens.some(t=>t61Norm(w.ta).includes(t)||t61Norm(w.en).includes(t)||t61Norm(w.roman||"").includes(t)))||null;
+ if(t70Exact.has(q))return words[t70Exact.get(q)];
+ const phrases=[...t70Exact.keys()].filter(x=>x.length>=2&&q.includes(x)).sort((a,b)=>b.length-a.length);
+ if(phrases.length)return words[t70Exact.get(phrases[0])];
+ const tokens=q.split(" ").filter(x=>x.length>1&&!t70Stop.has(x));
+ const scores=new Map();
+ tokens.forEach(tok=>{
+  for(const [key,set] of t70Tokens){
+   let score=0;
+   if(key===tok)score=8;
+   else if(key.startsWith(tok)||tok.startsWith(key))score=4;
+   else if(tok.length>=4&&(key.includes(tok)||tok.includes(key)))score=2;
+   if(score)set.forEach(i=>scores.set(i,(scores.get(i)||0)+score));
+  }
+ });
+ if(!scores.size)return null;
+ const ranked=[...scores.entries()].sort((a,b)=>b[1]-a[1]);
+ return ranked[0][1]>=4?words[ranked[0][0]]:null;
 }
-function t61Example(w,n=0){
- if(w.example)return w.example;
- const examples=[
-  `${w.ta} என்பது “${w.en}” என்று பொருள்.`,
-  `இந்தச் சொல்லை நினைவில் கொள்ளுங்கள்: ${w.ta} — ${w.en}.`,
-  `${w.ta} என்ற தமிழ்ச் சொல்லை தினமும் ஒருமுறை சொல்லிப் பழகுங்கள்.`,
-  `படத்தைப் பார்த்து “${w.ta}” என்று தெளிவாகச் சொல்லுங்கள்.`
- ];
- return examples[n%examples.length];
+function t70FindCategory(query){
+ const q=t70Norm(query);
+ for(const [cat,ids] of t70Categories)if(q===cat||q.includes(cat))return {cat:words[ids[0]].cat,ids};
+ return null;
 }
-function t61Explanation(w){
- const level=v51Level(w),kind=v53IsKnowledge(w)?"knowledge entry":"core vocabulary word";
- return `${w.ta} means “${w.en}” in English. It is a ${level.toLowerCase()} ${kind} from the ${w.cat} category. Pronounce it approximately as “${w.roman||w.ta}”. ${v53IsKnowledge(w)?v53Fact(w):t61Example(w)}`;
+
+let t70State;
+try{t70State=JSON.parse(localStorage.getItem("tl_v70_teacher")||localStorage.getItem("tl_v61_teacher")||"{}")}catch(e){t70State={}}
+t70State={questions:Number(t70State.questions||0),explained:Array.isArray(t70State.explained)?t70State.explained:[],quizCorrect:Number(t70State.quizCorrect||0),sessions:Number(t70State.sessions||0)+1,history:Array.isArray(t70State.history)?t70State.history:[]};
+let t61Current=null,t61LastReply="",t70SaveTimer=null;
+function t61Save(){
+ clearTimeout(t70SaveTimer);
+ t70SaveTimer=setTimeout(()=>localStorage.setItem("tl_v70_teacher",JSON.stringify(t70State)),120);
 }
 function t61AddBubble(text,type="bot"){
- const div=document.createElement("div");
- div.className=`teacherBubble ${type}`;div.textContent=text;
- $("teacherChat").appendChild(div);$("teacherChat").scrollTop=$("teacherChat").scrollHeight;
+ const chat=$("teacherChat");if(!chat)return;
+ const div=document.createElement("div");div.className=`teacherBubble ${type}`;div.textContent=text;
+ chat.appendChild(div);
+ while(chat.children.length>40)chat.removeChild(chat.firstElementChild);
+ requestAnimationFrame(()=>chat.scrollTop=chat.scrollHeight);
  if(type==="bot")t61LastReply=text;
 }
+function t61Stats(){
+ $("teacherQuestions").textContent=t70State.questions;
+ $("teacherWordsExplained").textContent=t70State.explained.length;
+ $("teacherQuizCorrect").textContent=t70State.quizCorrect;
+ $("teacherSessions").textContent=t70State.sessions;
+}
+function t61RenderHistory(){
+ const seen=new Set(),items=[];
+ for(const h of t70State.history){if(!seen.has(h.i)&&words[h.i]){seen.add(h.i);items.push(words[h.i])}}
+ $("teacherHistory").innerHTML=items.length?items.slice(0,10).map(w=>`<button class="teacherHistoryItem" data-teacher-history="${words.indexOf(w)}"><b>${w.ta}</b> · ${w.en}</button>`).join(""):'<div class="muted">No explanations yet.</div>';
+ document.querySelectorAll("[data-teacher-history]").forEach(b=>b.onclick=()=>t61SetCurrent(words[Number(b.dataset.teacherHistory)],false));
+}
 function t61SetCurrent(w,record=true){
- if(!w)return;
- t61Current=w;
+ if(!w)return;t61Current=w;const i=words.indexOf(w);
  if(record){
-  const i=words.indexOf(w);
-  if(!t61State.explained.includes(i))t61State.explained.push(i);
-  t61State.history.unshift({i,time:Date.now()});
-  t61State.history=t61State.history.slice(0,30);
-  t61Save();
+  if(!t70State.explained.includes(i))t70State.explained.push(i);
+  t70State.history.unshift({i,time:Date.now()});t70State.history=t70State.history.slice(0,24);t61Save();
  }
+ const related=t70Related(w);
+ const ex=t70Examples(w)[0];
  $("teacherWordCard").className="teacherWordCard";
  $("teacherWordCard").innerHTML=`<div class="teacherWordIcon">${w.emoji||"📘"}</div><div><div class="bigTamil">${w.ta}</div><b>${w.en}</b><div class="muted">${w.roman||""}</div></div>`;
  $("teacherDetails").innerHTML=`<div class="teacherInfoGrid">
   <div class="teacherInfo"><h4>Meaning</h4><p>${w.en}</p></div>
-  <div class="teacherInfo"><h4>Word type</h4><p>${t61WordType(w)}</p></div>
-  <div class="teacherInfo"><h4>Category and level</h4><p>${w.cat} · ${v51Level(w)}</p></div>
-  <div class="teacherInfo"><h4>Pronunciation tip</h4><p>${t61PronunciationTip(w)}</p></div>
-  <div class="teacherInfo"><h4>Usage guidance</h4><p>${t61UsageTip(w)}</p></div>
-  <div class="teacherInfo"><h4>Related words</h4><p>${t61RelatedWords(w)}</p></div>
-  <div class="teacherInfo" style="grid-column:1/-1"><h4>Example or knowledge note</h4><p>${v53IsKnowledge(w)?t61ExtraInfo(w):t61Example(w)}</p></div>
+  <div class="teacherInfo"><h4>Word type</h4><p>${t70WordType(w)}</p></div>
+  <div class="teacherInfo"><h4>Category</h4><p>${w.cat}</p></div>
+  <div class="teacherInfo"><h4>Pronunciation</h4><p>${w.roman||w.ta}</p></div>
+  <div class="teacherInfo" style="grid-column:1/-1"><h4>Example</h4><p><b>${ex.ta}</b><br>${ex.en}</p></div>
+  <div class="teacherInfo" style="grid-column:1/-1"><h4>Related words</h4><p>${related.length?related.map(x=>`${x.ta} (${x.en})`).join(", "):"No related words available."}</p></div>
  </div>`;
  t61RenderHistory();t61Stats();
 }
-function t61Stats(){
- $("teacherQuestions").textContent=t61State.questions;
- $("teacherWordsExplained").textContent=t61State.explained.length;
- $("teacherQuizCorrect").textContent=t61State.quizCorrect;
- $("teacherSessions").textContent=t61State.sessions;
+function t70Explain(w){
+ const ex=t70Examples(w)[0];
+ return `${w.ta} means “${w.en}”. It belongs to ${w.cat}. Pronunciation: ${w.roman||w.ta}. Example: ${ex.ta} — ${ex.en}`;
 }
-function t61RenderHistory(){
- const seen=new Set(),items=[];
- for(const h of t61State.history){
-  if(seen.has(h.i)||!words[h.i])continue;
-  seen.add(h.i);items.push(words[h.i]);
- }
- $("teacherHistory").innerHTML=items.length?items.slice(0,12).map(w=>`<button class="teacherHistoryItem" data-teacher-history="${words.indexOf(w)}"><b>${w.ta}</b> · ${w.en}</button>`).join(""):'<div class="muted">No explanations yet.</div>';
- document.querySelectorAll("[data-teacher-history]").forEach(b=>b.onclick=()=>t61SetCurrent(words[Number(b.dataset.teacherHistory)],false));
+function t61MakeQuiz(w){
+ const sameCat=words.filter(x=>x!==w&&x.cat===w.cat);
+ const pool=(sameCat.length>=3?sameCat:words.filter(x=>x!==w));
+ const opts=g54Shuffle([w,...g54Shuffle(pool).slice(0,3)]);
+ $("teacherQuizBox").innerHTML=`<div class="teacherQuiz"><b>What is the English meaning of “${w.ta}”?</b><div class="teacherQuizOptions">${opts.map(x=>`<button data-t61-answer="${words.indexOf(x)}">${x.en}</button>`).join("")}</div></div>`;
+ document.querySelectorAll("[data-t61-answer]").forEach(b=>b.onclick=()=>{
+  const ok=Number(b.dataset.t61Answer)===words.indexOf(w);b.classList.add(ok?"correct":"wrong");
+  if(ok){t70State.quizCorrect++;t61AddBubble("Correct! அருமை!");}
+  else{document.querySelector(`[data-t61-answer="${words.indexOf(w)}"]`)?.classList.add("correct");t61AddBubble(`The correct answer is ${w.en}.`)}
+  document.querySelectorAll("[data-t61-answer]").forEach(x=>x.disabled=true);t61Save();t61Stats();
+ });
+}
+function t70TopicText(topic){
+ return {
+  alphabet:"Tamil has 12 உயிரெழுத்துகள், 18 மெய்யெழுத்துகள் and 216 common உயிர்மெய் combinations. Learn short and long vowels first.",
+  pronunciation:"Tamil distinguishes short and long vowels. Listen for அ/ஆ, இ/ஈ, உ/ஊ and practise slowly before normal speed.",
+  grammar:"A simple Tamil sentence commonly follows Subject–Object–Verb order. Example: நான் தமிழ் படிக்கிறேன் — I Tamil study.",
+  conversation:"Start with greetings, introductions, requests, directions, food and family. Repeat one model sentence and replace one word.",
+  culture:"Tamil learning includes literature, calendar terms, regional geography, traditions and formal versus spoken usage."
+ }[topic]||"Choose a learning topic.";
 }
 function t61Ask(raw){
  const query=String(raw||"").trim();if(!query)return;
- t61State.questions++;t61Save();t61AddBubble(query,"user");
- const q=t61Norm(query),found=t61FindWord(query);
- if(q.includes("random")){
-  const w=words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61AddBubble(t61Explanation(w));return;
+ t70State.questions++;t61Save();t61AddBubble(query,"user");
+ const q=t70Norm(query),found=t70Find(query),category=t70FindCategory(query);
+ if(/^(hi|hello|vanakkam|வணக்கம்)\b/.test(q)){t61AddBubble("வணக்கம்! Ask for a word meaning, pronunciation, example, category, related words, or a quiz.");t61Stats();return}
+ if(q.includes("random")){const w=words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61AddBubble(t70Explain(w));return}
+ if(q.includes("quiz")||q.includes("test")){const w=found||t61Current||words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61MakeQuiz(w);t61AddBubble(`A quiz for ${w.ta} is ready below.`);return}
+ if(category&&!found){
+  const sample=category.ids.slice(0,8).map(i=>`${words[i].ta} (${words[i].en})`).join(", ");
+  t61AddBubble(`${category.cat} contains ${category.ids.length} entries. Examples: ${sample}.`);return;
  }
- if(q.includes("test")||q.includes("quiz")){
-  const w=found||t61Current||words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61MakeQuiz(w);t61AddBubble(`I prepared a short question for ${w.ta}. Choose the answer in the quiz panel.`);return;
+ const w=found||t61Current;
+ if(q.includes("pronunciation")||q.includes("pronounce")||q.includes("how to say")||q.includes("say this")){
+  if(!w){t61AddBubble("Enter a Tamil or English word first.");return}
+  t61SetCurrent(w);speakTamilText(w.ta,.62);t61AddBubble(`Listen and repeat: ${w.ta}. Roman guide: ${w.roman||w.ta}.`);return;
  }
- if(q.includes("another example")||q.includes("more example")){
-  const w=found||t61Current;
-  if(!w){t61AddBubble("Select or mention a word first, and I will give another example.");return}
-  t61SetCurrent(w);const reply=t61Example(w,Math.floor(Math.random()*4));t61AddBubble(reply);return;
+ if(q.includes("example")){
+  if(!w){t61AddBubble("Mention a word first.");return}
+  t61SetCurrent(w);const ex=t70Examples(w)[Math.floor(Math.random()*t70Examples(w).length)];t61AddBubble(`${ex.ta} — ${ex.en}`);return;
  }
- if(q.includes("pronoun")||q.includes("say")||q.includes("speak")||q.includes("how do i")){
-  const w=found||t61Current;
-  if(!w){t61AddBubble("Mention a Tamil or English word so I can demonstrate its pronunciation.");return}
-  t61SetCurrent(w);speakTamilText(w.ta,.65);t61AddBubble(`Listen and repeat: ${w.ta}. Roman guide: ${w.roman||w.ta}.`);return;
+ if(q.includes("related")||q.includes("similar")){
+  if(!w){t61AddBubble("Mention a word first.");return}
+  t61SetCurrent(w);const r=t70Related(w);t61AddBubble(r.length?`Related ${w.cat} words: ${r.map(x=>`${x.ta} (${x.en})`).join(", ")}.`:"No related words are available.");return;
  }
- if(found){
-  t61SetCurrent(found);t61AddBubble(t61Explanation(found));return;
- }
- if(q.includes("hello")||q.includes("vanakkam")||q.includes("வணக்கம்")){
-  t61AddBubble("வணக்கம்! Mention a Tamil or English word, or ask me to show a random word.");return;
- }
- t61AddBubble("I could not identify that word in the offline database. Try entering the exact Tamil word, English meaning, Roman pronunciation, or category name.");
+ if(found){t61SetCurrent(found);t61AddBubble(t70Explain(found));return}
+ t61AddBubble("I could not match that request. Try: “meaning of யானை”, “pronounce water”, “example for அம்மா”, “show Animals”, or “quiz me”.");
  t61Stats();
 }
-function t61MakeQuiz(w){
- const others=g54Shuffle(words.filter(x=>x!==w)).slice(0,3),opts=g54Shuffle([w,...others]);
- $("teacherQuizBox").innerHTML=`<div class="teacherQuiz"><b>What is the English meaning of “${w.ta}”?</b><div class="teacherQuizOptions">${opts.map(x=>`<button data-t61-answer="${words.indexOf(x)}">${x.en}</button>`).join("")}</div></div>`;
- document.querySelectorAll("[data-t61-answer]").forEach(b=>b.onclick=()=>{
-  const ok=Number(b.dataset.t61Answer)===words.indexOf(w);
-  b.classList.add(ok?"correct":"wrong");
-  if(ok){t61State.quizCorrect++;t61Save();t61Stats();t61AddBubble("Correct! Excellent work.")}
-  else{document.querySelector(`[data-t61-answer="${words.indexOf(w)}"]`)?.classList.add("correct");t61AddBubble(`The correct answer is ${w.en}.`)}
-  document.querySelectorAll("[data-t61-answer]").forEach(x=>x.disabled=true);
- });
-}
-$("teacherAsk").onclick=()=>{t61Ask($("teacherInput").value);$("teacherInput").value=""};
-$("teacherInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("teacherAsk").click()});
-document.querySelectorAll("[data-teacher-prompt]").forEach(b=>b.onclick=()=>t61Ask(b.dataset.teacherPrompt));
-$("teacherUseCurrent").onclick=()=>{
- const w=filtered?.[idx]||words[0];t61SetCurrent(w);t61AddBubble(t61Explanation(w));
-};
-$("teacherPronounce").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.78);
-$("teacherSlow").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.48);
-$("teacherExample").onclick=()=>{if(t61Current)t61AddBubble(t61Example(t61Current,Math.floor(Math.random()*4)))};
-$("teacherMiniQuiz").onclick=()=>{if(t61Current)t61MakeQuiz(t61Current)};
-$("clearTeacherHistory").onclick=()=>{t61State.history=[];t61Save();t61RenderHistory()};
-const t61OldShow=showView;
-showView=function(id){t61OldShow(id);if(id==="teacherView"){t61Stats();t61RenderHistory();if(!t61Current)t61SetCurrent(filtered?.[idx]||words[0],false)}};
 
+$("teacherAsk").onclick=()=>{const input=$("teacherInput"),v=input.value;input.value="";t61Ask(v)};
+$("teacherInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("teacherAsk").click()}});
+document.querySelectorAll("[data-teacher-prompt]").forEach(b=>b.onclick=()=>t61Ask(b.dataset.teacherPrompt));
+$("teacherUseCurrent").onclick=()=>{const w=(typeof filtered!=="undefined"&&filtered[idx])||words[0];t61SetCurrent(w);t61AddBubble(t70Explain(w))};
+$("teacherPronounce").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.76);
+$("teacherSlow").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.46);
+$("teacherExample").onclick=()=>{if(t61Current){const ex=t70Examples(t61Current)[0];t61AddBubble(`${ex.ta} — ${ex.en}`)}};
+$("teacherMiniQuiz").onclick=()=>t61Current&&t61MakeQuiz(t61Current);
+$("clearTeacherHistory").onclick=()=>{t70State.history=[];t61Save();t61RenderHistory()};
+const t70OldShow=showView;
+showView=function(id){t70OldShow(id);if(id==="teacherView"){t61Stats();t61RenderHistory();if(!t61Current)t61SetCurrent((typeof filtered!=="undefined"&&filtered[idx])||words[0],false)}};
 document.querySelectorAll("[data-teacher-tab]").forEach(b=>b.onclick=()=>{
- const tab=b.dataset.teacherTab;
- document.querySelectorAll("[data-teacher-tab]").forEach(x=>x.classList.toggle("active",x===b));
- $("teacherChatTab").style.display=tab==="chat"?"block":"none";
- $("teacherTopicsTab").style.display=tab==="topics"?"block":"none";
+ const tab=b.dataset.teacherTab;document.querySelectorAll("[data-teacher-tab]").forEach(x=>x.classList.toggle("active",x===b));
+ $("teacherChatTab").style.display=tab==="chat"?"block":"none";$("teacherTopicsTab").style.display=tab==="topics"?"block":"none";
 });
 document.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{
- document.querySelector('[data-teacher-tab="chat"]').click();
- t61AddBubble(b.querySelector("b").textContent,"user");
- t61AddBubble(t61TopicText(b.dataset.topic),"bot");
+ document.querySelector('[data-teacher-tab="chat"]').click();t61AddBubble(b.querySelector("b").textContent,"user");t61AddBubble(t70TopicText(b.dataset.topic));
 });
-
-t61Stats();t61RenderHistory();
-
+t61Save();t61Stats();t61RenderHistory();
 
 // ---------- Version 7.0 Premium Dashboard ----------
 function v7CountMastered(){
