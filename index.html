@@ -199,7 +199,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 /* Version 8.0 — Visual Games and Listening Challenges */
 .gameHubHero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;margin-bottom:14px}
 .gameHubHero .muted{color:#ede9fe}
-.gameStatsGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:14px}
+.gameStatsGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:14px}
 .gameStat{padding:11px;border-radius:15px;background:rgba(255,255,255,.14)}
 .gameStat b{display:block;font-size:1.15rem}
 .gameModes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
@@ -463,7 +463,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
 .bottomNav{
  position:fixed!important;left:50%!important;bottom:10px!important;transform:translateX(-50%)!important;
  width:min(calc(100% - 22px),980px)!important;z-index:50!important;padding:9px!important;
- display:grid!important;grid-template-columns:repeat(6,1fr)!important;gap:4px!important;
+ display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:4px!important;
  background:rgba(255,255,255,.97)!important;backdrop-filter:blur(18px)!important;
  border:1px solid var(--v8-line)!important;border-radius:28px!important;
  box-shadow:0 20px 45px rgba(17,24,39,.17)!important;overflow:visible!important
@@ -479,7 +479,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
  main{padding:10px 10px 112px!important}
  .wordVisual,.pictureStage,.visualStage,.cardVisual{min-height:310px!important;height:39vh!important;padding:16px!important}
  .wordInfo,.wordDetails,.learnInfo{padding:20px!important}
- .bottomNav{grid-template-columns:repeat(6,1fr)!important}
+ .bottomNav{grid-template-columns:repeat(5,1fr)!important}
  .navBtn{font-size:.66rem!important}.navBtn span{font-size:1.28rem!important}
 }
 @media(max-width:430px){
@@ -545,7 +545,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
 
  <h2 class="v7SectionTitle">Quick actions</h2>
  <div class="v7QuickActions">
-  <button class="v7QuickCard" onclick="showView('teacherView')"><span class="icon">🧑‍🏫</span><b>Ask Tamil Teacher</b><small>Meaning, pronunciation, examples and mini tests</small></button>
+  
   <button class="v7QuickCard" onclick="showView('knowledgeView')"><span class="icon">🧭</span><b>Continue Knowledge</b><small>Structured subjects, categories and progress</small></button>
  </div>
 
@@ -558,7 +558,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
   <button class="v7Feature" onclick="showView('gamesView')"><span class="icon">🎮</span><b>Games</b><small>Memory, listening and picture challenges</small></button>
   <button class="v7Feature" onclick="showView('writingView')"><span class="icon">✍️</span><b>Writing Practice</b><small>Trace and practise Tamil writing</small></button>
   <button class="v7Feature" onclick="showView('dashboardView')"><span class="icon">📊</span><b>Progress</b><small>XP, mastery, streaks and achievements</small></button>
-  <button class="v7Feature" onclick="showView('teacherView')"><span class="icon">💡</span><b>Smart Review</b><small>Review recent words and test yourself</small></button>
+  
  </div>
 
  <div class="stats">
@@ -618,7 +618,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
   <div class="card panel">
    <div class="sectionHead"><h2>🧑‍🏫 Offline Tamil Teacher</h2><span class="muted">Version 8.0</span></div>
    <p class="muted">Ask for meanings, pronunciation, examples and quick tests using the built-in Tamil learning database.</p>
-   <button class="btn primary" onclick="showView('teacherView')">Open Tamil Teacher →</button>
+   
   </div>
  </div>
 
@@ -852,7 +852,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
 
 
 
-<section class="view" id="teacherView">
+<section class="view" id="teacherView" style="display:none">
  <div class="teacherHero">
   <h2>🧑‍🏫 Tamil Teacher</h2>
   <p class="muted">Search a Tamil or English word, hear it, understand it, and test yourself — fully offline.</p><div class="teacherStatus"><span>✓ Offline database</span><span>✓ Tamil & English search</span><span>✓ Intent-aware replies</span></div>
@@ -1000,7 +1000,7 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
  <button class="navBtn active" data-view="homeView"><span>🏠</span>Home</button>
  <button class="navBtn" data-view="learnView"><span>📖</span>Words</button>
  <button class="navBtn" data-view="galleryView"><span>🖼️</span>Gallery</button>
- <button class="navBtn" data-view="teacherView"><span>🧑‍🏫</span>Teacher</button>
+ 
  <button class="navBtn" data-view="knowledgeView"><span>🧭</span>Knowledge</button>
  <button class="navBtn" data-view="gamesView"><span>🎮</span>Games</button>
 </nav>
@@ -1024,7 +1024,7 @@ $("lessonGrid").innerHTML=[...new Set(words.map(w=>w.cat))].map(c=>{
 }).join("")+`<div class="lesson" data-cat="All"><div class="emoji">🔤</div><h3>All words</h3><p>${words.length} words</p></div>`;
 document.querySelectorAll(".lesson").forEach(l=>l.onclick=()=>{const c=l.dataset.cat;$("category").value=c;filtered=c==="All"?[...words]:words.filter(w=>w.cat===c);idx=0;renderWord();showView("learnView")});
 
-function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="quizView")makeQuiz();if(id==="gamesView")makeMatch();if(id==="progressView"){renderProgress();newTrace()}if(id==="sentencesView"){renderSentence();updateSentenceStats()}if(id==="knowledgeView"){k62ShowSubjects()}window.scrollTo({top:0,behavior:"smooth"})}
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="quizView")makeQuiz();if(id==="progressView"){renderProgress();newTrace()}if(id==="sentencesView"){renderSentence();updateSentenceStats()}if(id==="knowledgeView"){k62ShowSubjects()}window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $("continueBtn").onclick=()=>showView("learnView");
 function renderWord(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";$("wordCounter").textContent=`${idx+1} / ${filtered.length}`;const c=$("lessonContent");c.classList.remove("slideIn");void c.offsetWidth;c.classList.add("slideIn");const n=words.indexOf(w);recent=[n,...recent.filter(x=>x!==n)].slice(0,6);if(!viewed.has(n)){viewed.add(n);xp+=5;save()}else{save();updateStats()}renderRecent();renderAchievements()}
@@ -1063,9 +1063,23 @@ function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function makeQuiz(){answered=false;quizAnswer=words[Math.floor(Math.random()*words.length)];$("qWord").textContent=quizAnswer.ta;$("qFeedback").textContent="";$("qOptions").innerHTML="";shuffle([quizAnswer,...shuffle(words.filter(w=>w!==quizAnswer)).slice(0,3)]).forEach(o=>{const b=document.createElement("button");b.className="option";b.textContent=o.en;b.onclick=()=>{if(answered)return;answered=true;[...$("qOptions").children].forEach(x=>{if(x.textContent===quizAnswer.en)x.classList.add("correct")});if(o===quizAnswer){$("qFeedback").textContent="✅ Correct!";$("qFeedback").style.color="var(--ok)";addXP(10,"Quiz answer")}else{b.classList.add("wrong");$("qFeedback").textContent=`❌ Correct answer: ${quizAnswer.en}`;$("qFeedback").style.color="var(--bad)"}speak(quizAnswer)};$("qOptions").appendChild(b)})}
 $("nextQ").onclick=makeQuiz;
 let first=null,matched=0;
-function makeMatch(){first=null;matched=0;$("matchMsg").textContent="";const set=shuffle(words).slice(0,4),items=shuffle(set.flatMap((w,i)=>[{text:w.ta,key:i},{text:w.en,key:i}]));$("matchGrid").innerHTML="";items.forEach(it=>{const b=document.createElement("button");b.className="tile";b.textContent=it.text;b.dataset.key=it.key;b.onclick=()=>pick(b);$("matchGrid").appendChild(b)})}
-function pick(b){if(b.classList.contains("matched")||b===first)return;if(!first){first=b;b.style.borderColor="var(--p)"}else{if(b.dataset.key===first.dataset.key){b.classList.add("matched");first.classList.add("matched");matched++;if(matched===4){$("matchMsg").textContent="🎉 Excellent! All pairs matched.";addXP(20,"Matching game")}}else $("matchMsg").textContent="Try again.";first.style.borderColor="";first=null}}
-$("newMatch").onclick=makeMatch;
+function makeMatch(){
+ const msg=$("matchMsg"),grid=$("matchGrid");
+ if(!msg||!grid)return;
+ first=null;matched=0;msg.textContent="";
+ const set=shuffle(words).slice(0,4),items=shuffle(set.flatMap((w,i)=>[{text:w.ta,key:i},{text:w.en,key:i}]));
+ grid.innerHTML="";
+ items.forEach(it=>{const b=document.createElement("button");b.className="tile";b.textContent=it.text;b.dataset.key=it.key;b.onclick=()=>pick(b);grid.appendChild(b)});
+}
+function pick(b){
+ const msg=$("matchMsg");if(!msg)return;
+ if(b.classList.contains("matched")||b===first)return;
+ if(!first){first=b;b.style.borderColor="var(--p)";return}
+ if(b.dataset.key===first.dataset.key){b.classList.add("matched");first.classList.add("matched");matched++;if(matched===4){msg.textContent="🎉 Excellent! All pairs matched.";addXP(20,"Matching game")}}
+ else msg.textContent="Try again.";
+ first.style.borderColor="";first=null;
+}
+if($("newMatch")) $("newMatch").onclick=makeMatch;
 function renderProgress(){if(!$("progressList"))return;const cats=[...new Set(words.map(w=>w.cat))];$("progressList").innerHTML=cats.map(c=>{const list=words.filter(w=>w.cat===c),done=list.filter(w=>viewed.has(words.indexOf(w))).length;return `<div class="row"><span><b>${c}</b><br><span class="muted">${done}/${list.length} viewed</span></span><span>${Math.round(done/list.length*100)}%</span></div>`}).join("");const f=[...favs].map(i=>words[i]);$("favList").innerHTML=f.length?f.map(w=>`<div class="row"><span>${w.ta} — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Open</button></div>`).join(""):'<p class="muted">No favorites yet.</p>'}
 window.openWord=i=>{filtered=[...words];$("category").value="All";idx=i;renderWord();showView("learnView")};
 $("searchBtn").onclick=searchWords;$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchWords()});
@@ -1216,7 +1230,7 @@ if(localStorage.getItem("tl_dark")==="1"){document.body.classList.add("dark");$(
 function renderRecent(){
  if(!$("recentWords"))return;
  const list=recent.map(i=>words[i]).filter(Boolean);
- $("recentWords").innerHTML=list.length?list.map(w=>`<div class="lesson" data-recent="${words.indexOf(w)}"><div class="emoji">${w.emoji}</div><h3>${w.ta}</h3><p>${w.en}</p></div>`).join(""):`<div class="muted">Open a few words to see them here.</div>`;
+ if($("recentWords")) $("recentWords").innerHTML=list.length?list.map(w=>`<div class="lesson" data-recent="${words.indexOf(w)}"><div class="emoji">${w.emoji}</div><h3>${w.ta}</h3><p>${w.en}</p></div>`).join(""):`<div class="muted">Open a few words to see them here.</div>`;
  document.querySelectorAll("[data-recent]").forEach(el=>el.onclick=()=>{const i=Number(el.dataset.recent);filtered=[...words];idx=i;renderWord();showView("learnView")});
 }
 function renderAchievements(){
@@ -1231,7 +1245,7 @@ function renderAchievements(){
   ["🏆","All Words",learned>=total],
   ["🗂️","3 Categories",completed>=3]
  ];
- $("achievementGrid").innerHTML=badges.map(([icon,name,ok])=>`<div class="stat" style="opacity:${ok?1:.45}"><strong>${icon}</strong><span>${name}</span></div>`).join("");
+ if($("achievementGrid")) $("achievementGrid").innerHTML=badges.map(([icon,name,ok])=>`<div class="stat" style="opacity:${ok?1:.45}"><strong>${icon}</strong><span>${name}</span></div>`).join("");
 }
 
 
@@ -2216,6 +2230,55 @@ function v8EnhanceCurrentWord(){
 }
 document.addEventListener("DOMContentLoaded",()=>requestAnimationFrame(v8EnhanceCurrentWord));
 
+
+// ---------- Version 8.0 five-tab reliability controller ----------
+(function(){
+ const validViews=new Set(["homeView","learnView","galleryView","knowledgeView","gamesView"]);
+ function safeOpenView(id){
+  if(!validViews.has(id))id="homeView";
+  const target=document.getElementById(id);
+  if(!target)return;
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v===target));
+  document.querySelectorAll(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  try{
+   if(id==="learnView"){
+    if(typeof renderWord==="function")renderWord();
+    if(typeof v8EnhanceCurrentWord==="function")v8EnhanceCurrentWord();
+   }
+   if(id==="galleryView"&&typeof renderGallery==="function")renderGallery();
+   if(id==="knowledgeView"){
+    if(typeof k62ShowSubjects==="function")k62ShowSubjects();
+    else if(typeof k62RenderSubjects==="function")k62RenderSubjects();
+   }
+   if(id==="gamesView"&&typeof g54Stats==="function")g54Stats();
+   if(id==="homeView"&&typeof v7RefreshDashboard==="function")v7RefreshDashboard();
+  }catch(err){console.error("View initialization failed:",id,err)}
+  window.scrollTo(0,0);
+ }
+ window.showView=safeOpenView;
+ document.querySelectorAll(".navBtn").forEach(btn=>{
+  btn.onclick=()=>safeOpenView(btn.dataset.view);
+ });
+ document.querySelectorAll('[onclick*="teacherView"]').forEach(el=>el.remove());
+ window.addEventListener("DOMContentLoaded",()=>safeOpenView("homeView"));
+ window.addEventListener("error",e=>console.error("App error:",e.message));
+})();
+
 </script>
+
+<script>
+window.v8SelfTest=function(){
+ const ids=["homeView","learnView","galleryView","knowledgeView","gamesView"];
+ const result={};
+ ids.forEach(id=>{
+  try{showView(id);result[id]=document.getElementById(id)?.classList.contains("active")===true}catch(e){result[id]=false}
+ });
+ showView("homeView");
+ document.documentElement.setAttribute("data-v8-selftest",JSON.stringify(result));
+ return result;
+};
+setTimeout(()=>window.v8SelfTest(),300);
+</script>
+
 </body>
 </html>
