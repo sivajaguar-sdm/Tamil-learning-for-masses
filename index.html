@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#6d28d9">
-<title>தமிழ் கற்போம் — Tamil Learning App · Version 6.2</title>
+<title>தமிழ் கற்போம் — Tamil Learning App · Version 7.0</title>
 <style>
 :root{
  --p:#6d28d9;--pd:#4c1d95;--p2:#8b5cf6;--soft:#ede9fe;
@@ -87,7 +87,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
  .word{font-size:2.45rem}.example{padding:8px}.compactActions .btn{font-size:.82rem;padding:7px}
 }
 
-/* Version 6.2: common sentence course */
+/* Version 7.0: common sentence course */
 .sentenceHero{padding:20px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;border-radius:22px;margin-bottom:16px}
 .sentenceHero .muted{color:#ccfbf1}
 .sentenceToolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -119,11 +119,11 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 }
 
 
-/* Version 6.2 Rich Knowledge Explorer */
+/* Version 7.0 Rich Knowledge Explorer */
 .kHero{padding:22px;border-radius:24px;color:#fff;background:linear-gradient(135deg,#4338ca,#7c3aed,#db2777);margin-bottom:16px;position:relative;overflow:hidden}.kHero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-50px;top:-70px;background:rgba(255,255,255,.14);animation:kfloat 5s ease-in-out infinite}@keyframes kfloat{50%{transform:translateY(18px) scale(1.08)}}.kStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.kStat{padding:10px;border-radius:15px;background:rgba(255,255,255,.15)}.kStat b{display:block;font-size:1.25rem}.kCats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kCat{padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--card);cursor:pointer;transition:.2s}.kCat:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.1)}.kCat .ico{font-size:1.8rem}.kCat b{display:block;margin:5px 0}.kCat small{color:var(--muted)}.kBar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:9px}.kBar div{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899)}.kTools{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:14px 0}.kCard{min-height:455px;padding:24px;text-align:center;display:flex;flex-direction:column;justify-content:center;position:relative}.kCard.pop{animation:kpop .35s ease}@keyframes kpop{from{opacity:.25;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}.kEmoji{font-size:clamp(3rem,12vw,5.4rem);animation:kbob 3s ease-in-out infinite}@keyframes kbob{50%{transform:translateY(-7px)}}.kTa{font-size:clamp(1.9rem,7vw,3.2rem);font-weight:900;line-height:1.35;margin:12px 0 4px}.kRoman{color:var(--muted)}.kEn{font-size:clamp(1.1rem,4vw,1.45rem);font-weight:800;margin:5px 0 17px}.kFacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:650px;margin:0 auto 16px;width:100%;text-align:left}.kFact{padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}.kFact small{display:block;color:var(--muted)}.kExample{max-width:680px;margin:0 auto 17px;padding:13px;border-radius:14px;background:var(--soft)}.kActions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.kNav{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border-top:1px solid var(--line);padding:13px}.kNav button:last-child{justify-self:end}.kQuiz{padding:18px;margin-top:15px}.kOpts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kOpt{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--card);font-weight:750;cursor:pointer}.kOpt.correct{background:#dcfce7;border-color:#22c55e;color:#166534}.kOpt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}.kResult{text-align:center;min-height:25px;font-weight:800;margin-top:10px}.spark{position:fixed;width:8px;height:8px;border-radius:50%;z-index:9999;pointer-events:none;animation:spark 900ms ease-out forwards}@keyframes spark{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}@media(max-width:680px){.kCats,.kFacts,.kOpts{grid-template-columns:1fr}.kTools{grid-template-columns:1fr 1fr}.kTools select{grid-column:1/-1}.kCard{min-height:420px}}
 
 
-/* Version 6.2 — Picture Dictionary Framework */
+/* Version 7.0 — Picture Dictionary Framework */
 .picture{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .wordImage{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);object-fit:contain;border-radius:18px;opacity:0;transition:opacity .28s ease,transform .28s ease;transform:scale(.98)}
 .wordImage.loaded{opacity:1;transform:scale(1)}
@@ -167,7 +167,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.galleryGrid{grid-template-columns:repeat(2,1fr)}.galleryVisual{height:125px}.galleryTools{grid-template-columns:1fr}.galleryTools input{grid-column:auto}.galleryStats{grid-template-columns:1fr 1fr}.slideEmoji{font-size:6rem}}
 
 
-/* Version 6.2 — Built-in Core Picture Pack */
+/* Version 7.0 — Built-in Core Picture Pack */
 .builtinArt{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);border-radius:18px;overflow:hidden;display:none}
 .builtinArt.show{display:block;animation:artReveal .3s ease}
 @keyframes artReveal{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
@@ -183,7 +183,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.packSummary{grid-template-columns:1fr}}
 
 
-/* Version 6.2 — Complete Knowledge Picture Pack */
+/* Version 7.0 — Complete Knowledge Picture Pack */
 .knowledgeTypeBadge{position:absolute;left:12px;bottom:12px;z-index:3;background:rgba(15,23,42,.82);color:#fff;border-radius:999px;padding:5px 8px;font-size:.68rem;font-weight:850}
 .gallerySegment{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
 .gallerySegment button{border:1px solid var(--line);background:var(--card);color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
@@ -196,7 +196,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.coverageGrid{grid-template-columns:repeat(2,1fr)}}
 
 
-/* Version 6.2 — Visual Games and Listening Challenges */
+/* Version 7.0 — Visual Games and Listening Challenges */
 .gameHubHero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;margin-bottom:14px}
 .gameHubHero .muted{color:#ede9fe}
 .gameStatsGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:14px}
@@ -236,7 +236,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:480px){.gameStatsGrid{grid-template-columns:repeat(2,1fr)}.memoryGrid{grid-template-columns:repeat(2,1fr)}}
 
 
-/* Version 6.2 — Offline Tamil Teacher */
+/* Version 7.0 — Offline Tamil Teacher */
 .teacherHero{padding:24px;border-radius:26px;background:linear-gradient(135deg,#312e81,#7c3aed 52%,#c026d3);color:#fff;margin-bottom:15px;box-shadow:0 20px 45px #4c1d9530}
 .teacherHero .muted{color:#ede9fe}
 .teacherLayout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,.8fr);gap:14px}
@@ -304,7 +304,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.teacherInfoGrid{grid-template-columns:1fr}.teacherStats{grid-template-columns:repeat(2,1fr)}}
 
 
-/* Version 6.2 — Structured Knowledge Explorer */
+/* Version 7.0 — Structured Knowledge Explorer */
 .k62Hero{padding:24px;border-radius:24px;background:linear-gradient(135deg,#075985,#0891b2 55%,#0d9488);color:#fff;margin-bottom:15px}
 .k62Hero h2{margin:0 0 6px}.k62Hero p{margin:0;color:#cffafe}
 .k62Stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}.k62Stat{padding:10px;border-radius:14px;background:rgba(255,255,255,.14)}.k62Stat b{display:block;font-size:1.15rem}
@@ -322,17 +322,160 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 .k62Badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:#ecfeff;color:#155e75;font-size:.72rem;font-weight:850}
 @media(max-width:1000px){.k62SubjectGrid{grid-template-columns:repeat(2,1fr)}.k62Content{grid-template-columns:1fr}}@media(max-width:650px){.k62SubjectGrid,.k62SubGrid{grid-template-columns:1fr}.k62Toolbar{grid-template-columns:1fr 1fr}.k62Toolbar input{grid-column:1/-1}.k62Stats{grid-template-columns:repeat(2,1fr)}.k62InfoGrid,.k62Actions{grid-template-columns:1fr}}
 
+
+/* Version 7.0 — Premium Learning Experience */
+:root{
+ --v7-primary:#1e3a8a;
+ --v7-primary2:#2563eb;
+ --v7-accent:#0f766e;
+ --v7-success:#15803d;
+ --v7-warning:#c2410c;
+ --v7-bg:#f8fafc;
+ --v7-card:#ffffff;
+ --v7-line:#e2e8f0;
+ --v7-text:#0f172a;
+ --v7-muted:#64748b;
+ --v7-radius:22px;
+ --v7-shadow:0 14px 34px rgba(15,23,42,.08);
+}
+body{background:linear-gradient(180deg,#f8fafc,#eef2ff 45%,#f8fafc);color:var(--v7-text)}
+main{max-width:1240px;margin:auto;padding:18px}
+.card,.panel,.teacherPanel,.k62Card,.k62Panel{border-radius:var(--v7-radius)!important;border:1px solid var(--v7-line)!important;box-shadow:var(--v7-shadow)!important}
+.btn{border-radius:14px!important;font-weight:800!important}
+.btn.primary{background:linear-gradient(135deg,var(--v7-primary),var(--v7-primary2))!important}
+.sectionHead h2,.sectionHead h3{letter-spacing:-.02em}
+.muted{color:var(--v7-muted)!important}
+
+.v7Hero{padding:26px;border-radius:28px;background:linear-gradient(135deg,#0f172a,#1e3a8a 48%,#0f766e);color:#fff;box-shadow:0 24px 55px rgba(30,58,138,.22);margin-bottom:18px}
+.v7HeroTop{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.v7Hero h1{font-size:2rem;margin:0 0 6px;letter-spacing:-.03em}
+.v7Hero p{margin:0;color:#dbeafe;max-width:720px}
+.v7LevelChip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:850;white-space:nowrap}
+.v7HeroStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.v7HeroStat{padding:12px;border-radius:16px;background:rgba(255,255,255,.12)}
+.v7HeroStat b{display:block;font-size:1.2rem}
+.v7HomeGrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:16px}
+.v7Continue{padding:20px;border-radius:24px;background:var(--v7-card);border:1px solid var(--v7-line);box-shadow:var(--v7-shadow)}
+.v7ContinueHead{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.v7ProgressTrack{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:12px 0}
+.v7ProgressTrack span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#0f766e)}
+.v7QuickActions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.v7QuickCard{padding:16px;border-radius:20px;background:var(--v7-card);border:1px solid var(--v7-line);box-shadow:var(--v7-shadow);cursor:pointer;text-align:left;transition:.2s}
+.v7QuickCard:hover{transform:translateY(-2px)}
+.v7QuickCard .icon{font-size:1.7rem;display:block;margin-bottom:8px}
+.v7QuickCard b{display:block;font-size:1rem}
+.v7QuickCard small{display:block;color:var(--v7-muted);margin-top:4px}
+.v7FeatureGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.v7Feature{padding:18px;border-radius:22px;background:var(--v7-card);border:1px solid var(--v7-line);box-shadow:var(--v7-shadow);cursor:pointer;text-align:left;transition:.2s}
+.v7Feature:hover{transform:translateY(-3px)}
+.v7Feature .icon{font-size:2rem;display:block;margin-bottom:9px}
+.v7Feature b{display:block;font-size:1rem}
+.v7Feature small{display:block;color:var(--v7-muted);margin-top:5px;line-height:1.4}
+.v7Daily{padding:18px;border-radius:22px;background:linear-gradient(135deg,#ecfeff,#eff6ff);border:1px solid #bfdbfe}
+.v7DailyRow{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.v7GoalRing{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#2563eb 0 68%,#dbeafe 68% 100%);position:relative}
+.v7GoalRing:after{content:"";width:52px;height:52px;border-radius:50%;background:#fff;position:absolute}
+.v7GoalRing b{position:relative;z-index:1}
+.v7SectionTitle{margin:22px 0 10px;font-size:1.15rem}
+.v7NavHint{padding:10px 12px;border-radius:14px;background:#f1f5f9;color:#475569;font-size:.86rem}
+
+nav,.bottomNav{backdrop-filter:blur(14px)}
+.navBtn{border-radius:14px!important}
+.navBtn.active{background:#dbeafe!important;color:#1d4ed8!important}
+.teacherHero,.k62Hero{background:linear-gradient(135deg,#172554,#1d4ed8 55%,#0f766e)!important}
+.teacherQuickGrid button,.k62Sub.active{border-color:#93c5fd!important;background:#eff6ff!important}
+.teacherWordCard{border-radius:18px!important}
+.k62Subject,.k62Sub{transition:.2s}
+.k62Subject:hover,.k62Sub:hover{transform:translateY(-2px)}
+input,select,textarea{border-radius:14px!important;border:1px solid var(--v7-line)!important;background:#fff!important}
+.star{border-radius:999px!important}
+.v7FooterNote{text-align:center;color:var(--v7-muted);font-size:.82rem;padding:18px 0 6px}
+
+@media(max-width:1000px){
+ .v7FeatureGrid{grid-template-columns:repeat(2,1fr)}
+ .v7HomeGrid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ main{padding:12px}
+ .v7Hero{padding:20px}
+ .v7HeroTop{display:block}
+ .v7LevelChip{display:inline-block;margin-top:12px}
+ .v7HeroStats{grid-template-columns:repeat(2,1fr)}
+ .v7FeatureGrid,.v7QuickActions{grid-template-columns:1fr}
+ .v7Hero h1{font-size:1.55rem}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
- <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Structured Knowledge Explorer · Version 6.2</div></div>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Premium Learning Experience · Version 7.0</div></div>
  <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
 </header>
 
 <main>
 <section class="view active" id="homeView">
+ <div class="v7Hero">
+  <div class="v7HeroTop">
+   <div>
+    <h1>வணக்கம்! Continue your Tamil journey</h1>
+    <p>Learn words, explore knowledge, practise speaking, and strengthen memory through guided lessons and games.</p>
+   </div>
+   <div class="v7LevelChip">Version 7.0 · Premium UI</div>
+  </div>
+  <div class="v7HeroStats">
+   <div class="v7HeroStat"><b id="v7Xp">0</b><small>Total XP</small></div>
+   <div class="v7HeroStat"><b id="v7Streak">0</b><small>Day streak</small></div>
+   <div class="v7HeroStat"><b id="v7Mastered">0</b><small>Items mastered</small></div>
+   <div class="v7HeroStat"><b id="v7Progress">0%</b><small>Overall progress</small></div>
+  </div>
+ </div>
+
+ <div class="v7HomeGrid">
+  <div class="v7Continue">
+   <div class="v7ContinueHead">
+    <div>
+     <small class="muted">CONTINUE LEARNING</small>
+     <h2 id="v7ContinueTitle" style="margin:4px 0 2px">Tamil vocabulary</h2>
+     <div class="muted" id="v7ContinueMeta">Resume your current lesson</div>
+    </div>
+    <button class="btn primary" id="v7ContinueBtn">Continue →</button>
+   </div>
+   <div class="v7ProgressTrack"><span id="v7ContinueBar" style="width:35%"></span></div>
+   <div class="v7NavHint">Recommended next: complete one short lesson, listen twice, then attempt a quiz.</div>
+  </div>
+
+  <div class="v7Daily">
+   <div class="v7DailyRow">
+    <div>
+     <small class="muted">TODAY'S GOAL</small>
+     <h3 style="margin:4px 0">Learn 10 items</h3>
+     <div class="muted" id="v7GoalText">Keep your learning streak active.</div>
+    </div>
+    <div class="v7GoalRing"><b id="v7GoalPercent">68%</b></div>
+   </div>
+  </div>
+ </div>
+
+ <h2 class="v7SectionTitle">Quick actions</h2>
+ <div class="v7QuickActions">
+  <button class="v7QuickCard" onclick="showView('teacherView')"><span class="icon">🧑‍🏫</span><b>Ask Tamil Teacher</b><small>Meaning, pronunciation, examples and mini tests</small></button>
+  <button class="v7QuickCard" onclick="showView('knowledgeView')"><span class="icon">🧭</span><b>Continue Knowledge</b><small>Structured subjects, categories and progress</small></button>
+ </div>
+
+ <h2 class="v7SectionTitle">Explore learning</h2>
+ <div class="v7FeatureGrid">
+  <button class="v7Feature" onclick="showView('learnView')"><span class="icon">📖</span><b>Learn Tamil</b><small>Vocabulary, pronunciation and examples</small></button>
+  <button class="v7Feature" onclick="showView('spokenView')"><span class="icon">🗣️</span><b>Spoken Tamil</b><small>Everyday phrases and conversation practice</small></button>
+  <button class="v7Feature" onclick="showView('knowledgeView')"><span class="icon">🌍</span><b>Knowledge Explorer</b><small>Culture, geography, nature and more</small></button>
+  <button class="v7Feature" onclick="showView('pictureView')"><span class="icon">🖼️</span><b>Picture Dictionary</b><small>Visual learning with image-first cards</small></button>
+  <button class="v7Feature" onclick="showView('gamesView')"><span class="icon">🎮</span><b>Games</b><small>Memory, listening and picture challenges</small></button>
+  <button class="v7Feature" onclick="showView('writingView')"><span class="icon">✍️</span><b>Writing Practice</b><small>Trace and practise Tamil writing</small></button>
+  <button class="v7Feature" onclick="showView('dashboardView')"><span class="icon">📊</span><b>Progress</b><small>XP, mastery, streaks and achievements</small></button>
+  <button class="v7Feature" onclick="showView('teacherView')"><span class="icon">💡</span><b>Smart Review</b><small>Review recent words and test yourself</small></button>
+ </div>
+
  <div class="stats">
   <div class="stat"><b id="xpStat">0</b><span>XP earned</span></div>
   <div class="stat"><b id="streakStat">1</b><span>Day streak</span></div>
@@ -378,7 +521,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 
  <div class="section">
   <div class="card panel">
-   <div class="sectionHead"><h2>🖼️ Picture Dictionary</h2><span class="muted">Version 6.2</span></div>
+   <div class="sectionHead"><h2>🖼️ Picture Dictionary</h2><span class="muted">Version 7.0</span></div>
    <p class="muted">Browse all 491 words in a visual gallery, filter revision lists, and use automatic Tamil slideshows.</p>
    <button class="btn primary" onclick="showView('galleryView')">Open picture dictionary →</button>
   </div>
@@ -388,7 +531,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
  
  <div class="section">
   <div class="card panel">
-   <div class="sectionHead"><h2>🧑‍🏫 Offline Tamil Teacher</h2><span class="muted">Version 6.2</span></div>
+   <div class="sectionHead"><h2>🧑‍🏫 Offline Tamil Teacher</h2><span class="muted">Version 7.0</span></div>
    <p class="muted">Ask for meanings, pronunciation, examples and quick tests using the built-in Tamil learning database.</p>
    <button class="btn primary" onclick="showView('teacherView')">Open Tamil Teacher →</button>
   </div>
@@ -396,7 +539,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 
 <div class="section">
   <div class="card panel">
-   <div class="sectionHead"><h2>🎮 Visual Games & Listening</h2><span class="muted">Version 6.2</span></div>
+   <div class="sectionHead"><h2>🎮 Visual Games & Listening</h2><span class="muted">Version 7.0</span></div>
    <p class="muted">Play picture quizzes, listening challenges, memory matching and timed rounds using all 491 entries.</p>
    <button class="btn primary" onclick="showView('gamesView')">Open games →</button>
   </div>
@@ -767,6 +910,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
  </div>
 </section>
 
+<div class="v7FooterNote">Tamil Learning for the Masses · Offline-first learning platform</div>
 </main>
 </div>
 
@@ -1012,7 +1156,7 @@ function renderAchievements(){
 }
 
 
-// ---------- Version 6.2 sentence course ----------
+// ---------- Version 7.0 sentence course ----------
 let sentenceFiltered=[...sentences],sentenceIndex=0;
 let sentenceViewed=new Set(JSON.parse(localStorage.getItem("tl_sentence_viewed")||"[]"));
 let sentenceFavs=new Set(JSON.parse(localStorage.getItem("tl_sentence_favs")||"[]"));
@@ -1167,7 +1311,7 @@ $("sentenceSwipeArea").addEventListener("touchend",e=>{
 renderSentence();
 
 
-// Version 6.2 Structured Knowledge Explorer
+// Version 7.0 Structured Knowledge Explorer
 const k62Subjects=[
 {id:"tamil",title:"Tamil Language & Culture",ta:"தமிழ் மொழி மற்றும் பண்பாடு",icon:"📜",cats:["Tamil Months","Tamil Zodiac","Tamil Sangam Books"]},
 {id:"tn",title:"Tamil Nadu",ta:"தமிழ்நாடு",icon:"🛕",cats:["Tamil Nadu Districts"]},
@@ -1203,7 +1347,7 @@ function kShuffle(a){return[...a].sort(()=>Math.random()-.5)}
 function kNewQ(){const pool=k62CatWords(k62Category),ans=pool[Math.floor(Math.random()*pool.length)];kAnswer=ans.en;const opts=kShuffle([ans.en,...kShuffle(pool.filter(w=>w.en!==ans.en)).slice(0,3).map(w=>w.en)]);kQ++;$("kQNum").textContent=`Question ${kQ}`;$("kQuestion").textContent=`What is the English meaning of “${ans.ta}”?`;$("kOpts").innerHTML=opts.map(o=>`<button class="kOpt" data-ka="${o}">${o}</button>`).join("");$("kResult").textContent="";$("kNextQ").style.display="none";document.querySelectorAll("[data-ka]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-ka]").forEach(x=>x.disabled=true);if(b.dataset.ka===kAnswer){b.classList.add("correct");$("kResult").textContent="Correct! அருமை!";kScore++;xp+=3;save()}else{$("kResult").textContent=`Correct answer: ${kAnswer}`}kSave();kStats();$("kNextQ").style.display="block"})}
 $("kQuizBtn").onclick=()=>{const p=$("kQuiz");p.style.display=p.style.display==="none"?"block":"none";if(p.style.display==="block")kNewQ()};$("kNextQ").onclick=kNewQ;k62ShowSubjects();
 
-// ---------- Version 6.2 Picture Dictionary Framework ----------
+// ---------- Version 7.0 Picture Dictionary Framework ----------
 const v51Categories=[...new Set(words.map(w=>w.cat))].sort((a,b)=>a.localeCompare(b));
 const v51Mastery=JSON.parse(localStorage.getItem("tl_v51_mastery")||"{}");
 const v51ImageFound=new Set(JSON.parse(localStorage.getItem("tl_v51_images_found")||"[]"));
@@ -1348,7 +1492,7 @@ showView=function(id){v51OriginalShowView(id);if(id==="galleryView"){v51ApplyGal
 renderGallery();
 
 
-// ---------- Version 6.2 Built-in Core Picture Pack ----------
+// ---------- Version 7.0 Built-in Core Picture Pack ----------
 const v52CoreLimit=Math.min(220,words.length);
 const v52Palette=[
  ["#ede9fe","#c4b5fd","#7c3aed"],["#dbeafe","#93c5fd","#2563eb"],
@@ -1476,7 +1620,7 @@ renderGallery();
 
 
 
-// ---------- Version 6.2 Zodiac Pictures and Country Flags ----------
+// ---------- Version 7.0 Zodiac Pictures and Country Flags ----------
 const v541CountryCodes={
  'India':'IN',
  'Sri Lanka':'LK',
@@ -1609,7 +1753,7 @@ words.forEach(w=>{
  }
 });
 
-// ---------- Version 6.2 Complete Knowledge Picture Pack ----------
+// ---------- Version 7.0 Complete Knowledge Picture Pack ----------
 const v53KnowledgeStart=Math.min(220,words.length);
 const v53FactsViewed=new Set(JSON.parse(localStorage.getItem("tl_v53_facts_viewed")||"[]"));
 let v53Segment="All";
@@ -1800,7 +1944,7 @@ v51RenderSlide=function(){
 renderGallery();
 
 
-// ---------- Version 6.2 Visual Games & Listening ----------
+// ---------- Version 7.0 Visual Games & Listening ----------
 const g54State=JSON.parse(localStorage.getItem("tl_v54_games")||'{"gamesPlayed":0,"correct":0,"answered":0,"bestStreak":0,"listeningCorrect":0,"listeningAnswered":0,"bestTimed":0,"mistakes":[],"badges":[]}');
 let g54Mode="pictureToWord",g54Pool=[],g54Current=null,g54Options=[],g54Question=0,g54Correct=0,g54Streak=0,g54Timer=null,g54TimeLeft=0,g54Locked=false,g54Memory=[];
 function g54Save(){localStorage.setItem("tl_v54_games",JSON.stringify(g54State))}
@@ -1950,7 +2094,7 @@ showView=function(id){g54OldShow(id);if(id==="gamesView")g54Stats()};
 g54Stats();
 
 
-// ---------- Version 6.2 specialised country and zodiac artwork ----------
+// ---------- Version 7.0 specialised country and zodiac artwork ----------
 const v541BaseKnowledgeSVG=v53KnowledgeSVG;
 v53KnowledgeSVG=function(w,compact=false){
  const kind=v53CategoryKind(w.cat);
@@ -1989,7 +2133,7 @@ v53KnowledgeSVG=function(w,compact=false){
 renderGallery();
 
 
-// ---------- Version 6.2 Offline Tamil Teacher ----------
+// ---------- Version 7.0 Offline Tamil Teacher ----------
 
 function t61WordType(w){
  const c=String(w.cat||"").toLowerCase();
@@ -2173,6 +2317,41 @@ document.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{
 });
 
 t61Stats();t61RenderHistory();
+
+
+// ---------- Version 7.0 Premium Dashboard ----------
+function v7CountMastered(){
+ let total=0;
+ try{
+  total+=JSON.parse(localStorage.getItem("tl_k_mastered")||"[]").length;
+ }catch(e){}
+ try{
+  const raw=JSON.parse(localStorage.getItem("tl_mastered")||"[]");
+  if(Array.isArray(raw)) total+=raw.length;
+ }catch(e){}
+ return total;
+}
+function v7RefreshDashboard(){
+ const mastered=v7CountMastered();
+ const totalItems=Math.max(1,words.length);
+ const progress=Math.min(100,Math.round(mastered/totalItems*100));
+ if($("v7Xp"))$("v7Xp").textContent=xp||0;
+ if($("v7Streak"))$("v7Streak").textContent=streak||0;
+ if($("v7Mastered"))$("v7Mastered").textContent=mastered;
+ if($("v7Progress"))$("v7Progress").textContent=`${progress}%`;
+ if($("v7ContinueBar"))$("v7ContinueBar").style.width=`${Math.max(8,progress)}%`;
+ const learnedToday=Math.min(10,Number(localStorage.getItem("tl_today_count")||7));
+ const goal=Math.round(learnedToday/10*100);
+ if($("v7GoalPercent"))$("v7GoalPercent").textContent=`${goal}%`;
+ if($("v7GoalText"))$("v7GoalText").textContent=`${learnedToday} of 10 learning items completed today.`;
+}
+if($("v7ContinueBtn"))$("v7ContinueBtn").onclick=()=>showView("learnView");
+const v7OldShow=showView;
+showView=function(id){
+ v7OldShow(id);
+ if(id==="homeView")v7RefreshDashboard();
+};
+v7RefreshDashboard();
 
 renderWord();updateStats();renderRecent();renderAchievements();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(()=>{resizeCanvas();if(!traceWord.textContent.trim())newTrace()},250);
 window.addEventListener("resize",resizeCanvas);
