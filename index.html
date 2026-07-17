@@ -269,12 +269,46 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:900px){.teacherLayout{grid-template-columns:1fr}.teacherStats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.teacherInputRow{grid-template-columns:1fr auto}.teacherInputRow .teacherSpeakInput{display:none}.teacherActions{grid-template-columns:1fr}}
 
+
+/* Clean Tamil Teacher UI */
+.teacherHero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;margin-bottom:14px}
+.teacherHero h2{margin:0 0 6px}.teacherHero p{margin:0}
+.teacherLayout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:14px}
+.teacherPanel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:var(--shadow)}
+.teacherTopBar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.teacherTopBar input{min-width:0}
+.teacherQuickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.teacherQuickGrid button{padding:10px;border-radius:14px;border:1px solid #ddd6fe;background:#faf5ff;color:#5b21b6;font-weight:800;cursor:pointer}
+.teacherChat{height:290px;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:9px;background:var(--soft);border-radius:16px}
+.teacherBubble{max-width:90%;padding:11px 13px;border-radius:16px;line-height:1.5}
+.teacherBubble.bot{align-self:flex-start;background:#fff;border:1px solid #ddd6fe;color:#3b0764}
+.teacherBubble.user{align-self:flex-end;background:#6d28d9;color:#fff}
+.teacherWordCard{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:14px;border-radius:17px;background:#faf5ff;border:1px solid #ddd6fe;text-align:left}
+.teacherWordIcon{font-size:3rem}.teacherWordCard .bigTamil{font-size:1.8rem;font-weight:900;color:#4c1d95}
+.teacherInfoGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.teacherInfo{padding:11px;border-radius:14px;background:var(--soft);border:1px solid var(--line)}
+.teacherInfo h4{margin:0 0 5px;font-size:.85rem;color:var(--pd)}.teacherInfo p{margin:0;font-size:.9rem;line-height:1.45}
+.teacherActions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.teacherStats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.teacherStat{padding:10px;border-radius:13px;background:rgba(255,255,255,.14)}.teacherStat b{display:block}
+.teacherHistory{max-height:190px;overflow:auto;display:grid;gap:7px}
+.teacherHistoryItem{padding:9px 10px;border-radius:12px;background:var(--soft);border:1px solid var(--line);text-align:left;cursor:pointer}
+.teacherTopicList{display:grid;gap:8px}
+.teacherTopicBtn{padding:10px 12px;border-radius:13px;background:#fff;border:1px solid #ddd6fe;text-align:left;cursor:pointer}
+.teacherTopicBtn b{display:block;color:#4c1d95}
+.teacherEmpty{padding:28px;text-align:center;color:var(--muted)}
+.teacherTabs{display:flex;gap:8px;margin-bottom:10px}
+.teacherTabs button{padding:8px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:800;cursor:pointer}
+.teacherTabs button.active{background:#6d28d9;color:#fff;border-color:#6d28d9}
+@media(max-width:900px){.teacherLayout{grid-template-columns:1fr}.teacherQuickGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.teacherInfoGrid{grid-template-columns:1fr}.teacherStats{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
- <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Offline Tamil Teacher · Version 6.1</div></div>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Clean Tamil Teacher · Version 6.1</div></div>
  <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
 </header>
 
@@ -573,63 +607,69 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 
 
 
+
 <section class="view" id="teacherView">
  <div class="teacherHero">
-  <h2>🧑‍🏫 Offline Tamil Teacher</h2>
-  <p class="muted">Ask about any word, meaning, pronunciation, example or category. The teacher works without internet using the app’s built-in learning database.</p>
+  <h2>🧑‍🏫 Tamil Teacher</h2>
+  <p class="muted">Search a Tamil or English word, hear it, understand it, and test yourself — fully offline.</p>
   <div class="teacherStats">
-   <div class="teacherStat"><b id="teacherQuestions">0</b><small>Questions asked</small></div>
-   <div class="teacherStat"><b id="teacherWordsExplained">0</b><small>Words explained</small></div>
+   <div class="teacherStat"><b id="teacherQuestions">0</b><small>Questions</small></div>
+   <div class="teacherStat"><b id="teacherWordsExplained">0</b><small>Words learned</small></div>
    <div class="teacherStat"><b id="teacherQuizCorrect">0</b><small>Quiz correct</small></div>
-   <div class="teacherStat"><b id="teacherSessions">0</b><small>Teacher sessions</small></div>
+   <div class="teacherStat"><b id="teacherSessions">0</b><small>Sessions</small></div>
   </div>
  </div>
-
  <div class="teacherLayout">
   <div class="teacherPanel">
-   <div class="sectionHead"><h3>Ask the teacher</h3><span class="muted">Tamil + English supported</span></div>
-   <div class="quickPrompts">
-    <button class="quickPrompt" data-teacher-prompt="Explain this word">Explain this word</button>
-    <button class="quickPrompt" data-teacher-prompt="Give another example">Another example</button>
-    <button class="quickPrompt" data-teacher-prompt="How do I pronounce this?">Pronunciation</button>
-    <button class="quickPrompt" data-teacher-prompt="Test me">Test me</button>
-    <button class="quickPrompt" data-teacher-prompt="Show a random word">Random word</button>
+   <div class="teacherTopBar">
+    <input id="teacherInput" placeholder="Search Tamil or English word...">
+    <button class="btn primary" id="teacherAsk">Search</button>
    </div>
-   <div class="teacherChat" id="teacherChat">
-    <div class="teacherBubble bot">வணக்கம்! I am your offline Tamil teacher. Select a word from the app or ask me about a Tamil or English word.</div>
+   <div class="teacherQuickGrid">
+    <button data-teacher-prompt="Show a random word">🎲 Random word</button>
+    <button data-teacher-prompt="Explain this word">💡 Explain</button>
+    <button data-teacher-prompt="How do I pronounce this?">🔊 Pronounce</button>
+    <button data-teacher-prompt="Test me">📝 Test me</button>
    </div>
-   <div class="teacherInputRow">
-    <input id="teacherInput" placeholder="Example: Explain யானை or What is river in Tamil?">
-    <button class="btn primary" id="teacherAsk">Ask</button>
-    <button class="btn soft teacherSpeakInput" id="teacherReadReply">🔊 Reply</button>
+   <div class="teacherTabs">
+    <button class="active" data-teacher-tab="chat">Teacher</button>
+    <button data-teacher-tab="topics">Learning topics</button>
    </div>
-   <div class="teacherOfflineNote">This teacher uses built-in rules and the 491-entry knowledge database. It does not send your questions to an online AI service.</div>
+   <div id="teacherChatTab">
+    <div class="teacherChat" id="teacherChat">
+     <div class="teacherBubble bot">வணக்கம்! Search for a word such as “யானை”, “river”, or “India”.</div>
+    </div>
+   </div>
+   <div id="teacherTopicsTab" style="display:none">
+    <div class="teacherTopicList">
+     <button class="teacherTopicBtn" data-topic="alphabet"><b>Tamil alphabet</b><span class="muted">Uyir, Mei and Uyirmei letters</span></button>
+     <button class="teacherTopicBtn" data-topic="pronunciation"><b>Pronunciation basics</b><span class="muted">How to read Tamil sounds clearly</span></button>
+     <button class="teacherTopicBtn" data-topic="grammar"><b>Basic grammar</b><span class="muted">Nouns, verbs, adjectives and simple sentences</span></button>
+     <button class="teacherTopicBtn" data-topic="conversation"><b>Daily conversation</b><span class="muted">Greetings and common spoken Tamil</span></button>
+     <button class="teacherTopicBtn" data-topic="culture"><b>Tamil culture</b><span class="muted">Months, literature and traditions</span></button>
+    </div>
+   </div>
   </div>
-
   <div>
    <div class="teacherPanel">
-    <div class="sectionHead"><h3>Current learning word</h3><button class="btn soft" id="teacherUseCurrent">Use current word</button></div>
-    <div class="teacherWordCard" id="teacherWordCard">
-     <div class="muted">No word selected yet</div>
-    </div>
-    <div class="teacherSections" id="teacherDetails"></div>
+    <div class="sectionHead"><h3>Word information</h3><button class="btn soft" id="teacherUseCurrent">Use current app word</button></div>
+    <div id="teacherWordCard" class="teacherEmpty">Search for a word to see its full explanation.</div>
+    <div id="teacherDetails"></div>
     <div class="teacherActions">
      <button class="btn primary" id="teacherPronounce">🔊 Pronounce</button>
-     <button class="btn soft" id="teacherSlow">🐢 Slow audio</button>
-     <button class="btn soft" id="teacherExample">Example</button>
-     <button class="btn soft" id="teacherMiniQuiz">Mini quiz</button>
+     <button class="btn soft" id="teacherSlow">🐢 Slow</button>
+     <button class="btn soft" id="teacherExample">💬 Example</button>
+     <button class="btn soft" id="teacherMiniQuiz">📝 Mini quiz</button>
     </div>
     <div id="teacherQuizBox"></div>
    </div>
-
    <div class="teacherPanel" style="margin-top:14px">
-    <div class="sectionHead"><h3>Recent explanations</h3><button class="btn soft" id="clearTeacherHistory">Clear</button></div>
+    <div class="sectionHead"><h3>Recent words</h3><button class="btn soft" id="clearTeacherHistory">Clear</button></div>
     <div class="teacherHistory" id="teacherHistory"></div>
    </div>
   </div>
  </div>
 </section>
-
 <section class="view" id="gamesView">
  <div class="gameHubHero">
   <h2>🎮 Visual Games & Listening</h2>
@@ -1900,6 +1940,44 @@ renderGallery();
 
 
 // ---------- Version 6.1 Offline Tamil Teacher ----------
+
+function t61WordType(w){
+ const c=String(w.cat||"").toLowerCase();
+ if(c.includes("action")||c.includes("verb"))return "Verb / action word";
+ if(c.includes("place")||c.includes("country")||c.includes("district")||c.includes("river"))return "Proper noun / place name";
+ if(c.includes("month")||c.includes("zodiac"))return "Calendar or cultural term";
+ if(c.includes("bird")||c.includes("animal")||c.includes("fruit")||c.includes("vegetable"))return "Common noun";
+ return "Vocabulary or knowledge term";
+}
+function t61UsageTip(w){
+ return v53IsKnowledge(w)?`Use “${w.ta}” when naming or discussing ${w.cat.toLowerCase()}.`:`Say “${w.ta}” clearly, then use it in a short sentence. Repeat it three times.`;
+}
+function t61RelatedWords(w){
+ const r=words.filter(x=>x!==w&&x.cat===w.cat).slice(0,3);
+ return r.length?r.map(x=>`${x.ta} (${x.en})`).join(", "):"No related words available.";
+}
+function t61PronunciationTip(w){
+ return `Say it slowly as “${w.roman||w.ta}”. Listen once, repeat twice, then say it at normal speed.`;
+}
+function t61ExtraInfo(w){
+ const kind=v53CategoryKind(w.cat);
+ if(kind==="country")return `${w.en} is in the world-countries section. Its national flag is shown on the visual card.`;
+ if(kind==="zodiac")return `${w.en} is one of the twelve zodiac signs, represented by ${w.zodiacLabel||"a traditional symbol"}.`;
+ if(kind==="month")return `${w.en} belongs to the traditional Tamil calendar.`;
+ if(kind==="book")return `${w.en} is part of the Tamil Sangam literature collection.`;
+ return v53IsKnowledge(w)?v53Fact(w):`This word belongs to the ${w.cat} category.`;
+}
+function t61TopicText(topic){
+ const t={
+  alphabet:"Tamil has 12 Uyir letters, 18 Mei letters and combined Uyirmei letters. Learn vowels first, consonants next, and combinations last.",
+  pronunciation:"Separate words into clear sound groups. Listen slowly, copy the sound, and then repeat at normal speed. Notice short and long vowels.",
+  grammar:"Start with nouns and verbs. A basic Tamil sentence expresses who or what is involved and what happens. Add describing and location words gradually.",
+  conversation:"Begin with greetings, introductions, requests, directions, food and family phrases. Listen, repeat and then replace one word.",
+  culture:"Tamil language learning includes Tamil months, Sangam literature, festivals, geography and traditional expressions."
+ };
+ return t[topic]||"Select a topic.";
+}
+
 const t61State=JSON.parse(localStorage.getItem("tl_v61_teacher")||'{"questions":0,"explained":[],"quizCorrect":0,"sessions":0,"history":[]}');
 let t61Current=null,t61LastReply="";
 t61State.sessions++;t61Save();
@@ -1950,11 +2028,17 @@ function t61SetCurrent(w,record=true){
   t61State.history=t61State.history.slice(0,30);
   t61Save();
  }
- $("teacherWordCard").innerHTML=`<div style="font-size:3.2rem">${w.emoji||"📘"}</div><div class="bigTamil">${w.ta}</div><b>${w.en}</b><div class="muted">${w.roman||""}</div>`;
- $("teacherDetails").innerHTML=`
-  <div class="teacherSection"><h4>Meaning</h4><div>${w.en}</div></div>
-  <div class="teacherSection"><h4>Category and level</h4><div>${w.cat} · ${v51Level(w)}</div></div>
-  <div class="teacherSection"><h4>Example or fact</h4><div>${v53IsKnowledge(w)?v53Fact(w):t61Example(w)}</div></div>`;
+ $("teacherWordCard").className="teacherWordCard";
+ $("teacherWordCard").innerHTML=`<div class="teacherWordIcon">${w.emoji||"📘"}</div><div><div class="bigTamil">${w.ta}</div><b>${w.en}</b><div class="muted">${w.roman||""}</div></div>`;
+ $("teacherDetails").innerHTML=`<div class="teacherInfoGrid">
+  <div class="teacherInfo"><h4>Meaning</h4><p>${w.en}</p></div>
+  <div class="teacherInfo"><h4>Word type</h4><p>${t61WordType(w)}</p></div>
+  <div class="teacherInfo"><h4>Category and level</h4><p>${w.cat} · ${v51Level(w)}</p></div>
+  <div class="teacherInfo"><h4>Pronunciation tip</h4><p>${t61PronunciationTip(w)}</p></div>
+  <div class="teacherInfo"><h4>Usage guidance</h4><p>${t61UsageTip(w)}</p></div>
+  <div class="teacherInfo"><h4>Related words</h4><p>${t61RelatedWords(w)}</p></div>
+  <div class="teacherInfo" style="grid-column:1/-1"><h4>Example or knowledge note</h4><p>${v53IsKnowledge(w)?t61ExtraInfo(w):t61Example(w)}</p></div>
+ </div>`;
  t61RenderHistory();t61Stats();
 }
 function t61Stats(){
@@ -2015,7 +2099,6 @@ function t61MakeQuiz(w){
 $("teacherAsk").onclick=()=>{t61Ask($("teacherInput").value);$("teacherInput").value=""};
 $("teacherInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("teacherAsk").click()});
 document.querySelectorAll("[data-teacher-prompt]").forEach(b=>b.onclick=()=>t61Ask(b.dataset.teacherPrompt));
-$("teacherReadReply").onclick=()=>{if(t61LastReply)speakTamilText(t61LastReply,.78)};
 $("teacherUseCurrent").onclick=()=>{
  const w=filtered?.[idx]||words[0];t61SetCurrent(w);t61AddBubble(t61Explanation(w));
 };
@@ -2026,6 +2109,19 @@ $("teacherMiniQuiz").onclick=()=>{if(t61Current)t61MakeQuiz(t61Current)};
 $("clearTeacherHistory").onclick=()=>{t61State.history=[];t61Save();t61RenderHistory()};
 const t61OldShow=showView;
 showView=function(id){t61OldShow(id);if(id==="teacherView"){t61Stats();t61RenderHistory();if(!t61Current)t61SetCurrent(filtered?.[idx]||words[0],false)}};
+
+document.querySelectorAll("[data-teacher-tab]").forEach(b=>b.onclick=()=>{
+ const tab=b.dataset.teacherTab;
+ document.querySelectorAll("[data-teacher-tab]").forEach(x=>x.classList.toggle("active",x===b));
+ $("teacherChatTab").style.display=tab==="chat"?"block":"none";
+ $("teacherTopicsTab").style.display=tab==="topics"?"block":"none";
+});
+document.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{
+ document.querySelector('[data-teacher-tab="chat"]').click();
+ t61AddBubble(b.querySelector("b").textContent,"user");
+ t61AddBubble(t61TopicText(b.dataset.topic),"bot");
+});
+
 t61Stats();t61RenderHistory();
 
 renderWord();updateStats();renderRecent();renderAchievements();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(()=>{resizeCanvas();if(!traceWord.textContent.trim())newTrace()},250);
