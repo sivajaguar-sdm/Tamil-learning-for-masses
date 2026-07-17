@@ -181,6 +181,170 @@ main{
  .letterGrid{grid-template-columns:repeat(2,1fr);gap:10px}
  .letterCard{padding:16px 10px}
 }
+
+/* Writing animation */
+.cardActions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin-top:13px
+}
+.cardActions .speakButton{margin-top:0}
+.writeButton{
+ width:100%;
+ min-height:44px;
+ border:0;
+ border-radius:14px;
+ background:#fff7e8;
+ color:#9a5b00;
+ font-weight:850
+}
+.writeButton:active{background:#ffedc7}
+
+.writeOverlay{
+ position:fixed;
+ inset:0;
+ z-index:100;
+ background:rgba(18,20,31,.64);
+ backdrop-filter:blur(7px);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:16px
+}
+.writeOverlay.open{display:flex}
+.writeDialog{
+ width:min(100%,560px);
+ max-height:92vh;
+ overflow:auto;
+ background:#fff;
+ border-radius:28px;
+ padding:20px;
+ box-shadow:0 28px 70px rgba(0,0,0,.28)
+}
+.writeTop{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px
+}
+.writeTop h2{
+ margin:0;
+ font-size:1.18rem
+}
+.closeWrite{
+ width:42px;
+ height:42px;
+ border:1px solid var(--line);
+ background:#fff;
+ border-radius:14px;
+ font-size:1.25rem
+}
+.writeStage{
+ position:relative;
+ margin-top:16px;
+ min-height:330px;
+ border-radius:24px;
+ overflow:hidden;
+ display:grid;
+ place-items:center;
+ background:
+  linear-gradient(90deg,transparent 49.6%,rgba(91,33,182,.10) 50%,transparent 50.4%),
+  linear-gradient(transparent 49.6%,rgba(91,33,182,.10) 50%,transparent 50.4%),
+  radial-gradient(circle at 50% 50%,#fff,#f5f0ff);
+ border:1px solid #e7defc
+}
+.writeStage svg{
+ width:92%;
+ height:300px;
+ overflow:visible
+}
+.traceLetter{
+ font-family:"Noto Sans Tamil","Nirmala UI",sans-serif;
+ font-size:210px;
+ font-weight:800;
+ text-anchor:middle;
+ dominant-baseline:middle;
+ fill:transparent;
+ stroke:var(--primary);
+ stroke-width:3.2;
+ stroke-linecap:round;
+ stroke-linejoin:round;
+ stroke-dasharray:1500;
+ stroke-dashoffset:1500;
+ animation:drawTamilLetter 3.1s ease-in-out forwards,fillTamilLetter .75s ease 2.65s forwards
+}
+.guideLetter{
+ font-family:"Noto Sans Tamil","Nirmala UI",sans-serif;
+ font-size:210px;
+ font-weight:800;
+ text-anchor:middle;
+ dominant-baseline:middle;
+ fill:none;
+ stroke:#d9d2ea;
+ stroke-width:8;
+ opacity:.52
+}
+.pen{
+ position:absolute;
+ top:23%;
+ left:15%;
+ font-size:2.2rem;
+ transform:rotate(-22deg);
+ animation:penMove 3.1s ease-in-out forwards;
+ filter:drop-shadow(0 5px 5px rgba(0,0,0,.18))
+}
+@keyframes drawTamilLetter{
+ 0%{stroke-dashoffset:1500}
+ 100%{stroke-dashoffset:0}
+}
+@keyframes fillTamilLetter{
+ to{fill:rgba(91,33,182,.12)}
+}
+@keyframes penMove{
+ 0%{left:14%;top:24%;opacity:1}
+ 22%{left:55%;top:16%}
+ 48%{left:70%;top:48%}
+ 72%{left:34%;top:68%}
+ 94%{left:66%;top:72%;opacity:1}
+ 100%{left:68%;top:72%;opacity:0}
+}
+.writeName{
+ text-align:center;
+ margin-top:14px;
+ font-size:1rem;
+ color:var(--muted)
+}
+.writeName b{
+ color:var(--primary);
+ font-size:1.45rem
+}
+.writeControls{
+ display:grid;
+ grid-template-columns:1fr 1fr 1fr;
+ gap:9px;
+ margin-top:17px
+}
+.writeControls button{
+ min-height:47px;
+ border-radius:15px;
+ border:1px solid var(--line);
+ background:#fff;
+ font-weight:850
+}
+.writeControls .replayWrite{
+ background:var(--primary);
+ color:#fff;
+ border-color:var(--primary)
+}
+@media(max-width:430px){
+ .writeDialog{padding:16px;border-radius:24px}
+ .writeStage{min-height:280px}
+ .writeStage svg{height:255px}
+ .traceLetter,.guideLetter{font-size:180px}
+ .writeControls{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -233,7 +397,7 @@ main{
     <div class="letter">ஃ</div>
     <div class="sound">Aytham</div>
     <div class="example">ஃ</div>
-    <button class="speakButton" data-speak="ஃ">🔊 Hear</button>
+    <div class="cardActions"><button class="speakButton" data-speak="ஃ">🔊 Hear</button><button class="writeButton" data-write="ஃ" data-sound="Aytham">✍️ Write</button></div>
    </article>
   </div>
  </section>
@@ -244,6 +408,29 @@ main{
  </div>
 
  <div class="voiceStatus" id="voiceStatus">Preparing Tamil pronunciation…</div>
+
+ <div class="writeOverlay" id="writeOverlay" role="dialog" aria-modal="true" aria-labelledby="writeTitle">
+  <div class="writeDialog">
+   <div class="writeTop">
+    <h2 id="writeTitle">Write the letter</h2>
+    <button class="closeWrite" id="closeWrite" aria-label="Close">×</button>
+   </div>
+   <div class="writeStage" id="writeStage">
+    <svg viewBox="0 0 420 300" aria-label="Tamil letter writing animation">
+     <text class="guideLetter" id="guideLetter" x="210" y="150"></text>
+     <text class="traceLetter" id="traceLetter" x="210" y="150"></text>
+    </svg>
+    <div class="pen" id="pen">✏️</div>
+   </div>
+   <div class="writeName"><b id="writeLetterLabel"></b><br><span id="writeSoundLabel"></span></div>
+   <div class="writeControls">
+    <button class="replayWrite" id="replayWrite">↻ Replay</button>
+    <button id="hearWrite">🔊 Pronounce</button>
+    <button id="doneWrite">✓ Done</button>
+   </div>
+  </div>
+ </div>
+
 </main>
 
 <script>
@@ -312,7 +499,10 @@ function createCard([letter,sound,example]){
    <div class="letter">${letter}</div>
    <div class="sound">${sound}</div>
    <div class="example">${example}</div>
-   <button class="speakButton" data-speak="${letter}">🔊 Hear</button>
+   <div class="cardActions">
+    <button class="speakButton" data-speak="${letter}">🔊 Hear</button>
+    <button class="writeButton" data-write="${letter}" data-sound="${sound}">✍️ Write</button>
+   </div>
  </article>`;
 }
 
@@ -327,6 +517,58 @@ document.addEventListener("click",event=>{
 document.getElementById("playVowels").addEventListener("click",()=>{
  speakTamil(vowels.map(item=>item[0]).join(" "),.58);
 });
+
+
+let currentWriteLetter="";
+let currentWriteSound="";
+
+function restartWriteAnimation(){
+ const stage=document.getElementById("writeStage");
+ const oldTrace=document.getElementById("traceLetter");
+ const oldPen=document.getElementById("pen");
+
+ const newTrace=oldTrace.cloneNode(true);
+ oldTrace.replaceWith(newTrace);
+
+ const newPen=oldPen.cloneNode(true);
+ oldPen.replaceWith(newPen);
+}
+
+function openWriteAnimation(letter,sound){
+ currentWriteLetter=letter;
+ currentWriteSound=sound||"";
+ document.getElementById("guideLetter").textContent=letter;
+ document.getElementById("traceLetter").textContent=letter;
+ document.getElementById("writeLetterLabel").textContent=letter;
+ document.getElementById("writeSoundLabel").textContent=sound||"";
+ document.getElementById("writeOverlay").classList.add("open");
+ document.body.style.overflow="hidden";
+ restartWriteAnimation();
+}
+
+function closeWriteAnimation(){
+ document.getElementById("writeOverlay").classList.remove("open");
+ document.body.style.overflow="";
+}
+
+document.addEventListener("click",event=>{
+ const writeButton=event.target.closest("[data-write]");
+ if(writeButton){
+  openWriteAnimation(writeButton.dataset.write,writeButton.dataset.sound);
+ }
+});
+
+document.getElementById("replayWrite").addEventListener("click",restartWriteAnimation);
+document.getElementById("hearWrite").addEventListener("click",()=>speakTamil(currentWriteLetter));
+document.getElementById("doneWrite").addEventListener("click",closeWriteAnimation);
+document.getElementById("closeWrite").addEventListener("click",closeWriteAnimation);
+document.getElementById("writeOverlay").addEventListener("click",event=>{
+ if(event.target.id==="writeOverlay")closeWriteAnimation();
+});
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape")closeWriteAnimation();
+});
+
 
 loadVoices();
 if("speechSynthesis" in window)speechSynthesis.onvoiceschanged=loadVoices;
