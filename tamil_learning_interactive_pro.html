@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6d28d9">
+<title>தமிழ் கற்போம் — Interactive Tamil Learning</title>
+<style>
+:root{--p:#6d28d9;--pd:#4c1d95;--s:#ede9fe;--bg:#f8f7ff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--ok:#15803d;--bad:#b91c1c}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Tamil","Latha",sans-serif;background:linear-gradient(#f5f3ff,#fff);color:var(--ink);min-height:100vh}
+.app{max-width:980px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:16px}
+h1{margin:0;font-size:clamp(1.4rem,5vw,2.2rem)}.sub,.muted{color:var(--muted)}.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:white;border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:.85rem}
+.tabs,.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.btn,select{border:1px solid var(--line);border-radius:13px;background:#fff;padding:11px 14px;font:inherit;cursor:pointer}.btn{font-weight:750}.btn.primary{background:var(--p);border-color:var(--p);color:#fff}.btn.soft{background:var(--s);color:var(--pd);border-color:transparent}.btn.active{background:var(--p);color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 14px 35px #312e811a;overflow:hidden}.view{display:none}.view.active{display:block}
+.learn{display:grid;grid-template-columns:280px 1fr}.visual{min-height:450px;background:linear-gradient(145deg,#ede9fe,#fdf4ff);display:flex;align-items:center;justify-content:center;font-size:8rem}.content{padding:28px}
+.badge{display:inline-block;background:var(--s);color:var(--pd);padding:6px 10px;border-radius:99px;font-weight:750;font-size:.82rem}.word{font-size:clamp(3.5rem,10vw,6.2rem);color:var(--pd);line-height:1.15;margin:18px 0 5px}.roman{font-size:1.3rem;font-weight:800}.meaning{font-size:1.1rem;color:var(--muted);margin:4px 0 18px}.example{background:#fafafa;border-left:5px solid var(--p);padding:15px;border-radius:11px}.ta{font-size:1.25rem;font-weight:800}.highlight{background:#fde68a;border-radius:5px;padding:0 3px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;border-top:1px solid var(--line)}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--p);width:0}
+.panel{padding:24px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{padding:15px;border:2px solid var(--line);border-radius:14px;background:#fff;text-align:left;font-weight:750}.correct{border-color:#22c55e!important;background:#f0fdf4!important}.wrong{border-color:#ef4444!important;background:#fef2f2!important}.center{text-align:center}.big{font-size:4rem;color:var(--pd);margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.tile{min-height:92px;border:2px solid var(--line);border-radius:15px;background:#fff;font-size:1.3rem;font-weight:800}.tile.matched{background:#dcfce7;border-color:#22c55e;opacity:.7}
+.canvasWrap{border:2px dashed #c4b5fd;border-radius:18px;overflow:hidden;background:#fff}canvas{display:block;width:100%;height:330px;touch-action:none}
+.recordBox{background:#fafafa;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:14px}audio{width:100%;margin-top:10px}
+.star{font-size:1.4rem;background:none;border:none;cursor:pointer}.footer{text-align:center;color:var(--muted);font-size:.82rem;margin:14px}
+@media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.learn{grid-template-columns:1fr}.visual{min-height:190px;font-size:5.5rem}.content{padding:21px}.options{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top">
+  <div><h1>தமிழ் கற்போம்</h1><div class="sub">Learn Tamil words, pronunciation and usage</div></div>
+  <div class="stats"><span class="pill" id="viewStat">Viewed: 0/20</span><span class="pill" id="favStat">⭐ 0</span><span class="pill" id="streakStat">🔥 1 day</span></div>
+ </div>
+ <div class="progress"><div class="fill" id="fill"></div></div>
+ <div class="tabs">
+  <button class="btn active" data-view="learnView">📘 Learn</button>
+  <button class="btn" data-view="quizView">🧠 Quiz</button>
+  <button class="btn" data-view="matchView">🎮 Match</button>
+  <button class="btn" data-view="writeView">✍️ Write</button>
+  <button class="btn" data-view="favView">⭐ Favorites</button>
+ </div>
+
+ <section class="card">
+  <div class="view active" id="learnView">
+   <div class="toolbar" style="padding:0 16px">
+    <select id="category"></select>
+    <button class="btn soft" id="speedBtn">🐢 Slow: Off</button>
+   </div>
+   <div class="learn">
+    <div class="visual" id="emoji">👩</div>
+    <div class="content">
+     <div style="display:flex;justify-content:space-between;align-items:center"><span class="badge" id="catBadge">Family</span><button class="star" id="favBtn">☆</button></div>
+     <div class="word" id="word">அம்மா</div>
+     <div class="roman" id="roman">Ammaa</div>
+     <div class="meaning" id="meaning">Mother</div>
+     <div class="example"><div class="ta" id="exTa"></div><div class="muted" id="exEn"></div></div>
+     <div class="actions">
+      <button class="btn primary" id="hearWord">🔊 Hear word</button>
+      <button class="btn soft" id="hearExample">🗣️ Hear example</button>
+     </div>
+     <div class="recordBox">
+      <b>Pronunciation practice</b>
+      <div class="muted" style="font-size:.88rem;margin:5px 0">Record yourself, then compare with the model voice.</div>
+      <button class="btn" id="recordBtn">🎙️ Start recording</button>
+      <audio id="recording" controls hidden></audio>
+     </div>
+     <div class="muted" id="voiceStatus" style="margin-top:10px;font-size:.85rem"></div>
+    </div>
+   </div>
+   <div class="nav"><button class="btn" id="prev">← Previous</button><button class="btn" id="next">Next →</button></div>
+  </div>
+
+  <div class="view panel" id="quizView">
+   <h2>Meaning Quiz</h2><div class="center"><div class="big" id="qWord"></div></div>
+   <div class="options" id="qOptions"></div><div id="qFeedback" style="font-weight:800;margin:14px 0"></div>
+   <button class="btn primary" id="nextQ">Next question</button>
+  </div>
+
+  <div class="view panel" id="matchView">
+   <h2>Matching Game</h2><p class="muted">Match each Tamil word with its English meaning.</p>
+   <div class="grid" id="matchGrid"></div>
+   <div id="matchMsg" style="font-weight:800;margin:14px 0"></div><button class="btn primary" id="newMatch">New game</button>
+  </div>
+
+  <div class="view panel" id="writeView">
+   <h2>Writing Practice</h2><div class="center"><div class="big" id="traceWord"></div><div class="muted">Trace or copy this word below.</div></div>
+   <div class="canvasWrap"><canvas id="canvas"></canvas></div>
+   <div class="actions"><button class="btn soft" id="clearCanvas">Clear</button><button class="btn" id="newTrace">New word</button></div>
+  </div>
+
+  <div class="view panel" id="favView">
+   <h2>Favorite Words</h2><div id="favList"></div>
+  </div>
+ </section>
+ <div class="footer">Works offline. Tamil speech quality depends on voices installed on your device. Microphone recording may require Chrome permission.</div>
+</div>
+
+<script>
+const words=[
+{ta:"அம்மா",roman:"Ammaa",en:"Mother",cat:"Family",emoji:"👩",exTa:"என் அம்மா அன்பானவர்.",exEn:"My mother is loving."},
+{ta:"அப்பா",roman:"Appaa",en:"Father",cat:"Family",emoji:"👨",exTa:"என் அப்பா வேலைக்கு செல்கிறார்.",exEn:"My father goes to work."},
+{ta:"அண்ணன்",roman:"Annan",en:"Elder brother",cat:"Family",emoji:"🧑",exTa:"என் அண்ணன் புத்தகம் படிக்கிறார்.",exEn:"My elder brother is reading a book."},
+{ta:"தங்கை",roman:"Thangai",en:"Younger sister",cat:"Family",emoji:"👧",exTa:"என் தங்கை விளையாடுகிறாள்.",exEn:"My younger sister is playing."},
+{ta:"நாய்",roman:"Naai",en:"Dog",cat:"Animals",emoji:"🐶",exTa:"நாய் வேகமாக ஓடுகிறது.",exEn:"The dog runs fast."},
+{ta:"பூனை",roman:"Poonai",en:"Cat",cat:"Animals",emoji:"🐱",exTa:"பூனை பால் குடிக்கிறது.",exEn:"The cat drinks milk."},
+{ta:"யானை",roman:"Yaanai",en:"Elephant",cat:"Animals",emoji:"🐘",exTa:"யானை பெரிய விலங்கு.",exEn:"The elephant is a big animal."},
+{ta:"பறவை",roman:"Paravai",en:"Bird",cat:"Animals",emoji:"🐦",exTa:"பறவை வானில் பறக்கிறது.",exEn:"The bird flies in the sky."},
+{ta:"சோறு",roman:"Soru",en:"Cooked rice",cat:"Food",emoji:"🍚",exTa:"நான் சோறு சாப்பிடுகிறேன்.",exEn:"I eat rice."},
+{ta:"பால்",roman:"Paal",en:"Milk",cat:"Food",emoji:"🥛",exTa:"குழந்தை பால் குடிக்கிறது.",exEn:"The child drinks milk."},
+{ta:"பழம்",roman:"Pazham",en:"Fruit",cat:"Food",emoji:"🍎",exTa:"பழம் உடலுக்கு நல்லது.",exEn:"Fruit is good for the body."},
+{ta:"தண்ணீர்",roman:"Thanneer",en:"Water",cat:"Food",emoji:"💧",exTa:"நான் தண்ணீர் குடிக்கிறேன்.",exEn:"I drink water."},
+{ta:"சிவப்பு",roman:"Sivappu",en:"Red",cat:"Colours",emoji:"🔴",exTa:"இந்த மலர் சிவப்பு நிறம்.",exEn:"This flower is red."},
+{ta:"நீலம்",roman:"Neelam",en:"Blue",cat:"Colours",emoji:"🔵",exTa:"வானம் நீலமாக இருக்கிறது.",exEn:"The sky is blue."},
+{ta:"பச்சை",roman:"Pachchai",en:"Green",cat:"Colours",emoji:"🟢",exTa:"இலை பச்சை நிறம்.",exEn:"The leaf is green."},
+{ta:"மஞ்சள்",roman:"Manjal",en:"Yellow",cat:"Colours",emoji:"🟡",exTa:"சூரியகாந்தி மஞ்சள் நிறம்.",exEn:"The sunflower is yellow."},
+{ta:"ஓடு",roman:"Odu",en:"Run",cat:"Actions",emoji:"🏃",exTa:"நான் தினமும் ஓடுகிறேன்.",exEn:"I run every day."},
+{ta:"படி",roman:"Padi",en:"Read / Study",cat:"Actions",emoji:"📖",exTa:"நான் தமிழ் படிக்கிறேன்.",exEn:"I study Tamil."},
+{ta:"சிரி",roman:"Siri",en:"Smile / Laugh",cat:"Actions",emoji:"😊",exTa:"குழந்தை அழகாக சிரிக்கிறது.",exEn:"The child smiles beautifully."},
+{ta:"தூங்கு",roman:"Thoongu",en:"Sleep",cat:"Actions",emoji:"😴",exTa:"நான் இரவில் தூங்குகிறேன்.",exEn:"I sleep at night."}
+];
+const $=id=>document.getElementById(id); let filtered=[...words],idx=0,slow=false,voices=[];
+const viewed=new Set(JSON.parse(localStorage.getItem("tw_viewed")||"[]"));const favs=new Set(JSON.parse(localStorage.getItem("tw_favs")||"[]"));
+function save(){localStorage.setItem("tw_viewed",JSON.stringify([...viewed]));localStorage.setItem("tw_favs",JSON.stringify([...favs]));$("viewStat").textContent=`Viewed: ${viewed.size}/${words.length}`;$("favStat").textContent=`⭐ ${favs.size}`;$("fill").style.width=(viewed.size/words.length*100)+"%"}
+function initStreak(){const today=new Date().toDateString(),last=localStorage.getItem("tw_last"),st=+localStorage.getItem("tw_streak")||0;if(last!==today){const y=new Date(Date.now()-86400000).toDateString();localStorage.setItem("tw_streak",last===y?st+1:1);localStorage.setItem("tw_last",today)}$("streakStat").textContent=`🔥 ${localStorage.getItem("tw_streak")||1} day`}
+["All",...new Set(words.map(x=>x.cat))].forEach(c=>{let o=document.createElement("option");o.value=c;o.textContent=c==="All"?"All categories":c;$("category").appendChild(o)});
+function render(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";viewed.add(words.indexOf(w));save()}
+function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found; transliteration fallback will be used."}
+function speak(w,example=false){if(!("speechSynthesis"in window))return alert("Speech is not supported.");speechSynthesis.cancel();const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));const u=new SpeechSynthesisUtterance();u.rate=slow?.5:.75;if(tv){u.voice=tv;u.lang=tv.lang;u.text=example?w.exTa:w.ta}else{u.lang="en-IN";u.text=example?w.exEn:w.roman}speechSynthesis.speak(u);if(example&&tv)karaoke(w)}
+function karaoke(w){const parts=w.exTa.split(" "),el=$("exTa");let i=0;el.innerHTML=parts.map((p,j)=>`<span id="k${j}">${p}</span>`).join(" ");const timer=setInterval(()=>{parts.forEach((_,j)=>$("k"+j)?.classList.remove("highlight"));$("k"+i)?.classList.add("highlight");i++;if(i>=parts.length){clearInterval(timer);setTimeout(()=>el.textContent=w.exTa,700)}},Math.max(450,(slow?950:650)))}
+$("hearWord").onclick=()=>speak(filtered[idx]);$("hearExample").onclick=()=>speak(filtered[idx],true);$("prev").onclick=()=>{idx=(idx-1+filtered.length)%filtered.length;render()};$("next").onclick=()=>{idx=(idx+1)%filtered.length;render()};
+$("category").onchange=e=>{filtered=e.target.value==="All"?[...words]:words.filter(w=>w.cat===e.target.value);idx=0;render()};$("speedBtn").onclick=()=>{slow=!slow;$("speedBtn").textContent=`🐢 Slow: ${slow?"On":"Off"}`};
+$("favBtn").onclick=()=>{const n=words.indexOf(filtered[idx]);favs.has(n)?favs.delete(n):favs.add(n);render()};
+document.querySelectorAll(".tabs .btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs .btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(b.dataset.view).classList.add("active");if(b.dataset.view==="quizView")makeQuiz();if(b.dataset.view==="matchView")makeMatch();if(b.dataset.view==="writeView")newTrace();if(b.dataset.view==="favView")showFavs()});
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}let qAns=false;
+function makeQuiz(){qAns=false;const q=words[Math.floor(Math.random()*words.length)];$("qWord").textContent=q.ta;$("qFeedback").textContent="";$("qOptions").innerHTML="";shuffle([q,...shuffle(words.filter(x=>x!==q)).slice(0,3)]).forEach(o=>{let b=document.createElement("button");b.className="option";b.textContent=o.en;b.onclick=()=>{if(qAns)return;qAns=true;[...$("qOptions").children].forEach(x=>{if(x.textContent===q.en)x.classList.add("correct")});if(o===q){$("qFeedback").textContent="✅ Correct!";$("qFeedback").style.color="var(--ok)"}else{b.classList.add("wrong");$("qFeedback").textContent=`❌ Correct answer: ${q.en}`;$("qFeedback").style.color="var(--bad)"}speak(q)};$("qOptions").appendChild(b)})}$("nextQ").onclick=makeQuiz;
+let first=null,matched=0;
+function makeMatch(){first=null;matched=0;$("matchMsg").textContent="";let set=shuffle(words).slice(0,4),items=shuffle(set.flatMap((w,i)=>[{text:w.ta,key:i},{text:w.en,key:i}]));$("matchGrid").innerHTML="";items.forEach(it=>{let b=document.createElement("button");b.className="tile";b.textContent=it.text;b.dataset.key=it.key;b.onclick=()=>pickTile(b);$("matchGrid").appendChild(b)})}
+function pickTile(b){if(b.classList.contains("matched")||b===first)return;if(!first){first=b;b.style.borderColor="var(--p)"}else{if(b.dataset.key===first.dataset.key){b.classList.add("matched");first.classList.add("matched");matched++;if(matched===4)$("matchMsg").textContent="🎉 Excellent! All pairs matched."}else{$("matchMsg").textContent="Try again."}first.style.borderColor="";first=null}}$("newMatch").onclick=makeMatch;
+const canvas=$("canvas"),ctx=canvas.getContext("2d");let drawing=false;
+function resize(){const r=canvas.getBoundingClientRect();canvas.width=r.width*devicePixelRatio;canvas.height=r.height*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineWidth=6;ctx.lineCap="round";ctx.strokeStyle="#4c1d95"}window.addEventListener("resize",resize);
+function pos(e){const r=canvas.getBoundingClientRect(),t=e.touches?.[0]||e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
+canvas.onpointerdown=e=>{drawing=true;let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};canvas.onpointermove=e=>{if(!drawing)return;let p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()};window.onpointerup=()=>drawing=false;
+function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height)}$("clearCanvas").onclick=clearCanvas;function newTrace(){clearCanvas();$("traceWord").textContent=words[Math.floor(Math.random()*words.length)].ta}$("newTrace").onclick=newTrace;
+function showFavs(){let list=[...favs].map(i=>words[i]);$("favList").innerHTML=list.length?list.map(w=>`<div class="pill" style="display:inline-block;margin:6px;font-size:1rem">${w.ta} — ${w.en}</div>`).join(""):'<p class="muted">No favorites yet. Tap ☆ on a word to save it.</p>'}
+let recorder,chunks=[];
+$("recordBtn").onclick=async()=>{try{if(!recorder||recorder.state==="inactive"){const stream=await navigator.mediaDevices.getUserMedia({audio:true});recorder=new MediaRecorder(stream);chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:"audio/webm"}),a=$("recording");a.src=URL.createObjectURL(blob);a.hidden=false;stream.getTracks().forEach(t=>t.stop())};recorder.start();$("recordBtn").textContent="⏹️ Stop recording"}else{recorder.stop();$("recordBtn").textContent="🎙️ Start recording"}}catch(e){alert("Microphone access was unavailable. Open this page in Chrome and allow microphone permission.")}};
+initStreak();render();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(resize,200);
+</script>
+</body>
+</html>
