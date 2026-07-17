@@ -217,28 +217,30 @@ function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.
 document.querySelectorAll(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $("continueBtn").onclick=()=>showView("learnView");
 function renderWord(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";$("wordCounter").textContent=`${idx+1} / ${filtered.length}`;const c=$("lessonContent");c.classList.remove("slideIn");void c.offsetWidth;c.classList.add("slideIn");const n=words.indexOf(w);recent=[n,...recent.filter(x=>x!==n)].slice(0,6);if(!viewed.has(n)){viewed.add(n);xp+=5;save()}else{save();updateStats()}renderRecent();renderAchievements()}
-function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found. Tamil sentences will use the device’s ta-IN fallback voice."}
+function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found. The app will still request Tamil pronunciation using ta-IN, but installing a Tamil system voice gives the best result."}
 function speak(w,example=false){
  if(!("speechSynthesis"in window))return alert("Speech is not supported.");
  speechSynthesis.cancel();
- const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));
+
+ const tamilVoice=voices.find(v=>{
+   const lang=(v.lang||"").toLowerCase();
+   return lang==="ta-in"||lang.startsWith("ta");
+ });
+
  const u=new SpeechSynthesisUtterance();
  u.rate=slow?.5:.75;
+ u.pitch=1;
+ u.volume=1;
 
- if(example){
-   // Sentence audio must always use the Tamil example sentence.
-   u.text=w.exTa;
-   u.lang="ta-IN";
-   if(tv)u.voice=tv;
- }else if(tv){
-   u.voice=tv;
-   u.lang=tv.lang||"ta-IN";
-   u.text=w.ta;
- }else{
-   // Keep the readable transliteration fallback for individual words.
-   u.lang="en-IN";
-   u.text=w.roman;
+ // Always speak Tamil script. Never fall back to English transliteration.
+ u.text=example?w.exTa:w.ta;
+ u.lang="ta-IN";
+
+ if(tamilVoice){
+   u.voice=tamilVoice;
+   u.lang=tamilVoice.lang||"ta-IN";
  }
+
  speechSynthesis.speak(u);
 }
 $("hearWord").onclick=()=>speak(filtered[idx]);$("hearExample").onclick=()=>speak(filtered[idx],true);
