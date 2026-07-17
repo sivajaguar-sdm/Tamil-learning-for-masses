@@ -240,7 +240,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 <body>
 <div class="app">
 <header>
- <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Visual Games & Listening · Version 5.4</div></div>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Visual Games, Zodiac Pictures & Country Flags · Version 5.4</div></div>
  <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
 </header>
 
@@ -1283,6 +1283,140 @@ v51RenderSlide=function(){
 renderGallery();
 
 
+
+// ---------- Version 5.4 Zodiac Pictures and Country Flags ----------
+const v541CountryCodes={
+ 'India':'IN',
+ 'Sri Lanka':'LK',
+ 'Nepal':'NP',
+ 'Bhutan':'BT',
+ 'Bangladesh':'BD',
+ 'Pakistan':'PK',
+ 'Afghanistan':'AF',
+ 'China':'CN',
+ 'Japan':'JP',
+ 'South Korea':'KR',
+ 'North Korea':'KP',
+ 'Mongolia':'MN',
+ 'Myanmar':'MM',
+ 'Thailand':'TH',
+ 'Malaysia':'MY',
+ 'Singapore':'SG',
+ 'Indonesia':'ID',
+ 'Philippines':'PH',
+ 'Vietnam':'VN',
+ 'Cambodia':'KH',
+ 'Laos':'LA',
+ 'Brunei':'BN',
+ 'Maldives':'MV',
+ 'Iran':'IR',
+ 'Iraq':'IQ',
+ 'Saudi Arabia':'SA',
+ 'United Arab Emirates':'AE',
+ 'Qatar':'QA',
+ 'Kuwait':'KW',
+ 'Oman':'OM',
+ 'Yemen':'YE',
+ 'Israel':'IL',
+ 'Jordan':'JO',
+ 'Lebanon':'LB',
+ 'Turkey':'TR',
+ 'Russia':'RU',
+ 'United Kingdom':'GB',
+ 'Ireland':'IE',
+ 'France':'FR',
+ 'Germany':'DE',
+ 'Italy':'IT',
+ 'Spain':'ES',
+ 'Portugal':'PT',
+ 'Netherlands':'NL',
+ 'Belgium':'BE',
+ 'Switzerland':'CH',
+ 'Austria':'AT',
+ 'Poland':'PL',
+ 'Czech Republic':'CZ',
+ 'Greece':'GR',
+ 'Norway':'NO',
+ 'Sweden':'SE',
+ 'Finland':'FI',
+ 'Denmark':'DK',
+ 'Iceland':'IS',
+ 'Ukraine':'UA',
+ 'Romania':'RO',
+ 'Hungary':'HU',
+ 'Serbia':'RS',
+ 'Croatia':'HR',
+ 'United States':'US',
+ 'Canada':'CA',
+ 'Mexico':'MX',
+ 'Cuba':'CU',
+ 'Jamaica':'JM',
+ 'Brazil':'BR',
+ 'Argentina':'AR',
+ 'Chile':'CL',
+ 'Peru':'PE',
+ 'Colombia':'CO',
+ 'Venezuela':'VE',
+ 'Uruguay':'UY',
+ 'Paraguay':'PY',
+ 'Bolivia':'BO',
+ 'Ecuador':'EC',
+ 'Australia':'AU',
+ 'New Zealand':'NZ',
+ 'Fiji':'FJ',
+ 'Papua New Guinea':'PG',
+ 'Egypt':'EG',
+ 'South Africa':'ZA',
+ 'Nigeria':'NG',
+ 'Kenya':'KE',
+ 'Ethiopia':'ET',
+ 'Ghana':'GH',
+ 'Tanzania':'TZ',
+ 'Uganda':'UG',
+ 'Sudan':'SD',
+ 'Morocco':'MA',
+ 'Algeria':'DZ',
+ 'Tunisia':'TN',
+ 'Libya':'LY',
+ 'Somalia':'SO',
+ 'Zimbabwe':'ZW',
+ 'Zambia':'ZM',
+ 'Botswana':'BW',
+ 'Madagascar':'MG',
+ 'Mauritius':'MU',
+ 'Seychelles':'SC'
+};
+const v541Zodiac={
+ 'Aries':{symbol:'♈',picture:'🐏',label:'Ram'},
+ 'Taurus':{symbol:'♉',picture:'🐂',label:'Bull'},
+ 'Gemini':{symbol:'♊',picture:'👯',label:'Twins'},
+ 'Cancer':{symbol:'♋',picture:'🦀',label:'Crab'},
+ 'Leo':{symbol:'♌',picture:'🦁',label:'Lion'},
+ 'Virgo':{symbol:'♍',picture:'👩',label:'Maiden'},
+ 'Libra':{symbol:'♎',picture:'⚖️',label:'Scales'},
+ 'Scorpio':{symbol:'♏',picture:'🦂',label:'Scorpion'},
+ 'Sagittarius':{symbol:'♐',picture:'🏹',label:'Archer'},
+ 'Capricorn':{symbol:'♑',picture:'🐐',label:'Goat'},
+ 'Aquarius':{symbol:'♒',picture:'🏺',label:'Water bearer'},
+ 'Pisces':{symbol:'♓',picture:'🐟',label:'Fish'}
+};
+function v541FlagFromCode(code){
+ return String(code||"").toUpperCase().replace(/[A-Z]/g,c=>String.fromCodePoint(127397+c.charCodeAt(0)));
+}
+words.forEach(w=>{
+ if(w.cat==="World Countries"&&v541CountryCodes[w.en]){
+  w.countryCode=v541CountryCodes[w.en];
+  w.emoji=v541FlagFromCode(w.countryCode);
+ }
+ if(w.cat==="Tamil Zodiac"&&v541Zodiac[w.en]){
+  const z=v541Zodiac[w.en];
+  w.zodiacSymbol=z.symbol;
+  w.zodiacPicture=z.picture;
+  w.zodiacLabel=z.label;
+  w.emoji=z.picture;
+ }
+});
+
 // ---------- Version 5.4 Complete Knowledge Picture Pack ----------
 const v53KnowledgeStart=Math.min(220,words.length);
 const v53FactsViewed=new Set(JSON.parse(localStorage.getItem("tl_v53_facts_viewed")||"[]"));
@@ -1324,7 +1458,7 @@ function v53Fact(w){
 }
 function v53Symbol(kind,w){
  const map={
-  country:"🏳️",ocean:"🌊",continent:"🗺️",river:"🏞️",bird:w.emoji||"🐦",
+  country:w.emoji||"🏳️",ocean:"🌊",continent:"🗺️",river:"🏞️",bird:w.emoji||"🐦",
   district:"📍",month:"📅",zodiac:w.emoji||"♈",book:"📜",religion:"🕊️",knowledge:w.emoji||"💡"
  };
  return map[kind]||"💡";
@@ -1622,6 +1756,45 @@ $("clearMistakes").onclick=()=>{g54State.mistakes=[];g54Save();g54Stats()};
 const g54OldShow=showView;
 showView=function(id){g54OldShow(id);if(id==="gamesView")g54Stats()};
 g54Stats();
+
+
+// ---------- Version 5.4 specialised country and zodiac artwork ----------
+const v541BaseKnowledgeSVG=v53KnowledgeSVG;
+v53KnowledgeSVG=function(w,compact=false){
+ const kind=v53CategoryKind(w.cat);
+ if(kind!=="country"&&kind!=="zodiac")return v541BaseKnowledgeSVG(w,compact);
+ const i=Math.max(0,words.indexOf(w)),p=v52Palette[i%v52Palette.length];
+ const width=compact?420:720,height=compact?300:460;
+ const ta=v52Escape(w.ta),en=v52Escape(w.en),category=v52Escape(w.cat);
+ const isCountry=kind==="country";
+ const primary=v52Escape(isCountry?(w.emoji||"🏳️"):(w.zodiacPicture||w.emoji||"⭐"));
+ const secondary=v52Escape(isCountry?(w.countryCode||""):(w.zodiacSymbol||""));
+ const label=v52Escape(isCountry?"NATIONAL FLAG":(w.zodiacLabel||"ZODIAC"));
+ const primarySize=compact?(isCountry?105:90):(isCountry?166:145);
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="100%" height="100%" role="img" aria-label="${en}">
+  <defs>
+   <linearGradient id="v541g${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset=".58" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>
+   <filter id="v541s${i}"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-opacity=".2"/></filter>
+  </defs>
+  <rect width="${width}" height="${height}" rx="34" fill="url(#v541g${i})"/>
+  <circle cx="${width*.18}" cy="${height*.23}" r="${height*.19}" fill="#fff" opacity=".18"/>
+  <circle cx="${width*.83}" cy="${height*.28}" r="${height*.28}" fill="#fff" opacity=".12"/>
+  ${isCountry
+    ? `<path d="M${width*.12} ${height*.58} Q${width*.28} ${height*.48} ${width*.45} ${height*.58} T${width*.78} ${height*.58} T${width*.96} ${height*.55}" fill="none" stroke="#fff" stroke-width="${compact?9:14}" opacity=".18"/>`
+    : `<circle cx="${width*.5}" cy="${height*.4}" r="${height*.27}" fill="none" stroke="#fff" stroke-width="${compact?6:9}" opacity=".2"/><circle cx="${width*.5}" cy="${height*.4}" r="${height*.19}" fill="none" stroke="#fff" stroke-width="${compact?3:5}" opacity=".18"/>`
+  }
+  <rect x="${width*.07}" y="${height*.07}" width="${width*.38}" height="${height*.105}" rx="${height*.052}" fill="#fff" opacity=".9"/>
+  <text x="${width*.26}" y="${height*.124}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?13:18}" font-weight="800" fill="${p[2]}">${category}</text>
+  <rect x="${width*.69}" y="${height*.07}" width="${width*.24}" height="${height*.105}" rx="${height*.052}" fill="#0f172a" opacity=".75"/>
+  <text x="${width*.81}" y="${height*.124}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?10:14}" font-weight="800" fill="#fff">${label}</text>
+  <text x="${width/2}" y="${height*.42}" text-anchor="middle" dominant-baseline="middle" font-size="${primarySize}" filter="url(#v541s${i})">${primary}</text>
+  ${secondary?`<circle cx="${width*.78}" cy="${height*.46}" r="${height*.10}" fill="#fff" opacity=".9"/><text x="${width*.78}" y="${height*.46}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?25:38}" font-weight="900" fill="#4c1d95">${secondary}</text>`:""}
+  <rect x="${width*.07}" y="${height*.69}" width="${width*.86}" height="${height*.23}" rx="${height*.055}" fill="#fff" opacity=".91"/>
+  <text x="${width/2}" y="${height*.79}" text-anchor="middle" dominant-baseline="middle" font-family="'Noto Sans Tamil','Latha',sans-serif" font-size="${compact?27:41}" font-weight="900" fill="#3b0764">${ta}</text>
+  <text x="${width/2}" y="${height*.875}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${compact?17:24}" font-weight="750" fill="#475569">${en}</text>
+ </svg>`;
+};
+renderGallery();
 
 renderWord();updateStats();renderRecent();renderAchievements();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(()=>{resizeCanvas();if(!traceWord.textContent.trim())newTrace()},250);
 window.addEventListener("resize",resizeCanvas);
