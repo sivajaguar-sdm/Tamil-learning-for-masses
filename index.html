@@ -6,92 +6,131 @@
 <meta name="theme-color" content="#6d28d9">
 <title>தமிழ் கற்போம் — Tamil Learning App</title>
 <style>
-:root{--p:#6d28d9;--pd:#4c1d95;--s:#ede9fe;--bg:#f8f7ff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--ok:#15803d;--bad:#b91c1c}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Tamil","Latha",sans-serif;background:linear-gradient(#f5f3ff,#fff);color:var(--ink);min-height:100vh}
-.app{max-width:980px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:16px}
-h1{margin:0;font-size:clamp(1.4rem,5vw,2.2rem)}.sub,.muted{color:var(--muted)}.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:white;border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:.85rem}
-.tabs,.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.btn,select{border:1px solid var(--line);border-radius:13px;background:#fff;padding:11px 14px;font:inherit;cursor:pointer}.btn{font-weight:750}.btn.primary{background:var(--p);border-color:var(--p);color:#fff}.btn.soft{background:var(--s);color:var(--pd);border-color:transparent}.btn.active{background:var(--p);color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}
-.card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 14px 35px #312e811a;overflow:hidden}.view{display:none}.view.active{display:block}
-.learn{display:grid;grid-template-columns:280px 1fr}.visual{min-height:450px;background:linear-gradient(145deg,#ede9fe,#fdf4ff);display:flex;align-items:center;justify-content:center;font-size:8rem}.content{padding:28px}
-.badge{display:inline-block;background:var(--s);color:var(--pd);padding:6px 10px;border-radius:99px;font-weight:750;font-size:.82rem}.word{font-size:clamp(3.5rem,10vw,6.2rem);color:var(--pd);line-height:1.15;margin:18px 0 5px}.roman{font-size:1.3rem;font-weight:800}.meaning{font-size:1.1rem;color:var(--muted);margin:4px 0 18px}.example{background:#fafafa;border-left:5px solid var(--p);padding:15px;border-radius:11px}.ta{font-size:1.25rem;font-weight:800}.highlight{background:#fde68a;border-radius:5px;padding:0 3px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;border-top:1px solid var(--line)}
-.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--p);width:0}
-.panel{padding:24px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{padding:15px;border:2px solid var(--line);border-radius:14px;background:#fff;text-align:left;font-weight:750}.correct{border-color:#22c55e!important;background:#f0fdf4!important}.wrong{border-color:#ef4444!important;background:#fef2f2!important}.center{text-align:center}.big{font-size:4rem;color:var(--pd);margin:16px 0}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.tile{min-height:92px;border:2px solid var(--line);border-radius:15px;background:#fff;font-size:1.3rem;font-weight:800}.tile.matched{background:#dcfce7;border-color:#22c55e;opacity:.7}
-.canvasWrap{border:2px dashed #c4b5fd;border-radius:18px;overflow:hidden;background:#fff}canvas{display:block;width:100%;height:330px;touch-action:none}
-.recordBox{background:#fafafa;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:14px}audio{width:100%;margin-top:10px}
-.star{font-size:1.4rem;background:none;border:none;cursor:pointer}.footer{text-align:center;color:var(--muted);font-size:.82rem;margin:14px}
-@media(max-width:720px){.top{align-items:flex-start;flex-direction:column}.learn{grid-template-columns:1fr}.visual{min-height:190px;font-size:5.5rem}.content{padding:21px}.options{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+:root{
+ --p:#6d28d9;--pd:#4c1d95;--p2:#8b5cf6;--soft:#ede9fe;
+ --bg:#f7f7fc;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;
+ --ok:#15803d;--bad:#b91c1c;--gold:#ca8a04;--shadow:0 14px 34px #312e8117;
+}
+body.dark{
+ --bg:#111827;--card:#1f2937;--ink:#f9fafb;--muted:#cbd5e1;--line:#374151;
+ --soft:#312e81;--shadow:0 14px 34px #0006;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Tamil","Latha",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+button,select,input{font:inherit}.app{max-width:1040px;margin:auto;padding:16px 16px 94px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+h1,h2,h3,p{margin-top:0}.brand h1{margin:0;font-size:clamp(1.45rem,5vw,2.3rem)}.sub,.muted{color:var(--muted)}
+.iconBtn,.btn,select,input{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:11px 14px}
+.btn{font-weight:750;cursor:pointer}.btn.primary{background:var(--p);border-color:var(--p);color:white}.btn.soft{background:var(--soft);color:var(--pd);border-color:transparent}
+.topActions{display:flex;gap:8px}.iconBtn{cursor:pointer;font-size:1.1rem;padding:10px 12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.stat b{display:block;font-size:1.4rem}.stat span{color:var(--muted);font-size:.82rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.hero{padding:24px;background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:white;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.hero .muted{color:#ede9fe}.heroEmoji{font-size:5rem}.progress{height:10px;background:#e5e7eb55;border-radius:99px;overflow:hidden}.fill{height:100%;background:#fde047;width:0}
+.section{margin-top:18px}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:10px}.sectionHead h2{margin-bottom:10px}
+.lessonGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.lesson{padding:18px;background:var(--card);border:1px solid var(--line);border-radius:20px;cursor:pointer;box-shadow:var(--shadow)}.lesson .emoji{font-size:2rem}.lesson h3{margin:10px 0 4px}.lesson p{font-size:.88rem;margin:0;color:var(--muted)}
+.searchBar{display:grid;grid-template-columns:1fr auto;gap:8px}.searchResults{display:grid;gap:8px;margin-top:10px}.searchItem{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.view{display:none}.view.active{display:block}.panel{padding:22px}
+.learnLayout{display:grid;grid-template-columns:270px 1fr}.visual{min-height:440px;background:linear-gradient(145deg,var(--soft),#fdf4ff);display:flex;align-items:center;justify-content:center;font-size:8rem}.content{padding:27px}.badge{display:inline-block;background:var(--soft);color:var(--pd);padding:6px 10px;border-radius:99px;font-size:.8rem;font-weight:800}.word{font-size:clamp(3.5rem,10vw,6rem);color:var(--pd);line-height:1.12;margin:18px 0 4px}.roman{font-size:1.3rem;font-weight:800}.meaning{color:var(--muted);font-size:1.08rem;margin:5px 0 18px}.example{background:var(--bg);border-left:5px solid var(--p);padding:15px;border-radius:12px}.ta{font-size:1.2rem;font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;border-top:1px solid var(--line)}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{padding:15px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-weight:750;text-align:left}.correct{border-color:#22c55e!important;background:#f0fdf4!important;color:#14532d!important}.wrong{border-color:#ef4444!important;background:#fef2f2!important;color:#7f1d1d!important}
+.big{text-align:center;font-size:4rem;color:var(--pd);margin:18px 0}.matchGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.tile{min-height:88px;border:2px solid var(--line);border-radius:15px;background:var(--card);color:var(--ink);font-weight:800}.matched{background:#dcfce7!important;border-color:#22c55e!important;color:#14532d!important}
+.canvasWrap{border:2px dashed #c4b5fd;border-radius:18px;background:#fff;overflow:hidden}canvas{display:block;width:100%;height:330px;touch-action:none}
+.recordBox{padding:14px;background:var(--bg);border:1px solid var(--line);border-radius:16px;margin-top:14px}audio{width:100%;margin-top:10px}.star{font-size:1.5rem;border:0;background:none;color:var(--gold);cursor:pointer}
+.list{display:grid;gap:10px}.row{padding:13px;border:1px solid var(--line);border-radius:14px;display:flex;justify-content:space-between;align-items:center}
+.bottomNav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(720px,calc(100% - 20px));background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px #0003;display:grid;grid-template-columns:repeat(5,1fr);padding:7px;z-index:5}.navBtn{border:0;background:transparent;color:var(--muted);padding:8px 3px;border-radius:14px;font-size:.76rem;font-weight:750}.navBtn span{display:block;font-size:1.25rem}.navBtn.active{background:var(--soft);color:var(--pd)}
+.toast{position:fixed;left:50%;bottom:95px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 15px;border-radius:99px;display:none;z-index:10}
+@media(max-width:760px){header{align-items:flex-start}.stats{grid-template-columns:1fr 1fr}.lessonGrid{grid-template-columns:1fr 1fr}.learnLayout{grid-template-columns:1fr}.visual{min-height:190px;font-size:5.5rem}.options{grid-template-columns:1fr}.matchGrid{grid-template-columns:1fr 1fr}.heroEmoji{font-size:3.5rem}}
 </style>
 </head>
 <body>
 <div class="app">
- <div class="top">
-  <div><h1>தமிழ் கற்போம்</h1><div class="sub">Learn Tamil words, pronunciation and usage</div></div>
-  <div class="stats"><button class="btn soft" id="installHelpBtn">📲 Add to Home Screen</button><span class="pill" id="viewStat">Viewed: 0/20</span><span class="pill" id="favStat">⭐ 0</span><span class="pill" id="streakStat">🔥 1 day</span></div>
+<header>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">Learn Tamil step by step</div></div>
+ <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
+</header>
+
+<main>
+<section class="view active" id="homeView">
+ <div class="stats">
+  <div class="stat"><b id="xpStat">0</b><span>XP earned</span></div>
+  <div class="stat"><b id="streakStat">1</b><span>Day streak</span></div>
+  <div class="stat"><b id="masteredStat">0</b><span>Words viewed</span></div>
+  <div class="stat"><b id="favStat">0</b><span>Favorites</span></div>
  </div>
- <div class="progress"><div class="fill" id="fill"></div></div>
- <div class="tabs">
-  <button class="btn active" data-view="learnView">📘 Learn</button>
-  <button class="btn" data-view="quizView">🧠 Quiz</button>
-  <button class="btn" data-view="matchView">🎮 Match</button>
-  <button class="btn" data-view="writeView">✍️ Write</button>
-  <button class="btn" data-view="favView">⭐ Favorites</button>
+ <div class="card hero">
+  <div>
+   <h2>Today’s Tamil Lesson</h2>
+   <p class="muted">Learn 5 words and complete one quiz.</p>
+   <div class="progress"><div class="fill" id="dailyFill"></div></div>
+   <p style="margin:9px 0 14px" id="goalText">0 of 5 words completed</p>
+   <button class="btn" id="continueBtn">Continue learning →</button>
+  </div><div class="heroEmoji">📚</div>
  </div>
 
- <section class="card">
-  <div class="view active" id="learnView">
-   <div class="toolbar" style="padding:0 16px">
-    <select id="category"></select>
-    <button class="btn soft" id="speedBtn">🐢 Slow: Off</button>
-   </div>
-   <div class="learn">
-    <div class="visual" id="emoji">👩</div>
-    <div class="content">
-     <div style="display:flex;justify-content:space-between;align-items:center"><span class="badge" id="catBadge">Family</span><button class="star" id="favBtn">☆</button></div>
-     <div class="word" id="word">அம்மா</div>
-     <div class="roman" id="roman">Ammaa</div>
-     <div class="meaning" id="meaning">Mother</div>
-     <div class="example"><div class="ta" id="exTa"></div><div class="muted" id="exEn"></div></div>
-     <div class="actions">
-      <button class="btn primary" id="hearWord">🔊 Hear word</button>
-      <button class="btn soft" id="hearExample">🗣️ Hear example</button>
-     </div>
-     <div class="recordBox">
-      <b>Pronunciation practice</b>
-      <div class="muted" style="font-size:.88rem;margin:5px 0">Record yourself, then compare with the model voice.</div>
-      <button class="btn" id="recordBtn">🎙️ Start recording</button>
-      <audio id="recording" controls hidden></audio>
-     </div>
-     <div class="muted" id="voiceStatus" style="margin-top:10px;font-size:.85rem"></div>
-    </div>
-   </div>
-   <div class="nav"><button class="btn" id="prev">← Previous</button><button class="btn" id="next">Next →</button></div>
+ <div class="section">
+  <div class="sectionHead"><h2>Learning paths</h2></div>
+  <div class="lessonGrid">
+   <div class="lesson" data-cat="Family"><div class="emoji">👨‍👩‍👧</div><h3>Family</h3><p>4 beginner words</p></div>
+   <div class="lesson" data-cat="Animals"><div class="emoji">🐘</div><h3>Animals</h3><p>4 beginner words</p></div>
+   <div class="lesson" data-cat="Food"><div class="emoji">🍚</div><h3>Food</h3><p>4 useful words</p></div>
+   <div class="lesson" data-cat="Colours"><div class="emoji">🎨</div><h3>Colours</h3><p>4 colour words</p></div>
+   <div class="lesson" data-cat="Actions"><div class="emoji">🏃</div><h3>Actions</h3><p>4 daily verbs</p></div>
+   <div class="lesson" data-cat="All"><div class="emoji">🔤</div><h3>All words</h3><p>Complete vocabulary</p></div>
   </div>
+ </div>
 
-  <div class="view panel" id="quizView">
-   <h2>Meaning Quiz</h2><div class="center"><div class="big" id="qWord"></div></div>
-   <div class="options" id="qOptions"></div><div id="qFeedback" style="font-weight:800;margin:14px 0"></div>
-   <button class="btn primary" id="nextQ">Next question</button>
-  </div>
+ <div class="section">
+  <div class="sectionHead"><h2>Search vocabulary</h2></div>
+  <div class="searchBar"><input id="searchInput" placeholder="Search Tamil or English word"><button class="btn primary" id="searchBtn">Search</button></div>
+  <div class="searchResults" id="searchResults"></div>
+ </div>
+</section>
 
-  <div class="view panel" id="matchView">
-   <h2>Matching Game</h2><p class="muted">Match each Tamil word with its English meaning.</p>
-   <div class="grid" id="matchGrid"></div>
-   <div id="matchMsg" style="font-weight:800;margin:14px 0"></div><button class="btn primary" id="newMatch">New game</button>
+<section class="view card" id="learnView">
+ <div class="panel" style="padding-bottom:8px">
+  <div class="actions" style="margin:0"><select id="category"></select><button class="btn soft" id="speedBtn">🐢 Slow: Off</button></div>
+ </div>
+ <div class="learnLayout">
+  <div class="visual" id="emoji">👩</div>
+  <div class="content">
+   <div style="display:flex;justify-content:space-between"><span class="badge" id="catBadge"></span><button class="star" id="favBtn">☆</button></div>
+   <div class="word" id="word"></div><div class="roman" id="roman"></div><div class="meaning" id="meaning"></div>
+   <div class="example"><div class="ta" id="exTa"></div><div class="muted" id="exEn"></div></div>
+   <div class="actions"><button class="btn primary" id="hearWord">🔊 Hear word</button><button class="btn soft" id="hearExample">🗣️ Hear example</button></div>
+   <div class="recordBox"><b>Speaking practice</b><p class="muted">Listen, record, and replay your pronunciation.</p><button class="btn" id="recordBtn">🎙️ Start recording</button><audio id="recording" controls hidden></audio></div>
+   <div class="muted" id="voiceStatus" style="margin-top:10px;font-size:.85rem"></div>
   </div>
+ </div>
+ <div class="nav"><button class="btn" id="prev">← Previous</button><button class="btn" id="next">Next →</button></div>
+</section>
 
-  <div class="view panel" id="writeView">
-   <h2>Writing Practice</h2><div class="center"><div class="big" id="traceWord"></div><div class="muted">Trace or copy this word below.</div></div>
-   <div class="canvasWrap"><canvas id="canvas"></canvas></div>
-   <div class="actions"><button class="btn soft" id="clearCanvas">Clear</button><button class="btn" id="newTrace">New word</button></div>
-  </div>
+<section class="view card panel" id="quizView">
+ <h2>Meaning Quiz</h2><p class="muted">Choose the correct English meaning.</p><div class="big" id="qWord"></div><div class="options" id="qOptions"></div><div id="qFeedback" style="font-weight:800;margin:14px 0"></div><button class="btn primary" id="nextQ">Next question</button>
+</section>
 
-  <div class="view panel" id="favView">
-   <h2>Favorite Words</h2><div id="favList"></div>
-  </div>
- </section>
- <div class="footer">Single-file web app • Microphone works only when opened from an HTTPS website • Use Chrome menu → Add to Home screen.</div>
+<section class="view card panel" id="gamesView">
+ <h2>Matching Game</h2><p class="muted">Match each Tamil word with its English meaning.</p><div class="matchGrid" id="matchGrid"></div><div id="matchMsg" style="font-weight:800;margin:14px 0"></div><button class="btn primary" id="newMatch">New game</button>
+</section>
+
+<section class="view card panel" id="progressView">
+ <h2>Your Progress</h2>
+ <div class="list" id="progressList"></div>
+ <h3 style="margin-top:22px">Writing Practice</h3><div class="big" id="traceWord"></div><div class="canvasWrap"><canvas id="canvas"></canvas></div>
+ <div class="actions"><button class="btn soft" id="clearCanvas">Clear</button><button class="btn" id="newTrace">New word</button></div>
+ <h3 style="margin-top:22px">Favorite Words</h3><div class="list" id="favList"></div>
+</section>
+</main>
 </div>
+
+<nav class="bottomNav">
+ <button class="navBtn active" data-view="homeView"><span>🏠</span>Home</button>
+ <button class="navBtn" data-view="learnView"><span>📘</span>Learn</button>
+ <button class="navBtn" data-view="quizView"><span>🧠</span>Quiz</button>
+ <button class="navBtn" data-view="gamesView"><span>🎮</span>Games</button>
+ <button class="navBtn" data-view="progressView"><span>📈</span>Progress</button>
+</nav>
+<div class="toast" id="toast"></div>
 
 <script>
 const words=[
@@ -116,47 +155,48 @@ const words=[
 {ta:"சிரி",roman:"Siri",en:"Smile / Laugh",cat:"Actions",emoji:"😊",exTa:"குழந்தை அழகாக சிரிக்கிறது.",exEn:"The child smiles beautifully."},
 {ta:"தூங்கு",roman:"Thoongu",en:"Sleep",cat:"Actions",emoji:"😴",exTa:"நான் இரவில் தூங்குகிறேன்.",exEn:"I sleep at night."}
 ];
-const $=id=>document.getElementById(id); let filtered=[...words],idx=0,slow=false,voices=[];
-const viewed=new Set(JSON.parse(localStorage.getItem("tw_viewed")||"[]"));const favs=new Set(JSON.parse(localStorage.getItem("tw_favs")||"[]"));
-function save(){localStorage.setItem("tw_viewed",JSON.stringify([...viewed]));localStorage.setItem("tw_favs",JSON.stringify([...favs]));$("viewStat").textContent=`Viewed: ${viewed.size}/${words.length}`;$("favStat").textContent=`⭐ ${favs.size}`;$("fill").style.width=(viewed.size/words.length*100)+"%"}
-function initStreak(){const today=new Date().toDateString(),last=localStorage.getItem("tw_last"),st=+localStorage.getItem("tw_streak")||0;if(last!==today){const y=new Date(Date.now()-86400000).toDateString();localStorage.setItem("tw_streak",last===y?st+1:1);localStorage.setItem("tw_last",today)}$("streakStat").textContent=`🔥 ${localStorage.getItem("tw_streak")||1} day`}
-["All",...new Set(words.map(x=>x.cat))].forEach(c=>{let o=document.createElement("option");o.value=c;o.textContent=c==="All"?"All categories":c;$("category").appendChild(o)});
-function render(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";viewed.add(words.indexOf(w));save()}
-function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found; transliteration fallback will be used."}
-function speak(w,example=false){if(!("speechSynthesis"in window))return alert("Speech is not supported.");speechSynthesis.cancel();const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));const u=new SpeechSynthesisUtterance();u.rate=slow?.5:.75;if(tv){u.voice=tv;u.lang=tv.lang;u.text=example?w.exTa:w.ta}else{u.lang="en-IN";u.text=example?w.exEn:w.roman}speechSynthesis.speak(u);if(example&&tv)karaoke(w)}
-function karaoke(w){const parts=w.exTa.split(" "),el=$("exTa");let i=0;el.innerHTML=parts.map((p,j)=>`<span id="k${j}">${p}</span>`).join(" ");const timer=setInterval(()=>{parts.forEach((_,j)=>$("k"+j)?.classList.remove("highlight"));$("k"+i)?.classList.add("highlight");i++;if(i>=parts.length){clearInterval(timer);setTimeout(()=>el.textContent=w.exTa,700)}},Math.max(450,(slow?950:650)))}
-$("hearWord").onclick=()=>speak(filtered[idx]);$("hearExample").onclick=()=>speak(filtered[idx],true);$("prev").onclick=()=>{idx=(idx-1+filtered.length)%filtered.length;render()};$("next").onclick=()=>{idx=(idx+1)%filtered.length;render()};
-$("category").onchange=e=>{filtered=e.target.value==="All"?[...words]:words.filter(w=>w.cat===e.target.value);idx=0;render()};$("speedBtn").onclick=()=>{slow=!slow;$("speedBtn").textContent=`🐢 Slow: ${slow?"On":"Off"}`};
-$("favBtn").onclick=()=>{const n=words.indexOf(filtered[idx]);favs.has(n)?favs.delete(n):favs.add(n);render()};
-document.querySelectorAll(".tabs .btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs .btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(b.dataset.view).classList.add("active");if(b.dataset.view==="quizView")makeQuiz();if(b.dataset.view==="matchView")makeMatch();if(b.dataset.view==="writeView")newTrace();if(b.dataset.view==="favView")showFavs()});
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}let qAns=false;
-function makeQuiz(){qAns=false;const q=words[Math.floor(Math.random()*words.length)];$("qWord").textContent=q.ta;$("qFeedback").textContent="";$("qOptions").innerHTML="";shuffle([q,...shuffle(words.filter(x=>x!==q)).slice(0,3)]).forEach(o=>{let b=document.createElement("button");b.className="option";b.textContent=o.en;b.onclick=()=>{if(qAns)return;qAns=true;[...$("qOptions").children].forEach(x=>{if(x.textContent===q.en)x.classList.add("correct")});if(o===q){$("qFeedback").textContent="✅ Correct!";$("qFeedback").style.color="var(--ok)"}else{b.classList.add("wrong");$("qFeedback").textContent=`❌ Correct answer: ${q.en}`;$("qFeedback").style.color="var(--bad)"}speak(q)};$("qOptions").appendChild(b)})}$("nextQ").onclick=makeQuiz;
+const $=id=>document.getElementById(id);let filtered=[...words],idx=0,slow=false,voices=[],quizAnswer=null,answered=false;
+const viewed=new Set(JSON.parse(localStorage.getItem("tl_viewed")||"[]"));const favs=new Set(JSON.parse(localStorage.getItem("tl_favs")||"[]"));let xp=+localStorage.getItem("tl_xp")||0;
+function toast(t){const el=$("toast");el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1800)}
+function save(){localStorage.setItem("tl_viewed",JSON.stringify([...viewed]));localStorage.setItem("tl_favs",JSON.stringify([...favs]));localStorage.setItem("tl_xp",xp);updateStats()}
+function addXP(n,msg){xp+=n;save();toast(`+${n} XP • ${msg}`)}
+function streak(){const today=new Date().toDateString(),last=localStorage.getItem("tl_last"),old=+localStorage.getItem("tl_streak")||0;if(last!==today){const yesterday=new Date(Date.now()-86400000).toDateString();localStorage.setItem("tl_streak",last===yesterday?old+1:1);localStorage.setItem("tl_last",today)}return +localStorage.getItem("tl_streak")||1}
+function updateStats(){$("xpStat").textContent=xp;$("streakStat").textContent=streak();$("masteredStat").textContent=viewed.size;$("favStat").textContent=favs.size;const done=Math.min(viewed.size,5);$("dailyFill").style.width=(done/5*100)+"%";$("goalText").textContent=`${done} of 5 words completed`;renderProgress()}
+["All",...new Set(words.map(w=>w.cat))].forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c==="All"?"All categories":c;$("category").appendChild(o)});
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="quizView")makeQuiz();if(id==="gamesView")makeMatch();if(id==="progressView"){renderProgress();newTrace()}window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
+document.querySelectorAll(".lesson").forEach(l=>l.onclick=()=>{const c=l.dataset.cat;$("category").value=c;filtered=c==="All"?[...words]:words.filter(w=>w.cat===c);idx=0;renderWord();showView("learnView")});
+$("continueBtn").onclick=()=>showView("learnView");
+function renderWord(){const w=filtered[idx];$("emoji").textContent=w.emoji;$("catBadge").textContent=w.cat;$("word").textContent=w.ta;$("roman").textContent=w.roman;$("meaning").textContent=w.en;$("exTa").textContent=w.exTa;$("exEn").textContent=w.exEn;$("favBtn").textContent=favs.has(words.indexOf(w))?"★":"☆";const n=words.indexOf(w);if(!viewed.has(n)){viewed.add(n);xp+=5;save()}else updateStats()}
+function loadVoices(){voices=speechSynthesis?.getVoices?.()||[];const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));$("voiceStatus").textContent=tv?`Tamil voice: ${tv.name}`:"Tamil voice not found. Using device fallback voice."}
+function speak(w,example=false){if(!("speechSynthesis"in window))return alert("Speech is not supported.");speechSynthesis.cancel();const tv=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"));const u=new SpeechSynthesisUtterance();u.rate=slow?.5:.75;if(tv){u.voice=tv;u.lang=tv.lang;u.text=example?w.exTa:w.ta}else{u.lang="en-IN";u.text=example?w.exEn:w.roman}speechSynthesis.speak(u)}
+$("hearWord").onclick=()=>speak(filtered[idx]);$("hearExample").onclick=()=>speak(filtered[idx],true);
+$("prev").onclick=()=>{idx=(idx-1+filtered.length)%filtered.length;renderWord()};$("next").onclick=()=>{idx=(idx+1)%filtered.length;renderWord()};
+$("category").onchange=e=>{filtered=e.target.value==="All"?[...words]:words.filter(w=>w.cat===e.target.value);idx=0;renderWord()};
+$("speedBtn").onclick=()=>{slow=!slow;$("speedBtn").textContent=`🐢 Slow: ${slow?"On":"Off"}`};
+$("favBtn").onclick=()=>{const n=words.indexOf(filtered[idx]);favs.has(n)?favs.delete(n):favs.add(n);save();renderWord()};
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function makeQuiz(){answered=false;quizAnswer=words[Math.floor(Math.random()*words.length)];$("qWord").textContent=quizAnswer.ta;$("qFeedback").textContent="";$("qOptions").innerHTML="";shuffle([quizAnswer,...shuffle(words.filter(w=>w!==quizAnswer)).slice(0,3)]).forEach(o=>{const b=document.createElement("button");b.className="option";b.textContent=o.en;b.onclick=()=>{if(answered)return;answered=true;[...$("qOptions").children].forEach(x=>{if(x.textContent===quizAnswer.en)x.classList.add("correct")});if(o===quizAnswer){$("qFeedback").textContent="✅ Correct!";$("qFeedback").style.color="var(--ok)";addXP(10,"Quiz answer")}else{b.classList.add("wrong");$("qFeedback").textContent=`❌ Correct answer: ${quizAnswer.en}`;$("qFeedback").style.color="var(--bad)"}speak(quizAnswer)};$("qOptions").appendChild(b)})}
+$("nextQ").onclick=makeQuiz;
 let first=null,matched=0;
-function makeMatch(){first=null;matched=0;$("matchMsg").textContent="";let set=shuffle(words).slice(0,4),items=shuffle(set.flatMap((w,i)=>[{text:w.ta,key:i},{text:w.en,key:i}]));$("matchGrid").innerHTML="";items.forEach(it=>{let b=document.createElement("button");b.className="tile";b.textContent=it.text;b.dataset.key=it.key;b.onclick=()=>pickTile(b);$("matchGrid").appendChild(b)})}
-function pickTile(b){if(b.classList.contains("matched")||b===first)return;if(!first){first=b;b.style.borderColor="var(--p)"}else{if(b.dataset.key===first.dataset.key){b.classList.add("matched");first.classList.add("matched");matched++;if(matched===4)$("matchMsg").textContent="🎉 Excellent! All pairs matched."}else{$("matchMsg").textContent="Try again."}first.style.borderColor="";first=null}}$("newMatch").onclick=makeMatch;
-const canvas=$("canvas"),ctx=canvas.getContext("2d");let drawing=false;
-function resize(){const r=canvas.getBoundingClientRect();canvas.width=r.width*devicePixelRatio;canvas.height=r.height*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineWidth=6;ctx.lineCap="round";ctx.strokeStyle="#4c1d95"}window.addEventListener("resize",resize);
-function pos(e){const r=canvas.getBoundingClientRect(),t=e.touches?.[0]||e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
-canvas.onpointerdown=e=>{drawing=true;let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};canvas.onpointermove=e=>{if(!drawing)return;let p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()};window.onpointerup=()=>drawing=false;
-function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height)}$("clearCanvas").onclick=clearCanvas;function newTrace(){clearCanvas();$("traceWord").textContent=words[Math.floor(Math.random()*words.length)].ta}$("newTrace").onclick=newTrace;
-function showFavs(){let list=[...favs].map(i=>words[i]);$("favList").innerHTML=list.length?list.map(w=>`<div class="pill" style="display:inline-block;margin:6px;font-size:1rem">${w.ta} — ${w.en}</div>`).join(""):'<p class="muted">No favorites yet. Tap ☆ on a word to save it.</p>'}
+function makeMatch(){first=null;matched=0;$("matchMsg").textContent="";const set=shuffle(words).slice(0,4),items=shuffle(set.flatMap((w,i)=>[{text:w.ta,key:i},{text:w.en,key:i}]));$("matchGrid").innerHTML="";items.forEach(it=>{const b=document.createElement("button");b.className="tile";b.textContent=it.text;b.dataset.key=it.key;b.onclick=()=>pick(b);$("matchGrid").appendChild(b)})}
+function pick(b){if(b.classList.contains("matched")||b===first)return;if(!first){first=b;b.style.borderColor="var(--p)"}else{if(b.dataset.key===first.dataset.key){b.classList.add("matched");first.classList.add("matched");matched++;if(matched===4){$("matchMsg").textContent="🎉 Excellent! All pairs matched.";addXP(20,"Matching game")}}else $("matchMsg").textContent="Try again.";first.style.borderColor="";first=null}}
+$("newMatch").onclick=makeMatch;
+function renderProgress(){if(!$("progressList"))return;const cats=["Family","Animals","Food","Colours","Actions"];$("progressList").innerHTML=cats.map(c=>{const list=words.filter(w=>w.cat===c),done=list.filter(w=>viewed.has(words.indexOf(w))).length;return `<div class="row"><span><b>${c}</b><br><span class="muted">${done}/${list.length} viewed</span></span><span>${Math.round(done/list.length*100)}%</span></div>`}).join("");const f=[...favs].map(i=>words[i]);$("favList").innerHTML=f.length?f.map(w=>`<div class="row"><span>${w.ta} — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Open</button></div>`).join(""):'<p class="muted">No favorites yet.</p>'}
+window.openWord=i=>{filtered=[...words];$("category").value="All";idx=i;renderWord();showView("learnView")};
+$("searchBtn").onclick=searchWords;$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchWords()});
+function searchWords(){const q=$("searchInput").value.trim().toLowerCase();const r=words.filter(w=>w.ta.includes(q)||w.en.toLowerCase().includes(q)||w.roman.toLowerCase().includes(q));$("searchResults").innerHTML=r.length?r.map(w=>`<div class="searchItem"><span><b>${w.ta}</b> — ${w.en}</span><button class="btn soft" onclick="openWord(${words.indexOf(w)})">Learn</button></div>`).join(""):'<p class="muted">No matching words found.</p>'}
 let recorder,chunks=[];
-$("recordBtn").onclick=async()=>{try{if(!recorder||recorder.state==="inactive"){const stream=await navigator.mediaDevices.getUserMedia({audio:true});recorder=new MediaRecorder(stream);chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:"audio/webm"}),a=$("recording");a.src=URL.createObjectURL(blob);a.hidden=false;stream.getTracks().forEach(t=>t.stop())};recorder.start();$("recordBtn").textContent="⏹️ Stop recording"}else{recorder.stop();$("recordBtn").textContent="🎙️ Start recording"}}catch(e){alert("Microphone access was unavailable. Open this page in Chrome and allow microphone permission.")}};
-initStreak();render();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(resize,200);
-
-$("installHelpBtn").onclick = () => {
-  alert("In Chrome, tap the three-dot menu and choose “Add to Home screen” or “Install app” if available.");
-};
-
-const originalRecordButtonHandler = $("recordBtn").onclick;
-$("recordBtn").onclick = async () => {
-  if (!window.isSecureContext) {
-    alert("Voice recording requires HTTPS. Open this page from your GitHub Pages HTTPS address, not from Downloads or a file manager.");
-    return;
-  }
-  return originalRecordButtonHandler();
-};
-
+$("recordBtn").onclick=async()=>{try{if(!window.isSecureContext)return alert("Recording requires your GitHub Pages HTTPS address.");if(!recorder||recorder.state==="inactive"){const stream=await navigator.mediaDevices.getUserMedia({audio:true});recorder=new MediaRecorder(stream);chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const a=$("recording");a.src=URL.createObjectURL(new Blob(chunks,{type:"audio/webm"}));a.hidden=false;stream.getTracks().forEach(t=>t.stop());addXP(5,"Speaking practice")};recorder.start();$("recordBtn").textContent="⏹️ Stop recording"}else{recorder.stop();$("recordBtn").textContent="🎙️ Start recording"}}catch(e){alert("Microphone permission was unavailable. Allow microphone access in Chrome site settings.")}};
+const canvas=$("canvas"),ctx=canvas.getContext("2d");let drawing=false;
+function resizeCanvas(){const r=canvas.getBoundingClientRect();canvas.width=r.width*devicePixelRatio;canvas.height=r.height*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineWidth=6;ctx.lineCap="round";ctx.strokeStyle="#4c1d95"}function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+canvas.onpointerdown=e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};canvas.onpointermove=e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()};window.onpointerup=()=>drawing=false;
+function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height)}function newTrace(){clearCanvas();$("traceWord").textContent=words[Math.floor(Math.random()*words.length)].ta}
+$("clearCanvas").onclick=clearCanvas;$("newTrace").onclick=newTrace;
+$("themeBtn").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("tl_dark",document.body.classList.contains("dark")?"1":"0");$("themeBtn").textContent=document.body.classList.contains("dark")?"☀️":"🌙"};
+$("homeHelp").onclick=()=>alert("In Chrome, tap the three-dot menu and choose “Add to Home screen”.");
+if(localStorage.getItem("tl_dark")==="1"){document.body.classList.add("dark");$("themeBtn").textContent="☀️"}
+renderWord();updateStats();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(resizeCanvas,250);window.addEventListener("resize",resizeCanvas);
 </script>
 </body>
 </html>
