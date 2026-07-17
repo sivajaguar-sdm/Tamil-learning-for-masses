@@ -490,6 +490,161 @@ input,select,textarea{min-height:54px!important;border-radius:18px!important;fon
  .navBtn{padding:8px 1px!important;font-size:.60rem!important}.navBtn span{font-size:1.16rem!important}
 }
 
+
+/* ===== Version 8.1 Simple Window + Reliable Scrolling ===== */
+
+/* Use normal document scrolling. The old fixed lesson viewport clipped lower content. */
+html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
+main{overflow:visible!important}
+#learnView{
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ overflow:visible!important;
+}
+#learnView .lessonShell{
+ height:auto!important;
+ min-height:0!important;
+ overflow:visible!important;
+ display:block!important;
+}
+#learnView .learnLayout{
+ display:block!important;
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ overflow:visible!important;
+}
+#learnView .visual{
+ position:relative!important;
+ height:auto!important;
+ min-height:330px!important;
+ max-height:none!important;
+ overflow:hidden!important;
+ border-radius:24px 24px 0 0!important;
+}
+#learnView .picture{
+ min-height:300px!important;
+ width:100%!important;
+ position:relative!important;
+}
+#learnView .content{
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ overflow:visible!important;
+ padding:22px 18px 26px!important;
+ display:block!important;
+}
+#learnView .nav{
+ position:relative!important;
+ bottom:auto!important;
+ z-index:1!important;
+ border-radius:0 0 24px 24px!important;
+}
+
+/* Remove the top filter panel and metadata requested by the user. */
+#learnView > .lessonShell > .panel,
+#category,
+#catBadge,
+#levelBadge,
+#masteryStrip,
+.masteryStrip,
+.masteryBtn,
+[data-mastery]{
+ display:none!important;
+}
+
+/* Keep only essential word information and actions. */
+#learnView .content > div:first-child{
+ justify-content:flex-end!important;
+ min-height:28px!important;
+}
+#learnView .word{
+ margin-top:4px!important;
+}
+#learnView .actions.compactActions{
+ display:grid!important;
+ grid-template-columns:1fr 1fr!important;
+ gap:10px!important;
+}
+#learnView #recordBtn{
+ grid-column:1/-1!important;
+}
+
+/* Remove subject/category/order/mastery metadata from Knowledge cards. */
+#kFacts,
+#kPathBadge,
+#kSort,
+#kMaster,
+#kCategoryList,
+.k62Side,
+#kMastered,
+#kSubjectsDone{
+ display:none!important;
+}
+.k62Stats{
+ grid-template-columns:1fr 1fr!important;
+}
+.k62Content{
+ grid-template-columns:1fr!important;
+}
+.k62Toolbar{
+ grid-template-columns:1fr auto auto!important;
+}
+#kSearch{grid-column:auto!important}
+
+/* Simplify Gallery controls and mastery references. */
+#galleryCategory,
+#galleryMastery,
+#galleryMastered,
+.masteryRow,
+.masteryButtons,
+.masteryControls,
+.learningStatus,
+.statusButtons{
+ display:none!important;
+}
+
+/* Remove mastery wording from the home interface where possible. */
+#v7Mastered,
+#masteredStat{
+ visibility:hidden!important;
+}
+.v7HeroStat:has(#v7Mastered),
+.stat:has(#masteredStat){
+ display:none!important;
+}
+.v7HeroStats{
+ grid-template-columns:repeat(3,1fr)!important;
+}
+
+/* Less visual clutter */
+.imageHint,
+.corePackBadge,
+.knowledgeTypeBadge{
+ display:none!important;
+}
+#voiceStatus{
+ display:none!important;
+}
+.card,.panel{
+ box-shadow:0 10px 28px rgba(17,24,39,.08)!important;
+}
+@media(max-width:600px){
+ #learnView .visual{min-height:300px!important}
+ #learnView .picture{min-height:270px!important}
+ #learnView .content{padding:18px 15px 22px!important}
+ #learnView .nav{
+  grid-template-columns:1fr auto 1fr!important;
+  padding:12px 10px!important;
+ }
+ #learnView .nav .btn{font-size:.88rem!important;padding:10px 8px!important}
+ .k62Toolbar{grid-template-columns:1fr 1fr!important}
+ .k62Toolbar input{grid-column:1/-1!important}
+ .k62Stats{grid-template-columns:1fr 1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -1478,7 +1633,7 @@ function k62ShowSubjects(){
 function k62OpenSubject(s){if(!s)return;const available=s.cats.filter(c=>k62CatWords(c).length);if(!available.length)return;k62Subject=s;k62Category=available[0];$("kSubjectScreen").style.display="none";$("kCategoryScreen").style.display="block";$("kSubjectTitle").textContent=`${s.icon} ${s.title}`;$("kSearch").value="";$("kSort").value="learning";k62RenderSubcategories();k62Apply();k62Breadcrumb()}
 function k62RenderSubcategories(){const cats=k62Subject.cats.filter(c=>k62CatWords(c).length).sort((a,b)=>k62CategoryMeta[a].order-k62CategoryMeta[b].order);$("kSubGrid").innerHTML=cats.map(c=>`<button class="k62Sub ${c===k62Category?"active":""}" data-k62-cat="${c}"><b>${k62CategoryMeta[c].icon} ${c}</b><small>${k62CatWords(c).length} entries · ${k62Progress(k62CatWords(c))}% complete</small></button>`).join("");$("kCategoryList").innerHTML=cats.map(c=>`<button class="${c===k62Category?"active":""}" data-k62-listcat="${c}"><b>${k62CategoryMeta[c].icon} ${c}</b><small>${k62Progress(k62CatWords(c))}% complete</small></button>`).join("");document.querySelectorAll("[data-k62-cat],[data-k62-listcat]").forEach(b=>b.onclick=()=>{k62Category=b.dataset.k62Cat||b.dataset.k62Listcat;kIndex=0;k62RenderSubcategories();k62Apply();k62Breadcrumb()})}
 function k62Apply(){if(!k62Category)return;let list=[...k62CatWords(k62Category)];const q=String($("kSearch").value||"").toLowerCase().trim();if(q)list=list.filter(w=>[w.ta,w.en,w.roman,w.cat].some(v=>String(v||"").toLowerCase().includes(q)));const sort=$("kSort").value;if(sort==="tamil")list.sort((a,b)=>a.ta.localeCompare(b.ta,"ta"));else if(sort==="english")list.sort((a,b)=>a.en.localeCompare(b.en));else if(sort==="recent")list.sort((a,b)=>{const ai=k62Recent.indexOf(kGi(a)),bi=k62Recent.indexOf(kGi(b));return(ai<0?999:ai)-(bi<0?999:bi)});else if(sort==="mastery")list.sort((a,b)=>Number(kMastered.has(kGi(a)))-Number(kMastered.has(kGi(b))));kList=list;kIndex=Math.min(kIndex,Math.max(0,kList.length-1));kRender()}
-function kRender(){if(!kList.length){const card=$("kCard");if(card)card.innerHTML='<div class="k62Empty">No entries are available for this category.</div>';return}const w=kList[kIndex],m=k62CategoryMeta[w.cat],gi=kGi(w);k62Recent=[gi,...k62Recent.filter(x=>x!==gi)];kSave();$("kEmoji").textContent=w.emoji||m.icon;$("kTa").textContent=w.ta;$("kRoman").textContent=w.roman||"";$("kEn").textContent=w.en;$("kPathBadge").textContent=`${k62Subject.title} › ${w.cat}`;$("kFacts").innerHTML=[["Subject",k62Subject.title],["Category",m.label],["Learning order",`${k62CatWords(w.cat).indexOf(w)+1} of ${k62CatWords(w.cat).length}`],["Mastery",kMastered.has(gi)?"Mastered":"Learning"]].map(x=>`<div class="k62Info"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");$("kExample").innerHTML=`<b>${w.exTa||w.ta}</b><br><span class="muted">${w.exEn||m.note}</span>`;$("kCount").textContent=`${kIndex+1} / ${kList.length}`;$("kFav").textContent=kFavs.has(gi)?"★":"☆";$("kMaster").textContent=kMastered.has(gi)?"✓ Mastered":"✓ Mark mastered";const next=kList.find(x=>!kMastered.has(kGi(x)));$("kContinue").innerHTML=next?`Continue with <b>${next.ta}</b><br><span class="muted">${next.en}</span>`:"Category completed 🎉";kStats()}
+function kRender(){if(!kList.length){const card=$("kCard");if(card)card.innerHTML='<div class="k62Empty">No entries are available for this category.</div>';return}const w=kList[kIndex],m=k62CategoryMeta[w.cat],gi=kGi(w);k62Recent=[gi,...k62Recent.filter(x=>x!==gi)];kSave();$("kEmoji").textContent=w.emoji||m.icon;$("kTa").textContent=w.ta;$("kRoman").textContent=w.roman||"";$("kEn").textContent=w.en;$("kPathBadge").textContent=`${k62Subject.title} › ${w.cat}`;if($("kFacts"))$("kFacts").innerHTML="";$("kExample").innerHTML=`<b>${w.exTa||w.ta}</b><br><span class="muted">${w.exEn||m.note}</span>`;$("kCount").textContent=`${kIndex+1} / ${kList.length}`;$("kFav").textContent=kFavs.has(gi)?"★":"☆";$("kMaster").textContent=kMastered.has(gi)?"✓ Mastered":"✓ Mark mastered";const next=kList.find(x=>!kMastered.has(kGi(x)));$("kContinue").innerHTML=next?`Continue with <b>${next.ta}</b><br><span class="muted">${next.en}</span>`:"Category completed 🎉";kStats()}
 $("kBackSubjects").onclick=k62ShowSubjects;$("kSearch").oninput=()=>{kIndex=0;k62Apply()};$("kSort").onchange=()=>{kIndex=0;k62Apply()};$("kPrev").onclick=()=>{if(kList.length){kIndex=(kIndex-1+kList.length)%kList.length;kRender()}};$("kNext").onclick=()=>{if(kList.length){kIndex=(kIndex+1)%kList.length;kRender()}};$("kRandom").onclick=()=>{if(kList.length){kIndex=Math.floor(Math.random()*kList.length);kRender()}};$("kSpeak").onclick=()=>kList[kIndex]&&speakTamilText(kList[kIndex].ta,.72);$("kSlow").onclick=()=>kList[kIndex]&&speakTamilText(kList[kIndex].ta,.46);$("kFav").onclick=()=>{const gi=kGi(kList[kIndex]);kFavs.has(gi)?kFavs.delete(gi):kFavs.add(gi);kSave();kRender()};$("kMaster").onclick=()=>{const gi=kGi(kList[kIndex]);if(kMastered.has(gi))kMastered.delete(gi);else{kMastered.add(gi);xp+=5;save()}kSave();kRender();k62RenderSubcategories()};
 function kShuffle(a){return[...a].sort(()=>Math.random()-.5)}
 function kNewQ(){const pool=k62CatWords(k62Category),ans=pool[Math.floor(Math.random()*pool.length)];kAnswer=ans.en;const opts=kShuffle([ans.en,...kShuffle(pool.filter(w=>w.en!==ans.en)).slice(0,3).map(w=>w.en)]);kQ++;$("kQNum").textContent=`Question ${kQ}`;$("kQuestion").textContent=`What is the English meaning of “${ans.ta}”?`;$("kOpts").innerHTML=opts.map(o=>`<button class="kOpt" data-ka="${o}">${o}</button>`).join("");$("kResult").textContent="";$("kNextQ").style.display="none";document.querySelectorAll("[data-ka]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-ka]").forEach(x=>x.disabled=true);if(b.dataset.ka===kAnswer){b.classList.add("correct");$("kResult").textContent="Correct! அருமை!";kScore++;xp+=3;save()}else{$("kResult").textContent=`Correct answer: ${kAnswer}`}kSave();kStats();$("kNextQ").style.display="block"})}
@@ -2278,6 +2433,24 @@ window.v8SelfTest=function(){
  return result;
 };
 setTimeout(()=>window.v8SelfTest(),300);
+
+// Version 8.1: normal page scrolling and simple lesson window
+(function(){
+ function simplifyLesson(){
+   const learn=document.getElementById("learnView");
+   if(!learn)return;
+   const image=document.getElementById("wordImage");
+   if(image){
+     image.loading="eager";
+     image.decoding="async";
+   }
+   const category=document.getElementById("category");
+   if(category && !category.value) category.value="All";
+ }
+ document.addEventListener("DOMContentLoaded",simplifyLesson);
+ window.addEventListener("load",simplifyLesson);
+})();
+
 </script>
 
 </body>
