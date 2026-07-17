@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#6d28d9">
-<title>தமிழ் கற்போம் — Tamil Learning App · Version 5.4</title>
+<title>தமிழ் கற்போம் — Tamil Learning App · Version 6.1</title>
 <style>
 :root{
  --p:#6d28d9;--pd:#4c1d95;--p2:#8b5cf6;--soft:#ede9fe;
@@ -87,7 +87,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
  .word{font-size:2.45rem}.example{padding:8px}.compactActions .btn{font-size:.82rem;padding:7px}
 }
 
-/* Version 5.4: common sentence course */
+/* Version 6.1: common sentence course */
 .sentenceHero{padding:20px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;border-radius:22px;margin-bottom:16px}
 .sentenceHero .muted{color:#ccfbf1}
 .sentenceToolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -119,11 +119,11 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 }
 
 
-/* Version 5.4 Rich Knowledge Explorer */
+/* Version 6.1 Rich Knowledge Explorer */
 .kHero{padding:22px;border-radius:24px;color:#fff;background:linear-gradient(135deg,#4338ca,#7c3aed,#db2777);margin-bottom:16px;position:relative;overflow:hidden}.kHero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-50px;top:-70px;background:rgba(255,255,255,.14);animation:kfloat 5s ease-in-out infinite}@keyframes kfloat{50%{transform:translateY(18px) scale(1.08)}}.kStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.kStat{padding:10px;border-radius:15px;background:rgba(255,255,255,.15)}.kStat b{display:block;font-size:1.25rem}.kCats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kCat{padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--card);cursor:pointer;transition:.2s}.kCat:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.1)}.kCat .ico{font-size:1.8rem}.kCat b{display:block;margin:5px 0}.kCat small{color:var(--muted)}.kBar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:9px}.kBar div{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899)}.kTools{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:14px 0}.kCard{min-height:455px;padding:24px;text-align:center;display:flex;flex-direction:column;justify-content:center;position:relative}.kCard.pop{animation:kpop .35s ease}@keyframes kpop{from{opacity:.25;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}.kEmoji{font-size:clamp(3rem,12vw,5.4rem);animation:kbob 3s ease-in-out infinite}@keyframes kbob{50%{transform:translateY(-7px)}}.kTa{font-size:clamp(1.9rem,7vw,3.2rem);font-weight:900;line-height:1.35;margin:12px 0 4px}.kRoman{color:var(--muted)}.kEn{font-size:clamp(1.1rem,4vw,1.45rem);font-weight:800;margin:5px 0 17px}.kFacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:650px;margin:0 auto 16px;width:100%;text-align:left}.kFact{padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}.kFact small{display:block;color:var(--muted)}.kExample{max-width:680px;margin:0 auto 17px;padding:13px;border-radius:14px;background:var(--soft)}.kActions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.kNav{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border-top:1px solid var(--line);padding:13px}.kNav button:last-child{justify-self:end}.kQuiz{padding:18px;margin-top:15px}.kOpts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kOpt{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--card);font-weight:750;cursor:pointer}.kOpt.correct{background:#dcfce7;border-color:#22c55e;color:#166534}.kOpt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}.kResult{text-align:center;min-height:25px;font-weight:800;margin-top:10px}.spark{position:fixed;width:8px;height:8px;border-radius:50%;z-index:9999;pointer-events:none;animation:spark 900ms ease-out forwards}@keyframes spark{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}@media(max-width:680px){.kCats,.kFacts,.kOpts{grid-template-columns:1fr}.kTools{grid-template-columns:1fr 1fr}.kTools select{grid-column:1/-1}.kCard{min-height:420px}}
 
 
-/* Version 5.4 — Picture Dictionary Framework */
+/* Version 6.1 — Picture Dictionary Framework */
 .picture{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .wordImage{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);object-fit:contain;border-radius:18px;opacity:0;transition:opacity .28s ease,transform .28s ease;transform:scale(.98)}
 .wordImage.loaded{opacity:1;transform:scale(1)}
@@ -167,7 +167,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.galleryGrid{grid-template-columns:repeat(2,1fr)}.galleryVisual{height:125px}.galleryTools{grid-template-columns:1fr}.galleryTools input{grid-column:auto}.galleryStats{grid-template-columns:1fr 1fr}.slideEmoji{font-size:6rem}}
 
 
-/* Version 5.4 — Built-in Core Picture Pack */
+/* Version 6.1 — Built-in Core Picture Pack */
 .builtinArt{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);border-radius:18px;overflow:hidden;display:none}
 .builtinArt.show{display:block;animation:artReveal .3s ease}
 @keyframes artReveal{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
@@ -183,7 +183,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.packSummary{grid-template-columns:1fr}}
 
 
-/* Version 5.4 — Complete Knowledge Picture Pack */
+/* Version 6.1 — Complete Knowledge Picture Pack */
 .knowledgeTypeBadge{position:absolute;left:12px;bottom:12px;z-index:3;background:rgba(15,23,42,.82);color:#fff;border-radius:999px;padding:5px 8px;font-size:.68rem;font-weight:850}
 .gallerySegment{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
 .gallerySegment button{border:1px solid var(--line);background:var(--card);color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
@@ -196,7 +196,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:560px){.coverageGrid{grid-template-columns:repeat(2,1fr)}}
 
 
-/* Version 5.4 — Visual Games and Listening Challenges */
+/* Version 6.1 — Visual Games and Listening Challenges */
 .gameHubHero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;margin-bottom:14px}
 .gameHubHero .muted{color:#ede9fe}
 .gameStatsGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:14px}
@@ -235,12 +235,46 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 @media(max-width:650px){.gameControls{grid-template-columns:1fr 1fr}.gameControls button{grid-column:1/-1}.gameOptions{grid-template-columns:1fr}.memoryGrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.gameStatsGrid{grid-template-columns:repeat(2,1fr)}.memoryGrid{grid-template-columns:repeat(2,1fr)}}
 
+
+/* Version 6.1 — Offline Tamil Teacher */
+.teacherHero{padding:24px;border-radius:26px;background:linear-gradient(135deg,#312e81,#7c3aed 52%,#c026d3);color:#fff;margin-bottom:15px;box-shadow:0 20px 45px #4c1d9530}
+.teacherHero .muted{color:#ede9fe}
+.teacherLayout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,.8fr);gap:14px}
+.teacherPanel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.teacherChat{height:430px;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,var(--soft),transparent);border-radius:18px}
+.teacherBubble{max-width:88%;padding:12px 14px;border-radius:17px;line-height:1.55}
+.teacherBubble.bot{align-self:flex-start;background:#ede9fe;color:#3b0764;border-bottom-left-radius:5px}
+.teacherBubble.user{align-self:flex-end;background:#6d28d9;color:#fff;border-bottom-right-radius:5px}
+.teacherInputRow{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-top:10px}
+.teacherInputRow input{min-width:0}
+.quickPrompts{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.quickPrompt{border:1px solid #c4b5fd;background:#f5f3ff;color:#5b21b6;padding:8px 10px;border-radius:999px;font-weight:800;cursor:pointer;font-size:.8rem}
+.teacherWordCard{padding:15px;border-radius:18px;background:linear-gradient(145deg,#faf5ff,#f5f3ff);border:1px solid #ddd6fe;text-align:center}
+.teacherWordCard .bigTamil{font-size:2rem;font-weight:900;color:#4c1d95;margin:5px 0}
+.teacherSections{display:grid;gap:10px;margin-top:12px}
+.teacherSection{padding:12px;border-radius:16px;background:var(--soft);border:1px solid var(--line)}
+.teacherSection h4{margin:0 0 6px;color:var(--pd)}
+.teacherActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.teacherQuiz{margin-top:12px;padding:13px;border-radius:17px;background:#fffbeb;border:1px solid #fde68a}
+.teacherQuizOptions{display:grid;gap:7px;margin-top:8px}
+.teacherQuizOptions button{padding:10px;border-radius:13px;border:1px solid #fcd34d;background:#fff;font-weight:800;cursor:pointer}
+.teacherQuizOptions button.correct{background:#dcfce7;border-color:#22c55e}
+.teacherQuizOptions button.wrong{background:#fee2e2;border-color:#ef4444}
+.teacherHistory{max-height:240px;overflow:auto;display:grid;gap:8px}
+.teacherHistoryItem{padding:9px 10px;border-radius:13px;background:var(--soft);font-size:.84rem}
+.teacherStats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.teacherStat{padding:10px;border-radius:14px;background:rgba(255,255,255,.14)}
+.teacherStat b{display:block;font-size:1.1rem}
+.teacherOfflineNote{margin-top:10px;padding:10px 12px;border-radius:14px;background:#ecfeff;color:#155e75;border:1px solid #a5f3fc;font-size:.84rem}
+@media(max-width:900px){.teacherLayout{grid-template-columns:1fr}.teacherStats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.teacherInputRow{grid-template-columns:1fr auto}.teacherInputRow .teacherSpeakInput{display:none}.teacherActions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
- <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Visual Games, Zodiac Pictures & Country Flags · Version 5.4</div></div>
+ <div class="brand"><h1>தமிழ் கற்போம்</h1><div class="sub">491 words · 500 common sentences · Offline Tamil Teacher · Version 6.1</div></div>
  <div class="topActions"><button class="iconBtn" id="themeBtn">🌙</button><button class="iconBtn" id="homeHelp">📲</button></div>
 </header>
 
@@ -291,16 +325,25 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 
  <div class="section">
   <div class="card panel">
-   <div class="sectionHead"><h2>🖼️ Picture Dictionary</h2><span class="muted">Version 5.4</span></div>
+   <div class="sectionHead"><h2>🖼️ Picture Dictionary</h2><span class="muted">Version 6.1</span></div>
    <p class="muted">Browse all 491 words in a visual gallery, filter revision lists, and use automatic Tamil slideshows.</p>
    <button class="btn primary" onclick="showView('galleryView')">Open picture dictionary →</button>
   </div>
  </div>
 
 
+ 
  <div class="section">
   <div class="card panel">
-   <div class="sectionHead"><h2>🎮 Visual Games & Listening</h2><span class="muted">Version 5.4</span></div>
+   <div class="sectionHead"><h2>🧑‍🏫 Offline Tamil Teacher</h2><span class="muted">Version 6.1</span></div>
+   <p class="muted">Ask for meanings, pronunciation, examples and quick tests using the built-in Tamil learning database.</p>
+   <button class="btn primary" onclick="showView('teacherView')">Open Tamil Teacher →</button>
+  </div>
+ </div>
+
+<div class="section">
+  <div class="card panel">
+   <div class="sectionHead"><h2>🎮 Visual Games & Listening</h2><span class="muted">Version 6.1</span></div>
    <p class="muted">Play picture quizzes, listening challenges, memory matching and timed rounds using all 491 entries.</p>
    <button class="btn primary" onclick="showView('gamesView')">Open games →</button>
   </div>
@@ -529,6 +572,64 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
 </div>
 
 
+
+<section class="view" id="teacherView">
+ <div class="teacherHero">
+  <h2>🧑‍🏫 Offline Tamil Teacher</h2>
+  <p class="muted">Ask about any word, meaning, pronunciation, example or category. The teacher works without internet using the app’s built-in learning database.</p>
+  <div class="teacherStats">
+   <div class="teacherStat"><b id="teacherQuestions">0</b><small>Questions asked</small></div>
+   <div class="teacherStat"><b id="teacherWordsExplained">0</b><small>Words explained</small></div>
+   <div class="teacherStat"><b id="teacherQuizCorrect">0</b><small>Quiz correct</small></div>
+   <div class="teacherStat"><b id="teacherSessions">0</b><small>Teacher sessions</small></div>
+  </div>
+ </div>
+
+ <div class="teacherLayout">
+  <div class="teacherPanel">
+   <div class="sectionHead"><h3>Ask the teacher</h3><span class="muted">Tamil + English supported</span></div>
+   <div class="quickPrompts">
+    <button class="quickPrompt" data-teacher-prompt="Explain this word">Explain this word</button>
+    <button class="quickPrompt" data-teacher-prompt="Give another example">Another example</button>
+    <button class="quickPrompt" data-teacher-prompt="How do I pronounce this?">Pronunciation</button>
+    <button class="quickPrompt" data-teacher-prompt="Test me">Test me</button>
+    <button class="quickPrompt" data-teacher-prompt="Show a random word">Random word</button>
+   </div>
+   <div class="teacherChat" id="teacherChat">
+    <div class="teacherBubble bot">வணக்கம்! I am your offline Tamil teacher. Select a word from the app or ask me about a Tamil or English word.</div>
+   </div>
+   <div class="teacherInputRow">
+    <input id="teacherInput" placeholder="Example: Explain யானை or What is river in Tamil?">
+    <button class="btn primary" id="teacherAsk">Ask</button>
+    <button class="btn soft teacherSpeakInput" id="teacherReadReply">🔊 Reply</button>
+   </div>
+   <div class="teacherOfflineNote">This teacher uses built-in rules and the 491-entry knowledge database. It does not send your questions to an online AI service.</div>
+  </div>
+
+  <div>
+   <div class="teacherPanel">
+    <div class="sectionHead"><h3>Current learning word</h3><button class="btn soft" id="teacherUseCurrent">Use current word</button></div>
+    <div class="teacherWordCard" id="teacherWordCard">
+     <div class="muted">No word selected yet</div>
+    </div>
+    <div class="teacherSections" id="teacherDetails"></div>
+    <div class="teacherActions">
+     <button class="btn primary" id="teacherPronounce">🔊 Pronounce</button>
+     <button class="btn soft" id="teacherSlow">🐢 Slow audio</button>
+     <button class="btn soft" id="teacherExample">Example</button>
+     <button class="btn soft" id="teacherMiniQuiz">Mini quiz</button>
+    </div>
+    <div id="teacherQuizBox"></div>
+   </div>
+
+   <div class="teacherPanel" style="margin-top:14px">
+    <div class="sectionHead"><h3>Recent explanations</h3><button class="btn soft" id="clearTeacherHistory">Clear</button></div>
+    <div class="teacherHistory" id="teacherHistory"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
 <section class="view" id="gamesView">
  <div class="gameHubHero">
   <h2>🎮 Visual Games & Listening</h2>
@@ -603,6 +704,7 @@ body.dark #traceWord.traceGuide{color:rgba(196,181,253,.18)}
  <button class="navBtn active" data-view="homeView"><span>🏠</span>Home</button>
  <button class="navBtn" data-view="learnView"><span>📘</span>Words</button>
  <button class="navBtn" data-view="galleryView"><span>🖼️</span>Gallery</button>
+ <button class="navBtn" data-view="teacherView"><span>🧑‍🏫</span>Teacher</button>
  <button class="navBtn" data-view="gamesView"><span>🎮</span>Games</button>
  <button class="navBtn" data-view="sentencesView"><span>💬</span>Speak</button>
  <button class="navBtn" data-view="quizView"><span>🧠</span>Quiz</button>
@@ -840,7 +942,7 @@ function renderAchievements(){
 }
 
 
-// ---------- Version 5.4 sentence course ----------
+// ---------- Version 6.1 sentence course ----------
 let sentenceFiltered=[...sentences],sentenceIndex=0;
 let sentenceViewed=new Set(JSON.parse(localStorage.getItem("tl_sentence_viewed")||"[]"));
 let sentenceFavs=new Set(JSON.parse(localStorage.getItem("tl_sentence_favs")||"[]"));
@@ -995,7 +1097,7 @@ $("sentenceSwipeArea").addEventListener("touchend",e=>{
 renderSentence();
 
 
-// Version 5.4 Rich Knowledge Explorer
+// Version 6.1 Rich Knowledge Explorer
 const kNames=["Tamil Months","Tamil Zodiac","World Oceans","World Continents","World Countries","Birds","Tamil Nadu Districts","World Rivers","Tamil Sangam Books","World Religions"];
 const kWords=words.filter(w=>kNames.includes(w.cat));
 const kMeta={"Tamil Months":["📅","Tamil calendar","Tamil months guide festivals and seasons."],"Tamil Zodiac":["♈","Astronomy & tradition","The twelve zodiac signs are called இராசிகள்."],"World Oceans":["🌊","Physical geography","Oceans influence climate and marine life."],"World Continents":["🌍","World geography","Continents are Earth's major land regions."],"World Countries":["🌎","Political geography","Countries have their own names, cultures and governments."],"Birds":["🐦","Animal world","Birds have feathers, beaks and wings."],"Tamil Nadu Districts":["🗺️","Tamil Nadu geography","Districts support local administration."],"World Rivers":["🏞️","Physical geography","Many civilizations developed near rivers."],"Tamil Sangam Books":["📜","Classical Tamil literature","These works preserve early Tamil poetry and culture."],"World Religions":["🕊️","Culture & society","Learn belief traditions respectfully and neutrally."]};
@@ -1011,7 +1113,7 @@ function kShuffle(a){return [...a].sort(()=>Math.random()-.5)} function kNewQ(){
 $('kQuizBtn').onclick=()=>{let p=$('kQuiz');p.style.display=p.style.display==='none'?'block':'none';if(p.style.display==='block'){kNewQ();p.scrollIntoView({behavior:'smooth'})}};$('kNextQ').onclick=kNewQ;kRender();kStats();
 
 
-// ---------- Version 5.4 Picture Dictionary Framework ----------
+// ---------- Version 6.1 Picture Dictionary Framework ----------
 const v51Categories=[...new Set(words.map(w=>w.cat))].sort((a,b)=>a.localeCompare(b));
 const v51Mastery=JSON.parse(localStorage.getItem("tl_v51_mastery")||"{}");
 const v51ImageFound=new Set(JSON.parse(localStorage.getItem("tl_v51_images_found")||"[]"));
@@ -1156,7 +1258,7 @@ showView=function(id){v51OriginalShowView(id);if(id==="galleryView"){v51ApplyGal
 renderGallery();
 
 
-// ---------- Version 5.4 Built-in Core Picture Pack ----------
+// ---------- Version 6.1 Built-in Core Picture Pack ----------
 const v52CoreLimit=Math.min(220,words.length);
 const v52Palette=[
  ["#ede9fe","#c4b5fd","#7c3aed"],["#dbeafe","#93c5fd","#2563eb"],
@@ -1284,7 +1386,7 @@ renderGallery();
 
 
 
-// ---------- Version 5.4 Zodiac Pictures and Country Flags ----------
+// ---------- Version 6.1 Zodiac Pictures and Country Flags ----------
 const v541CountryCodes={
  'India':'IN',
  'Sri Lanka':'LK',
@@ -1417,7 +1519,7 @@ words.forEach(w=>{
  }
 });
 
-// ---------- Version 5.4 Complete Knowledge Picture Pack ----------
+// ---------- Version 6.1 Complete Knowledge Picture Pack ----------
 const v53KnowledgeStart=Math.min(220,words.length);
 const v53FactsViewed=new Set(JSON.parse(localStorage.getItem("tl_v53_facts_viewed")||"[]"));
 let v53Segment="All";
@@ -1608,7 +1710,7 @@ v51RenderSlide=function(){
 renderGallery();
 
 
-// ---------- Version 5.4 Visual Games & Listening ----------
+// ---------- Version 6.1 Visual Games & Listening ----------
 const g54State=JSON.parse(localStorage.getItem("tl_v54_games")||'{"gamesPlayed":0,"correct":0,"answered":0,"bestStreak":0,"listeningCorrect":0,"listeningAnswered":0,"bestTimed":0,"mistakes":[],"badges":[]}');
 let g54Mode="pictureToWord",g54Pool=[],g54Current=null,g54Options=[],g54Question=0,g54Correct=0,g54Streak=0,g54Timer=null,g54TimeLeft=0,g54Locked=false,g54Memory=[];
 function g54Save(){localStorage.setItem("tl_v54_games",JSON.stringify(g54State))}
@@ -1758,7 +1860,7 @@ showView=function(id){g54OldShow(id);if(id==="gamesView")g54Stats()};
 g54Stats();
 
 
-// ---------- Version 5.4 specialised country and zodiac artwork ----------
+// ---------- Version 6.1 specialised country and zodiac artwork ----------
 const v541BaseKnowledgeSVG=v53KnowledgeSVG;
 v53KnowledgeSVG=function(w,compact=false){
  const kind=v53CategoryKind(w.cat);
@@ -1795,6 +1897,136 @@ v53KnowledgeSVG=function(w,compact=false){
  </svg>`;
 };
 renderGallery();
+
+
+// ---------- Version 6.1 Offline Tamil Teacher ----------
+const t61State=JSON.parse(localStorage.getItem("tl_v61_teacher")||'{"questions":0,"explained":[],"quizCorrect":0,"sessions":0,"history":[]}');
+let t61Current=null,t61LastReply="";
+t61State.sessions++;t61Save();
+
+function t61Save(){
+ localStorage.setItem("tl_v61_teacher",JSON.stringify(t61State));
+}
+function t61Norm(s){
+ return String(s||"").toLowerCase().trim().replace(/[?!.,;:()[\]{}"']/g," ").replace(/\s+/g," ");
+}
+function t61FindWord(query){
+ const q=t61Norm(query);
+ if(!q)return null;
+ let exact=words.find(w=>[w.ta,w.en,w.roman].filter(Boolean).some(v=>t61Norm(v)===q));
+ if(exact)return exact;
+ exact=words.find(w=>[w.ta,w.en,w.roman].filter(Boolean).some(v=>q.includes(t61Norm(v))||t61Norm(v).includes(q)));
+ if(exact)return exact;
+ const tokens=q.split(" ").filter(x=>x.length>1);
+ return words.find(w=>tokens.some(t=>t61Norm(w.ta).includes(t)||t61Norm(w.en).includes(t)||t61Norm(w.roman||"").includes(t)))||null;
+}
+function t61Example(w,n=0){
+ if(w.example)return w.example;
+ const examples=[
+  `${w.ta} என்பது “${w.en}” என்று பொருள்.`,
+  `இந்தச் சொல்லை நினைவில் கொள்ளுங்கள்: ${w.ta} — ${w.en}.`,
+  `${w.ta} என்ற தமிழ்ச் சொல்லை தினமும் ஒருமுறை சொல்லிப் பழகுங்கள்.`,
+  `படத்தைப் பார்த்து “${w.ta}” என்று தெளிவாகச் சொல்லுங்கள்.`
+ ];
+ return examples[n%examples.length];
+}
+function t61Explanation(w){
+ const level=v51Level(w),kind=v53IsKnowledge(w)?"knowledge entry":"core vocabulary word";
+ return `${w.ta} means “${w.en}” in English. It is a ${level.toLowerCase()} ${kind} from the ${w.cat} category. Pronounce it approximately as “${w.roman||w.ta}”. ${v53IsKnowledge(w)?v53Fact(w):t61Example(w)}`;
+}
+function t61AddBubble(text,type="bot"){
+ const div=document.createElement("div");
+ div.className=`teacherBubble ${type}`;div.textContent=text;
+ $("teacherChat").appendChild(div);$("teacherChat").scrollTop=$("teacherChat").scrollHeight;
+ if(type==="bot")t61LastReply=text;
+}
+function t61SetCurrent(w,record=true){
+ if(!w)return;
+ t61Current=w;
+ if(record){
+  const i=words.indexOf(w);
+  if(!t61State.explained.includes(i))t61State.explained.push(i);
+  t61State.history.unshift({i,time:Date.now()});
+  t61State.history=t61State.history.slice(0,30);
+  t61Save();
+ }
+ $("teacherWordCard").innerHTML=`<div style="font-size:3.2rem">${w.emoji||"📘"}</div><div class="bigTamil">${w.ta}</div><b>${w.en}</b><div class="muted">${w.roman||""}</div>`;
+ $("teacherDetails").innerHTML=`
+  <div class="teacherSection"><h4>Meaning</h4><div>${w.en}</div></div>
+  <div class="teacherSection"><h4>Category and level</h4><div>${w.cat} · ${v51Level(w)}</div></div>
+  <div class="teacherSection"><h4>Example or fact</h4><div>${v53IsKnowledge(w)?v53Fact(w):t61Example(w)}</div></div>`;
+ t61RenderHistory();t61Stats();
+}
+function t61Stats(){
+ $("teacherQuestions").textContent=t61State.questions;
+ $("teacherWordsExplained").textContent=t61State.explained.length;
+ $("teacherQuizCorrect").textContent=t61State.quizCorrect;
+ $("teacherSessions").textContent=t61State.sessions;
+}
+function t61RenderHistory(){
+ const seen=new Set(),items=[];
+ for(const h of t61State.history){
+  if(seen.has(h.i)||!words[h.i])continue;
+  seen.add(h.i);items.push(words[h.i]);
+ }
+ $("teacherHistory").innerHTML=items.length?items.slice(0,12).map(w=>`<button class="teacherHistoryItem" data-teacher-history="${words.indexOf(w)}"><b>${w.ta}</b> · ${w.en}</button>`).join(""):'<div class="muted">No explanations yet.</div>';
+ document.querySelectorAll("[data-teacher-history]").forEach(b=>b.onclick=()=>t61SetCurrent(words[Number(b.dataset.teacherHistory)],false));
+}
+function t61Ask(raw){
+ const query=String(raw||"").trim();if(!query)return;
+ t61State.questions++;t61Save();t61AddBubble(query,"user");
+ const q=t61Norm(query),found=t61FindWord(query);
+ if(q.includes("random")){
+  const w=words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61AddBubble(t61Explanation(w));return;
+ }
+ if(q.includes("test")||q.includes("quiz")){
+  const w=found||t61Current||words[Math.floor(Math.random()*words.length)];t61SetCurrent(w);t61MakeQuiz(w);t61AddBubble(`I prepared a short question for ${w.ta}. Choose the answer in the quiz panel.`);return;
+ }
+ if(q.includes("another example")||q.includes("more example")){
+  const w=found||t61Current;
+  if(!w){t61AddBubble("Select or mention a word first, and I will give another example.");return}
+  t61SetCurrent(w);const reply=t61Example(w,Math.floor(Math.random()*4));t61AddBubble(reply);return;
+ }
+ if(q.includes("pronoun")||q.includes("say")||q.includes("speak")||q.includes("how do i")){
+  const w=found||t61Current;
+  if(!w){t61AddBubble("Mention a Tamil or English word so I can demonstrate its pronunciation.");return}
+  t61SetCurrent(w);speakTamilText(w.ta,.65);t61AddBubble(`Listen and repeat: ${w.ta}. Roman guide: ${w.roman||w.ta}.`);return;
+ }
+ if(found){
+  t61SetCurrent(found);t61AddBubble(t61Explanation(found));return;
+ }
+ if(q.includes("hello")||q.includes("vanakkam")||q.includes("வணக்கம்")){
+  t61AddBubble("வணக்கம்! Mention a Tamil or English word, or ask me to show a random word.");return;
+ }
+ t61AddBubble("I could not identify that word in the offline database. Try entering the exact Tamil word, English meaning, Roman pronunciation, or category name.");
+ t61Stats();
+}
+function t61MakeQuiz(w){
+ const others=g54Shuffle(words.filter(x=>x!==w)).slice(0,3),opts=g54Shuffle([w,...others]);
+ $("teacherQuizBox").innerHTML=`<div class="teacherQuiz"><b>What is the English meaning of “${w.ta}”?</b><div class="teacherQuizOptions">${opts.map(x=>`<button data-t61-answer="${words.indexOf(x)}">${x.en}</button>`).join("")}</div></div>`;
+ document.querySelectorAll("[data-t61-answer]").forEach(b=>b.onclick=()=>{
+  const ok=Number(b.dataset.t61Answer)===words.indexOf(w);
+  b.classList.add(ok?"correct":"wrong");
+  if(ok){t61State.quizCorrect++;t61Save();t61Stats();t61AddBubble("Correct! Excellent work.")}
+  else{document.querySelector(`[data-t61-answer="${words.indexOf(w)}"]`)?.classList.add("correct");t61AddBubble(`The correct answer is ${w.en}.`)}
+  document.querySelectorAll("[data-t61-answer]").forEach(x=>x.disabled=true);
+ });
+}
+$("teacherAsk").onclick=()=>{t61Ask($("teacherInput").value);$("teacherInput").value=""};
+$("teacherInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("teacherAsk").click()});
+document.querySelectorAll("[data-teacher-prompt]").forEach(b=>b.onclick=()=>t61Ask(b.dataset.teacherPrompt));
+$("teacherReadReply").onclick=()=>{if(t61LastReply)speakTamilText(t61LastReply,.78)};
+$("teacherUseCurrent").onclick=()=>{
+ const w=filtered?.[idx]||words[0];t61SetCurrent(w);t61AddBubble(t61Explanation(w));
+};
+$("teacherPronounce").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.78);
+$("teacherSlow").onclick=()=>t61Current&&speakTamilText(t61Current.ta,.48);
+$("teacherExample").onclick=()=>{if(t61Current)t61AddBubble(t61Example(t61Current,Math.floor(Math.random()*4)))};
+$("teacherMiniQuiz").onclick=()=>{if(t61Current)t61MakeQuiz(t61Current)};
+$("clearTeacherHistory").onclick=()=>{t61State.history=[];t61Save();t61RenderHistory()};
+const t61OldShow=showView;
+showView=function(id){t61OldShow(id);if(id==="teacherView"){t61Stats();t61RenderHistory();if(!t61Current)t61SetCurrent(filtered?.[idx]||words[0],false)}};
+t61Stats();t61RenderHistory();
 
 renderWord();updateStats();renderRecent();renderAchievements();loadVoices();if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=loadVoices;setTimeout(()=>{resizeCanvas();if(!traceWord.textContent.trim())newTrace()},250);
 window.addEventListener("resize",resizeCanvas);
