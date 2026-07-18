@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Explorer 1.7 — Interactive Learning</title>
+<style>
+:root{
+  --ink:#15304b;--muted:#5e7285;--blue:#3979e9;--blue2:#dfeeff;
+  --card:#fff;--line:#d9e5ef;--bg:#edf6fb;--gold:#ffb703;--green:#31a36c;
+  --shadow:0 12px 32px rgba(32,78,110,.14)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+linear-gradient(135deg,#e7f6ff,#fff7df);color:var(--ink);min-height:100vh}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1120px;margin:auto;padding:14px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.92);
+border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow);border-radius:22px;padding:13px 16px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#3a86ff,#65c7f7);display:grid;place-items:center;font-size:25px}
+.brand h1{font-size:clamp(1rem,2.3vw,1.4rem);margin:0;white-space:nowrap}
+.version{font-size:.75rem;color:var(--muted);font-weight:750}
+.top-actions{display:flex;gap:8px;align-items:center}
+.pill{background:#fff;border:1px solid var(--line);padding:8px 11px;border-radius:999px;font-weight:800;white-space:nowrap}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:12px 2px 9px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:#fff;color:var(--ink);padding:10px 14px;border-radius:999px;font-weight:800;box-shadow:0 4px 15px rgba(40,76,100,.08);white-space:nowrap}
+.tab.active{background:var(--blue);color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);padding:11px 13px;border-radius:18px;margin-bottom:10px}
+.filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+select{border:1px solid var(--line);padding:9px 12px;border-radius:12px;background:#fff;color:var(--ink);font-weight:750}
+.status{font-size:.88rem;color:var(--muted);font-weight:700}
+.country-card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow)}
+.country-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.country-id{display:flex;align-items:center;gap:13px}
+.flag{font-size:3.2rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12))}
+.country-name{margin:0;font-size:clamp(1.55rem,4vw,2.35rem)}
+.greeting{margin:3px 0 0;color:var(--blue);font-weight:850}
+.counter{background:var(--blue2);color:#245b9f;padding:8px 12px;border-radius:999px;font-weight:850}
+.fact-grid{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:9px;margin:16px 0}
+.fact-box{padding:12px;border-radius:16px;border:1px solid var(--line);background:#f9fcff}
+.fact-box small{display:block;color:var(--muted);font-weight:750;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+.fact-box strong{display:block;margin-top:3px;line-height:1.25}
+.didyouknow{background:#fff4cf;border:1px solid #ffe28a;padding:12px 14px;border-radius:16px;font-weight:700}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:13px;padding:10px 14px;font-weight:850}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-soft{background:#edf4fa;color:var(--ink)}
+.btn-green{background:#dff7e9;color:#127248}
+.btn-gold{background:#fff0bd;color:#8a5c00}
+.gallery-intro{margin:0 0 10px;padding:10px 13px;border-radius:14px;background:#eaf8ff;color:#315d79;font-weight:700}
+.gallery-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}
+.gallery-card{min-height:250px;border:0;border-radius:21px;overflow:hidden;position:relative;background:#dce8f0;box-shadow:0 8px 20px rgba(37,72,99,.13);padding:0;text-align:left}
+.gallery-card img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform .3s ease,opacity .3s}
+.gallery-card:hover img{transform:scale(1.04)}
+.gallery-card::after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(8,28,48,.94))}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:5rem;background:linear-gradient(145deg,#dceeff,#fff1cb)}
+.gallery-text{position:absolute;z-index:2;left:13px;right:13px;bottom:13px;color:#fff}
+.gallery-text small{font-weight:850;text-transform:uppercase;font-size:.68rem;opacity:.88}
+.gallery-text strong{display:block;font-size:1rem;margin-top:4px;line-height:1.16}
+.photo-state{position:absolute;z-index:3;top:9px;right:9px;background:rgba(255,255,255,.9);border-radius:999px;padding:5px 8px;font-size:.69rem;font-weight:850;color:#36546b}
+.modal{position:fixed;inset:0;background:rgba(8,24,39,.73);z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-card{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:14px;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.modal-image{height:min(54vh,470px);border-radius:17px;overflow:hidden;background:#e5eef5;position:relative}
+.modal-image img{width:100%;height:100%;object-fit:cover}
+.modal-body{padding:8px 4px 2px}
+.modal-body h2{margin:6px 0}
+.credit{font-size:.76rem;color:var(--muted);line-height:1.35}
+.loading{animation:pulse 1s infinite alternate}
+@keyframes pulse{from{opacity:.45}to{opacity:1}}
+.country-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.country-mini{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;display:flex;align-items:center;gap:10px;text-align:left}
+.country-mini:hover{border-color:#7dadf3}
+.country-mini .mini-flag{font-size:2rem}
+.country-mini strong,.country-mini span{display:block}
+.country-mini span{font-size:.78rem;color:var(--muted);margin-top:2px}
+.progress-wrap{margin-top:10px;background:#e7eef4;border-radius:999px;height:10px;overflow:hidden}
+.progress{height:100%;background:linear-gradient(90deg,#46b983,#38a3e5);width:0;transition:width .3s}
+.offline-note{font-size:.78rem;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:900px){
+ .fact-grid{grid-template-columns:repeat(2,1fr)}
+ .gallery-grid{grid-template-columns:repeat(2,1fr)}
+ .gallery-card{min-height:220px}
+ .country-list{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+ .app{padding:8px}.topbar{border-radius:17px;padding:10px}.logo{width:39px;height:39px}
+ .top-actions .pill:first-child{display:none}.country-card{padding:13px;border-radius:20px}
+ .fact-grid{grid-template-columns:1fr 1fr;gap:7px}.fact-box{padding:9px}
+ .gallery-grid{grid-template-columns:1fr 1fr;gap:8px}.gallery-card{min-height:190px}
+ .gallery-card:last-child{grid-column:1/-1;min-height:210px}
+ .country-list{grid-template-columns:1fr}.btn{flex:1}
+}
+
+.search-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search-input{min-width:220px;flex:1;border:1px solid var(--line);padding:10px 12px;border-radius:13px;background:#fff;color:var(--ink);font-weight:700}
+.dashboard-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-bottom:12px}
+.dashboard-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 7px 22px rgba(35,75,104,.09)}
+.dashboard-card h3{margin:0 0 10px;font-size:1rem}
+.country-day{display:flex;align-items:center;gap:12px}
+.country-day .day-flag{font-size:3.2rem}
+.country-day p{margin:3px 0;color:var(--muted)}
+.quick-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+.quick-row::-webkit-scrollbar{display:none}
+.quick-chip{border:1px solid var(--line);background:#f9fcff;padding:8px 10px;border-radius:999px;white-space:nowrap;font-weight:800}
+.quick-chip.favorite{background:#fff1d2;border-color:#ffd66d}
+.map-shell{background:#fff;border:1px solid var(--line);border-radius:23px;padding:12px;box-shadow:var(--shadow)}
+.map-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.world-map{width:100%;aspect-ratio:2/1;display:block;border-radius:18px;background:linear-gradient(#cfefff,#eaf8ff)}
+.land{fill:#b9d8a7;stroke:#7faa70;stroke-width:1.2}
+.map-marker{cursor:pointer}
+.map-marker circle{fill:#fff;stroke:#2f71d8;stroke-width:2.2}
+.map-marker text{font-size:13px;font-weight:900;pointer-events:none}
+.map-marker:hover circle,.map-marker.active circle{fill:#ffdf73;stroke:#c78a00}
+.map-legend{font-size:.77rem;color:var(--muted);margin-top:7px}
+.favorite-btn.active{background:#fff0bd;color:#8a5c00}
+.section-title{margin:0 0 9px}
+.continent-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.continent-item{border:1px solid var(--line);border-radius:15px;padding:10px;background:#fbfdff}
+.continent-item strong,.continent-item small{display:block}
+.continent-item small{color:var(--muted);margin-top:3px}
+.mini-progress{height:7px;border-radius:99px;background:#e5edf4;overflow:hidden;margin-top:7px}
+.mini-progress span{display:block;height:100%;background:linear-gradient(90deg,#46b983,#3e88eb)}
+.empty-state{padding:12px;color:var(--muted);text-align:center}
+@media(max-width:900px){
+ .dashboard-grid{grid-template-columns:1fr}
+ .continent-progress{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+ .search-input{min-width:0;width:100%}
+ .continent-progress{grid-template-columns:1fr 1fr}
+ .map-marker text{font-size:11px}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">🌍</div><div><h1>World Explorer</h1><div class="version">Version 1.7 • Interactive learning</div></div></div>
+    <div class="top-actions"><div class="pill">⭐ <span id="stars">0</span></div><div class="pill">✅ <span id="learnedCount">0</span>/30</div></div>
+  </header>
+
+  <nav class="tabs" aria-label="App sections">
+    <button class="tab active" data-panel="learn">Learn</button>
+    <button class="tab" data-panel="gallery">Gallery</button>
+    <button class="tab" data-panel="map">World Map</button>
+    <button class="tab" data-panel="countries">All Countries</button>
+  </nav>
+
+  <section id="learn" class="panel active">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="countrySearch" class="search-input" type="search" placeholder="Search country, capital or continent…" aria-label="Search countries">
+        <select id="continentLearn"></select>
+      </div>
+      <div class="status" id="networkStatus">Checking photo service…</div>
+    </div>
+    <div class="dashboard-grid">
+      <section class="dashboard-card">
+        <h3>🌟 Country of the Day</h3>
+        <div class="country-day">
+          <div class="day-flag" id="dayFlag"></div>
+          <div>
+            <strong id="dayName"></strong>
+            <p id="dayFact"></p>
+            <button class="btn btn-primary" id="openDay">Explore Today’s Country</button>
+          </div>
+        </div>
+      </section>
+      <section class="dashboard-card">
+        <h3>🕘 Recently Viewed</h3>
+        <div class="quick-row" id="recentRow"></div>
+        <h3 style="margin-top:14px">❤️ Favorites</h3>
+        <div class="quick-row" id="favoriteRow"></div>
+      </section>
+    </div>
+    <article class="country-card">
+      <div class="country-head">
+        <div class="country-id"><div class="flag" id="flag"></div><div><h2 class="country-name" id="countryName"></h2><p class="greeting" id="greeting"></p></div></div>
+        <div class="counter" id="counter"></div>
+      </div>
+      <div class="fact-grid">
+        <div class="fact-box"><small>Capital</small><strong id="capital"></strong></div>
+        <div class="fact-box"><small>Currency</small><strong id="currency"></strong></div>
+        <div class="fact-box"><small>Language</small><strong id="language"></strong></div>
+        <div class="fact-box"><small>Climate</small><strong id="climate"></strong></div>
+        <div class="fact-box"><small>Continent</small><strong id="continent"></strong></div>
+      </div>
+      <div class="didyouknow" id="fact"></div>
+      <div class="controls">
+        <button class="btn btn-soft" id="prev">← Previous</button>
+        <button class="btn btn-gold" id="speak">🔊 Listen</button>
+        <button class="btn btn-green" id="learnBtn">✓ Mark Learned</button>
+        <button class="btn btn-gold favorite-btn" id="favoriteBtn">♡ Favorite</button>
+        <button class="btn btn-primary" id="openGallery">Open Gallery</button>
+        <button class="btn btn-soft" id="next">Next →</button>
+      </div>
+    </article>
+  </section>
+
+  <section id="gallery" class="panel">
+    <div class="toolbar">
+      <div class="country-id"><div class="flag" id="galleryFlag"></div><div><strong id="galleryName"></strong><div class="status">Landmark • Animal • Food • Culture • Scenery</div></div></div>
+      <div class="filter"><select id="continentGallery"></select></div>
+    </div>
+    <p class="gallery-intro">📷 Photos are fetched from Wikimedia Commons. The first load needs internet; successful results are cached on this device.</p>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="controls">
+      <button class="btn btn-soft" id="galleryPrev">← Previous</button>
+      <button class="btn btn-gold" id="reloadPhotos">↻ Refresh Photos</button>
+      <button class="btn btn-green" id="galleryLearn">✓ Mark Learned</button>
+      <button class="btn btn-primary" id="details">Country Details</button>
+      <button class="btn btn-soft" id="galleryNext">Next →</button>
+    </div>
+    <p class="offline-note">Photo credit and source are shown after opening a photo. Wikimedia results can vary over time.</p>
+  </section>
+
+
+  <section id="map" class="panel">
+    <div class="map-shell">
+      <div class="map-head">
+        <div>
+          <h2 class="section-title">Interactive World Map</h2>
+          <div class="status">Tap a numbered marker to open a country.</div>
+        </div>
+        <select id="continentMap"></select>
+      </div>
+      <svg class="world-map" viewBox="0 0 1000 500" role="img" aria-label="Stylized interactive world map">
+        <path class="land" d="M75 105 C120 55 225 55 280 105 C320 142 302 185 255 195 C225 205 235 245 198 255 C160 265 145 225 112 215 C70 202 48 155 75 105 Z"/>
+        <path class="land" d="M245 270 C285 250 335 280 345 325 C352 365 330 420 292 455 C255 430 243 390 254 350 C265 314 223 292 245 270 Z"/>
+        <path class="land" d="M420 95 C470 60 555 62 605 100 C650 135 630 180 580 185 C535 190 516 175 480 190 C445 205 410 170 420 95 Z"/>
+        <path class="land" d="M505 205 C555 185 630 205 648 260 C667 315 630 397 575 435 C535 405 525 360 540 322 C555 285 480 255 505 205 Z"/>
+        <path class="land" d="M610 105 C695 55 850 75 920 135 C950 165 938 205 900 215 C855 227 845 250 800 245 C755 240 733 205 690 210 C650 215 615 175 610 105 Z"/>
+        <path class="land" d="M792 330 C830 305 895 315 922 350 C940 375 920 407 880 414 C840 421 790 390 792 330 Z"/>
+        <g id="mapMarkers"></g>
+      </svg>
+      <div class="map-legend">The map is a child-friendly visual guide rather than a political-boundary map.</div>
+    </div>
+    <div class="dashboard-card" style="margin-top:12px">
+      <h3>📊 Learning Progress by Continent</h3>
+      <div class="continent-progress" id="continentProgress"></div>
+    </div>
+  </section>
+
+  <section id="countries" class="panel">
+    <div class="toolbar"><strong>Choose a country</strong><select id="continentList"></select></div>
+    <div class="country-list" id="countryList"></div>
+    <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+  </section>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-image" id="modalImage"></div>
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+      <p id="modalDescription"></p>
+      <p class="credit" id="modalCredit"></p>
+      <button class="btn btn-primary" id="modalClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const countries = [
+{name:"India",flag:"🇮🇳",capital:"New Delhi",currency:"Indian Rupee (₹)",continent:"Asia",language:"Hindi and English",climate:"Mostly warm",greeting:"Namaste",lang:"hi-IN",landmark:"Taj Mahal",animal:"Bengal tiger",food:"Indian biryani",culture:"Diwali festival India",scenery:"Himalayas India",fact:"India has many languages, traditions and festivals."},
+{name:"Japan",flag:"🇯🇵",capital:"Tokyo",currency:"Japanese Yen (¥)",continent:"Asia",language:"Japanese",climate:"Four clear seasons",greeting:"Konnichiwa",lang:"ja-JP",landmark:"Mount Fuji Japan",animal:"Japanese macaque",food:"Sushi Japan",culture:"Japanese tea ceremony",scenery:"Cherry blossoms Japan",fact:"Japan is famous for cherry blossoms and fast bullet trains."},
+{name:"China",flag:"🇨🇳",capital:"Beijing",currency:"Chinese Yuan (¥)",continent:"Asia",language:"Mandarin Chinese",climate:"Varies by region",greeting:"Ni hao",lang:"zh-CN",landmark:"Great Wall of China",animal:"Giant panda",food:"Chinese dumplings",culture:"Chinese lantern festival",scenery:"Guilin mountains China",fact:"The Great Wall stretches across northern China."},
+{name:"United States",flag:"🇺🇸",capital:"Washington, D.C.",currency:"US Dollar ($)",continent:"North America",language:"English",climate:"Many climate zones",greeting:"Hello",lang:"en-US",landmark:"Statue of Liberty",animal:"Bald eagle",food:"Hamburger",culture:"American music festival",scenery:"Grand Canyon",fact:"The United States has 50 states."},
+{name:"United Kingdom",flag:"🇬🇧",capital:"London",currency:"Pound Sterling (£)",continent:"Europe",language:"English",climate:"Cool and often rainy",greeting:"Hello",lang:"en-GB",landmark:"Big Ben London",animal:"Red deer Scotland",food:"Fish and chips",culture:"Changing of the Guard London",scenery:"Scottish Highlands",fact:"The United Kingdom is made of four countries."},
+{name:"France",flag:"🇫🇷",capital:"Paris",currency:"Euro (€)",continent:"Europe",language:"French",climate:"Mostly mild",greeting:"Bonjour",lang:"fr-FR",landmark:"Eiffel Tower",animal:"Gallic rooster",food:"French croissant",culture:"French cafe Paris",scenery:"French Alps",fact:"France is known for art, fashion and food."},
+{name:"Germany",flag:"🇩🇪",capital:"Berlin",currency:"Euro (€)",continent:"Europe",language:"German",climate:"Cool temperate",greeting:"Hallo",lang:"de-DE",landmark:"Brandenburg Gate",animal:"Golden eagle Germany",food:"German pretzel",culture:"Oktoberfest traditional dress",scenery:"Black Forest Germany",fact:"Germany has many forests, castles and rivers."},
+{name:"Australia",flag:"🇦🇺",capital:"Canberra",currency:"Australian Dollar (A$)",continent:"Oceania",language:"English",climate:"Mostly dry and warm",greeting:"G'day",lang:"en-AU",landmark:"Sydney Opera House",animal:"Kangaroo Australia",food:"Australian meat pie",culture:"Aboriginal Australian art",scenery:"Great Barrier Reef",fact:"Australia is both a country and a continent."},
+{name:"Canada",flag:"🇨🇦",capital:"Ottawa",currency:"Canadian Dollar (C$)",continent:"North America",language:"English and French",climate:"Cold winters",greeting:"Hello / Bonjour",lang:"en-CA",landmark:"CN Tower Toronto",animal:"North American beaver",food:"Poutine",culture:"Canada Day celebration",scenery:"Canadian Rocky Mountains",fact:"Canada has more lakes than any other country."},
+{name:"Brazil",flag:"🇧🇷",capital:"Brasília",currency:"Brazilian Real (R$)",continent:"South America",language:"Portuguese",climate:"Mostly tropical",greeting:"Olá",lang:"pt-BR",landmark:"Christ the Redeemer Rio",animal:"Jaguar Brazil",food:"Feijoada Brazil",culture:"Rio Carnival",scenery:"Amazon rainforest Brazil",fact:"Much of the Amazon rainforest lies in Brazil."},
+{name:"Italy",flag:"🇮🇹",capital:"Rome",currency:"Euro (€)",continent:"Europe",language:"Italian",climate:"Mediterranean",greeting:"Ciao",lang:"it-IT",landmark:"Colosseum Rome",animal:"Italian wolf",food:"Neapolitan pizza",culture:"Venice Carnival",scenery:"Tuscany landscape",fact:"Italy is famous for ancient Rome."},
+{name:"Spain",flag:"🇪🇸",capital:"Madrid",currency:"Euro (€)",continent:"Europe",language:"Spanish",climate:"Warm and sunny",greeting:"Hola",lang:"es-ES",landmark:"Sagrada Familia Barcelona",animal:"Iberian lynx",food:"Paella",culture:"Flamenco dance",scenery:"Costa Brava Spain",fact:"Spain has many beautiful beaches."},
+{name:"Portugal",flag:"🇵🇹",capital:"Lisbon",currency:"Euro (€)",continent:"Europe",language:"Portuguese",climate:"Mediterranean",greeting:"Olá",lang:"pt-PT",landmark:"Belem Tower Lisbon",animal:"Iberian wolf Portugal",food:"Pastel de nata",culture:"Fado music",scenery:"Algarve coast Portugal",fact:"Portugal was a great sailing nation."},
+{name:"Russia",flag:"🇷🇺",capital:"Moscow",currency:"Russian Ruble (₽)",continent:"Europe",language:"Russian",climate:"Very cold in many areas",greeting:"Privet",lang:"ru-RU",landmark:"Saint Basil Cathedral Moscow",animal:"Brown bear Russia",food:"Borscht",culture:"Russian ballet",scenery:"Lake Baikal winter",fact:"Russia is the world's largest country."},
+{name:"South Korea",flag:"🇰🇷",capital:"Seoul",currency:"South Korean Won (₩)",continent:"Asia",language:"Korean",climate:"Four seasons",greeting:"Annyeong",lang:"ko-KR",landmark:"Gyeongbokgung Palace",animal:"Korean tiger",food:"Kimchi",culture:"Korean hanbok",scenery:"Jeju Island",fact:"K-pop is popular worldwide."},
+{name:"Thailand",flag:"🇹🇭",capital:"Bangkok",currency:"Baht (฿)",continent:"Asia",language:"Thai",climate:"Tropical",greeting:"Sawasdee",lang:"th-TH",landmark:"Grand Palace Bangkok",animal:"Asian elephant Thailand",food:"Pad Thai",culture:"Loy Krathong festival",scenery:"Phi Phi Islands Thailand",fact:"Thailand is called the Land of Smiles."},
+{name:"Singapore",flag:"🇸🇬",capital:"Singapore",currency:"Singapore Dollar (S$)",continent:"Asia",language:"English and Malay",climate:"Tropical",greeting:"Hello",lang:"en-SG",landmark:"Marina Bay Sands",animal:"Lion",food:"Hainanese chicken rice",culture:"Singapore multicultural festival",scenery:"Gardens by the Bay",fact:"Singapore is a city-country."},
+{name:"Malaysia",flag:"🇲🇾",capital:"Kuala Lumpur",currency:"Ringgit (RM)",continent:"Asia",language:"Malay",climate:"Tropical",greeting:"Selamat",lang:"ms-MY",landmark:"Petronas Towers",animal:"Malayan tiger",food:"Nasi lemak",culture:"Malaysian traditional dance",scenery:"Borneo rainforest Malaysia",fact:"Malaysia has lush rainforests."},
+{name:"Indonesia",flag:"🇮🇩",capital:"Jakarta",currency:"Rupiah (Rp)",continent:"Asia",language:"Indonesian",climate:"Tropical",greeting:"Halo",lang:"id-ID",landmark:"Borobudur temple",animal:"Komodo dragon",food:"Nasi goreng",culture:"Indonesian batik",scenery:"Mount Bromo Indonesia",fact:"Indonesia has thousands of islands."},
+{name:"Vietnam",flag:"🇻🇳",capital:"Hanoi",currency:"Dong (₫)",continent:"Asia",language:"Vietnamese",climate:"Tropical",greeting:"Xin chào",lang:"vi-VN",landmark:"Ha Long Bay",animal:"Water buffalo Vietnam",food:"Vietnamese pho",culture:"Vietnam water puppetry",scenery:"Mu Cang Chai rice terraces",fact:"Vietnam is famous for beautiful bays."},
+{name:"Nepal",flag:"🇳🇵",capital:"Kathmandu",currency:"Nepalese Rupee (₨)",continent:"Asia",language:"Nepali",climate:"Mountain",greeting:"Namaste",lang:"ne-NP",landmark:"Mount Everest Nepal",animal:"Himalayan yak",food:"Nepal momo",culture:"Nepal festival traditional dress",scenery:"Himalayas Nepal",fact:"Mount Everest is in Nepal."},
+{name:"Sri Lanka",flag:"🇱🇰",capital:"Sri Jayawardenepura Kotte",currency:"Sri Lankan Rupee (Rs)",continent:"Asia",language:"Sinhala and Tamil",climate:"Tropical",greeting:"Ayubowan",lang:"si-LK",landmark:"Sigiriya Sri Lanka",animal:"Sri Lankan elephant",food:"Sri Lankan rice and curry",culture:"Kandyan dance",scenery:"Sri Lanka tea plantations",fact:"Sri Lanka is known for tea."},
+{name:"United Arab Emirates",flag:"🇦🇪",capital:"Abu Dhabi",currency:"UAE Dirham (د.إ)",continent:"Asia",language:"Arabic",climate:"Desert",greeting:"Marhaba",lang:"ar-AE",landmark:"Burj Khalifa",animal:"Arabian oryx",food:"Shawarma",culture:"Emirati traditional dance",scenery:"UAE desert dunes",fact:"Dubai has the world's tallest building."},
+{name:"Saudi Arabia",flag:"🇸🇦",capital:"Riyadh",currency:"Saudi Riyal (﷼)",continent:"Asia",language:"Arabic",climate:"Desert",greeting:"As-salamu alaykum",lang:"ar-SA",landmark:"Kingdom Centre Riyadh",animal:"Arabian camel",food:"Kabsa",culture:"Saudi traditional heritage",scenery:"Saudi Arabia desert",fact:"Much of Saudi Arabia is desert."},
+{name:"South Africa",flag:"🇿🇦",capital:"Pretoria",currency:"Rand (R)",continent:"Africa",language:"English and others",climate:"Varied",greeting:"Sawubona",lang:"zu-ZA",landmark:"Table Mountain Cape Town",animal:"African lion",food:"South African braai",culture:"Zulu dance South Africa",scenery:"Blyde River Canyon",fact:"South Africa has three capital cities."},
+{name:"Egypt",flag:"🇪🇬",capital:"Cairo",currency:"Egyptian Pound (E£)",continent:"Africa",language:"Arabic",climate:"Desert",greeting:"Marhaba",lang:"ar-EG",landmark:"Pyramids of Giza",animal:"Dromedary camel Egypt",food:"Koshari",culture:"Egyptian traditional crafts",scenery:"Nile River Egypt",fact:"The pyramids are over 4,500 years old."},
+{name:"Kenya",flag:"🇰🇪",capital:"Nairobi",currency:"Kenyan Shilling (KSh)",continent:"Africa",language:"Swahili and English",climate:"Warm",greeting:"Jambo",lang:"sw-KE",landmark:"Maasai Mara",animal:"African lion Kenya",food:"Ugali Kenya",culture:"Maasai traditional dance",scenery:"Great Rift Valley Kenya",fact:"Kenya is famous for wildlife safaris."},
+{name:"Mexico",flag:"🇲🇽",capital:"Mexico City",currency:"Mexican Peso (MX$)",continent:"North America",language:"Spanish",climate:"Varied",greeting:"Hola",lang:"es-MX",landmark:"Chichen Itza",animal:"Golden eagle Mexico",food:"Mexican tacos",culture:"Day of the Dead Mexico",scenery:"Copper Canyon Mexico",fact:"Mexico is famous for ancient Mayan sites."},
+{name:"Argentina",flag:"🇦🇷",capital:"Buenos Aires",currency:"Argentine Peso (ARS$)",continent:"South America",language:"Spanish",climate:"Varied",greeting:"Hola",lang:"es-AR",landmark:"Perito Moreno Glacier",animal:"Puma Argentina",food:"Argentine empanadas",culture:"Tango dance Argentina",scenery:"Patagonia Argentina",fact:"Argentina is known for tango."},
+{name:"New Zealand",flag:"🇳🇿",capital:"Wellington",currency:"New Zealand Dollar (NZ$)",continent:"Oceania",language:"English and Māori",climate:"Mild",greeting:"Kia ora",lang:"mi-NZ",landmark:"Milford Sound",animal:"Kiwi bird",food:"Pavlova dessert",culture:"Maori haka",scenery:"Southern Alps New Zealand",fact:"The kiwi is a flightless bird."}
+];
+
+const mapCoordinates = {"India": [690, 220], "Japan": [870, 170], "China": [760, 160], "United States": [170, 150], "United Kingdom": [470, 120], "France": [480, 145], "Germany": [500, 130], "Australia": [850, 365], "Canada": [160, 105], "Brazil": [300, 345], "Italy": [510, 160], "Spain": [455, 165], "Portugal": [440, 170], "Russia": [690, 105], "South Korea": [825, 175], "Thailand": [720, 230], "Singapore": [745, 265], "Malaysia": [735, 250], "Indonesia": [775, 285], "Vietnam": [745, 215], "Nepal": [680, 190], "Sri Lanka": [690, 260], "United Arab Emirates": [625, 220], "Saudi Arabia": [600, 230], "South Africa": [565, 390], "Egypt": [545, 225], "Kenya": [575, 300], "Mexico": [185, 220], "Argentina": [300, 410], "New Zealand": [935, 400]};
+
+const photoTypes = [
+ {key:"landmark",label:"Famous Landmark",emoji:"🏛️",description:"A famous place or landmark."},
+ {key:"animal",label:"Animal",emoji:"🐾",description:"An animal connected with this country."},
+ {key:"food",label:"Popular Food",emoji:"🍽️",description:"A popular food from this country."},
+ {key:"culture",label:"Culture",emoji:"🎭",description:"A glimpse of local culture and traditions."},
+ {key:"scenery",label:"Scenery",emoji:"🏞️",description:"A beautiful natural landscape."}
+];
+
+let index=0;
+let currentFilter="All";
+let learned=new Set(JSON.parse(localStorage.getItem("worldExplorerLearned16")||"[]"));
+let favorites=new Set(JSON.parse(localStorage.getItem("worldExplorerFavorites17")||"[]"));
+let recent=JSON.parse(localStorage.getItem("worldExplorerRecent17")||"[]");
+let searchTerm="";
+const memoryPhotoCache=new Map();
+const $=id=>document.getElementById(id);
+const filteredCountries=()=>countries.filter(c=>{
+ const continentOk=currentFilter==="All"||c.continent===currentFilter;
+ const q=searchTerm.trim().toLowerCase();
+ const searchOk=!q||[c.name,c.capital,c.continent,c.currency,c.language].some(v=>String(v).toLowerCase().includes(q));
+ return continentOk&&searchOk;
+});
+const currentCountry=()=>filteredCountries()[index]||filteredCountries()[0]||null;
+
+function buildContinentMenus(){
+ const values=["All",...new Set(countries.map(c=>c.continent))];
+ ["continentLearn","continentGallery","continentList","continentMap"].forEach(id=>{
+   $(id).innerHTML=values.map(v=>`<option value="${v}">${v==="All"?"All Countries":v}</option>`).join("");
+   $(id).value=currentFilter;
+   $(id).addEventListener("change",e=>{currentFilter=e.target.value;index=0;syncMenus();renderAll();});
+ });
+}
+function syncMenus(){["continentLearn","continentGallery","continentList","continentMap"].forEach(id=>$(id).value=currentFilter)}
+
+function saveFavorites(){localStorage.setItem("worldExplorerFavorites17",JSON.stringify([...favorites]));}
+function saveRecent(){localStorage.setItem("worldExplorerRecent17",JSON.stringify(recent));}
+function addRecent(name){
+ recent=[name,...recent.filter(n=>n!==name)].slice(0,8);
+ saveRecent();
+}
+function openCountryByName(name,panel="learn"){
+ const list=filteredCountries();
+ let i=list.findIndex(c=>c.name===name);
+ if(i<0){
+   currentFilter="All";searchTerm="";$("countrySearch").value="";syncMenus();
+   i=countries.findIndex(c=>c.name===name);
+ }
+ index=Math.max(0,i);showPanel(panel);renderAll();
+}
+function getCountryOfDay(){
+ const now=new Date();
+ const dayNumber=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())/86400000);
+ return countries[dayNumber%countries.length];
+}
+function renderCountryOfDay(){
+ const c=getCountryOfDay();
+ $("dayFlag").textContent=c.flag;$("dayName").textContent=c.name;$("dayFact").textContent=c.fact;
+}
+function renderQuickRows(){
+ const make=(names,empty)=>names.length?names.map(n=>{
+   const c=countries.find(x=>x.name===n);if(!c)return "";
+   return `<button class="quick-chip ${favorites.has(n)?"favorite":""}" data-country="${c.name}">${c.flag} ${c.name}</button>`;
+ }).join(""):`<div class="empty-state">${empty}</div>`;
+ $("recentRow").innerHTML=make(recent,"No recently viewed countries yet.");
+ $("favoriteRow").innerHTML=make([...favorites],"No favorites yet.");
+ document.querySelectorAll(".quick-chip").forEach(b=>b.onclick=()=>openCountryByName(b.dataset.country));
+}
+function renderMap(){
+ const visible=filteredCountries();
+ $("mapMarkers").innerHTML=visible.map((c,i)=>{
+   const [x,y]=mapCoordinates[c.name]||[500,250];
+   return `<g class="map-marker" data-country="${c.name}" transform="translate(${x} ${y})">
+     <circle r="13"></circle><text text-anchor="middle" dominant-baseline="central">${i+1}</text>
+   </g>`;
+ }).join("");
+ document.querySelectorAll(".map-marker").forEach(m=>m.onclick=()=>openCountryByName(m.dataset.country));
+ const continents=[...new Set(countries.map(c=>c.continent))];
+ $("continentProgress").innerHTML=continents.map(cont=>{
+   const total=countries.filter(c=>c.continent===cont).length;
+   const done=countries.filter(c=>c.continent===cont&&learned.has(c.name)).length;
+   const pct=total?Math.round(done/total*100):0;
+   return `<div class="continent-item"><strong>${cont}</strong><small>${done} of ${total} learned</small><div class="mini-progress"><span style="width:${pct}%"></span></div></div>`;
+ }).join("");
+}
+function toggleFavorite(){
+ const name=currentCountry().name;
+ favorites.has(name)?favorites.delete(name):favorites.add(name);
+ saveFavorites();renderLearn();renderQuickRows();
+}
+
+function saveLearned(){localStorage.setItem("worldExplorerLearned16",JSON.stringify([...learned]));}
+function updateStats(){
+ $("learnedCount").textContent=learned.size;
+ $("stars").textContent=learned.size*2;
+ $("progress").style.width=`${learned.size/countries.length*100}%`;
+}
+function renderLearn(){
+ const list=filteredCountries();
+ if(!list.length){
+   $("countryName").textContent="No matching country";$("flag").textContent="🔎";$("greeting").textContent="Try another search";
+   ["capital","currency","language","climate","continent"].forEach(id=>$(id).textContent="—");
+   $("fact").textContent="No countries match your current search and continent filter.";
+   $("counter").textContent="0 of 0";return;
+ }
+ const c=currentCountry();addRecent(c.name);
+ $("flag").textContent=c.flag;$("countryName").textContent=c.name;$("greeting").textContent=c.greeting;
+ $("capital").textContent=c.capital;$("currency").textContent=c.currency;$("language").textContent=c.language;
+ $("climate").textContent=c.climate;$("continent").textContent=c.continent;$("fact").textContent="💡 Did you know? "+c.fact;
+ $("counter").textContent=`${index+1} of ${list.length}`;
+ $("learnBtn").textContent=learned.has(c.name)?"✓ Learned":"✓ Mark Learned";
+ $("favoriteBtn").textContent=favorites.has(c.name)?"♥ Favorited":"♡ Favorite";
+ $("favoriteBtn").classList.toggle("active",favorites.has(c.name));
+}
+function go(delta){const list=filteredCountries();if(!list.length)return;index=(index+delta+list.length)%list.length;renderLearn();renderGallery();}
+function speakCountry(){
+ const c=currentCountry();speechSynthesis.cancel();
+ const text=`${c.name}. Capital: ${c.capital}. Currency: ${c.currency}. Hello is ${c.greeting}. ${c.fact}`;
+ const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u);
+}
+function toggleLearn(){
+ const name=currentCountry().name;learned.has(name)?learned.delete(name):learned.add(name);
+ saveLearned();updateStats();renderLearn();renderGallery();renderCountryList();
+}
+function showPanel(id){
+ document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.panel===id));
+ if(id==="gallery")renderGallery();
+}
+function photoCacheKey(country,key){return `we16:${country.name}:${key}`}
+function readPhotoCache(country,key){
+ const mk=photoCacheKey(country,key);
+ if(memoryPhotoCache.has(mk))return memoryPhotoCache.get(mk);
+ try{const saved=JSON.parse(localStorage.getItem(mk)||"null");if(saved){memoryPhotoCache.set(mk,saved);return saved}}catch(e){}
+ return null;
+}
+function savePhotoCache(country,key,data){
+ const mk=photoCacheKey(country,key);memoryPhotoCache.set(mk,data);
+ try{localStorage.setItem(mk,JSON.stringify(data))}catch(e){}
+}
+function clearCountryPhotos(country){
+ photoTypes.forEach(t=>{const k=photoCacheKey(country,t.key);memoryPhotoCache.delete(k);localStorage.removeItem(k);});
+}
+function cleanTitle(t){return (t||"").replace(/^File:/,"").replace(/\.[^.]+$/,"").replace(/_/g," ")}
+function selectBestPage(pages){
+ const arr=Object.values(pages||{}).filter(p=>p.imageinfo&&p.imageinfo[0]&&p.imageinfo[0].thumburl);
+ const bad=/map|flag|coat of arms|logo|diagram|drawing|painting|icon|stamp|coin|poster|locator/i;
+ return arr.find(p=>!bad.test(p.title))||arr[0]||null;
+}
+async function fetchCommonsPhoto(query){
+ const api="https://commons.wikimedia.org/w/api.php";
+ const params=new URLSearchParams({
+   action:"query",generator:"search",gsrsearch:`${query} filetype:bitmap`,
+   gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",
+   iiprop:"url|extmetadata",iiurlwidth:"1000",format:"json",origin:"*"
+ });
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
+ try{
+   const res=await fetch(`${api}?${params}`,{signal:controller.signal});
+   if(!res.ok)throw new Error("Wikimedia request failed");
+   const json=await res.json();const page=selectBestPage(json.query&&json.query.pages);
+   if(!page)throw new Error("No suitable image");
+   const info=page.imageinfo[0],meta=info.extmetadata||{};
+   return {
+     url:info.thumburl,full:info.descriptionurl||info.url,
+     title:cleanTitle(page.title),
+     artist:(meta.Artist&&meta.Artist.value||"Wikimedia Commons contributor").replace(/<[^>]*>/g,""),
+     license:(meta.LicenseShortName&&meta.LicenseShortName.value)||"See source page",
+     source:info.descriptionurl||info.url
+   };
+ }finally{clearTimeout(timer)}
+}
+async function loadCardPhoto(card,country,type,force=false){
+ const img=card.querySelector("img"),state=card.querySelector(".photo-state");
+ if(force)clearCountryPhotos(country);
+ let data=readPhotoCache(country,type.key);
+ if(data){applyPhoto(card,data);return data}
+ state.textContent="Loading…";state.classList.add("loading");
+ try{
+   data=await fetchCommonsPhoto(country[type.key]);
+   savePhotoCache(country,type.key,data);applyPhoto(card,data);$("networkStatus").textContent="Real photos are available";
+   return data;
+ }catch(err){
+   state.textContent=navigator.onLine?"Photo unavailable":"Offline";
+   state.classList.remove("loading");img.removeAttribute("src");
+   $("networkStatus").textContent=navigator.onLine?"Some Wikimedia photos may be unavailable":"Offline — showing fallback art";
+   return null;
+ }
+}
+function applyPhoto(card,data){
+ const img=card.querySelector("img"),state=card.querySelector(".photo-state");
+ img.onload=()=>{img.style.opacity="1"};img.onerror=()=>{img.style.opacity="0";state.textContent="Fallback"};
+ img.style.opacity="0";img.src=data.url;img.alt=data.title||"Country gallery photo";
+ card.dataset.photo=JSON.stringify(data);state.textContent="Real photo";state.classList.remove("loading");
+}
+function renderGallery(){
+ const c=currentCountry();if(!c){$("galleryGrid").innerHTML=`<div class="empty-state">No matching countries.</div>`;return;}$("galleryFlag").textContent=c.flag;$("galleryName").textContent=c.name;
+ $("galleryLearn").textContent=learned.has(c.name)?"✓ Learned":"✓ Mark Learned";
+ const grid=$("galleryGrid");grid.innerHTML="";
+ photoTypes.forEach(type=>{
+  const card=document.createElement("button");card.className="gallery-card";card.type="button";
+  card.innerHTML=`<div class="fallback">${type.emoji}</div><img alt="" loading="lazy"><span class="photo-state">Loading…</span>
+  <div class="gallery-text"><small>${type.label}</small><strong>${c[type.key]}</strong></div>`;
+  card.addEventListener("click",()=>openPhoto(card,c,type));
+  grid.appendChild(card);loadCardPhoto(card,c,type);
+ });
+}
+function openPhoto(card,c,type){
+ let data=null;try{data=JSON.parse(card.dataset.photo||"null")}catch(e){}
+ const box=$("modalImage");box.innerHTML=data?`<img src="${data.url}" alt="${data.title}">`:`<div class="fallback">${type.emoji}</div>`;
+ $("modalTitle").textContent=c[type.key];
+ $("modalDescription").textContent=`${type.description} Search topic: ${c[type.key]}.`;
+ $("modalCredit").innerHTML=data
+   ?`Photo: ${escapeHtml(data.title)} • ${escapeHtml(data.artist)} • ${escapeHtml(data.license)} • <a href="${data.source}" target="_blank" rel="noopener">Open Wikimedia source</a>`
+   :"A real photo could not be loaded. Check the internet connection and press Refresh Photos.";
+ $("modal").classList.add("open");
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function renderCountryList(){
+ const list=filteredCountries();$("countryList").innerHTML=list.length?list.map((c,i)=>`
+ <button class="country-mini" data-i="${i}"><span class="mini-flag">${c.flag}</span><span><strong>${c.name}${learned.has(c.name)?" ✓":""}</strong><span>${c.capital} • ${c.continent}</span></span></button>`).join(""):`<div class="empty-state">No countries match your search.</div>`;
+ document.querySelectorAll(".country-mini").forEach(b=>b.onclick=()=>{index=Number(b.dataset.i);showPanel("learn");renderAll();});
+}
+function renderAll(){renderLearn();renderGallery();renderCountryList();renderCountryOfDay();renderQuickRows();renderMap();updateStats()}
+function refreshPhotos(){
+ const c=currentCountry();clearCountryPhotos(c);renderGallery();
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showPanel(t.dataset.panel));
+$("prev").onclick=()=>go(-1);$("next").onclick=()=>go(1);$("galleryPrev").onclick=()=>go(-1);$("galleryNext").onclick=()=>go(1);
+$("speak").onclick=speakCountry;$("learnBtn").onclick=toggleLearn;$("galleryLearn").onclick=toggleLearn;
+$("openGallery").onclick=()=>showPanel("gallery");$("details").onclick=()=>showPanel("learn");
+$("reloadPhotos").onclick=refreshPhotos;
+$("modalClose").onclick=()=>$("modal").classList.remove("open");
+$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("open")};
+window.addEventListener("online",()=>{$("networkStatus").textContent="Online — photos can load";});
+window.addEventListener("offline",()=>{$("networkStatus").textContent="Offline — showing cached photos or fallbacks";});
+
+$("favoriteBtn").onclick=toggleFavorite;
+$("openDay").onclick=()=>openCountryByName(getCountryOfDay().name);
+$("countrySearch").addEventListener("input",e=>{
+ searchTerm=e.target.value;index=0;renderAll();
+});
+
+buildContinentMenus();renderAll();
+$("networkStatus").textContent=navigator.onLine?"Online — loading Wikimedia photos":"Offline — showing cached photos or fallbacks";
+</script>
+</body>
+</html>
