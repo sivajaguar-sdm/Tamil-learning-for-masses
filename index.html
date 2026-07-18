@@ -2,609 +2,817 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#fff7e8" />
-  <title>தமிழ் ஒலி பயிற்சி 4.2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8fafc" />
+  <title>Tamil Letter Trainer v4.2</title>
+
   <style>
     :root {
-      --bg: #fff8ea;
-      --card: #ffffff;
-      --ink: #2a2a32;
-      --muted: #6e6b75;
-      --accent: #ef6c35;
-      --accent-dark: #c94f20;
-      --accent-soft: #ffe1c7;
-      --green: #288b63;
-      --green-soft: #dcf6eb;
-      --line: #eadfce;
-      --shadow: 0 14px 36px rgba(90, 57, 25, .12);
+      --page-bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --primary-border: #bfdbfe;
+      --text: #1e293b;
+      --text-dark: #0f172a;
+      --muted: #64748b;
+      --light-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
     }
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
     body {
       margin: 0;
-      font-family: "Noto Sans Tamil", "Nirmala UI", Latha, system-ui, sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 8% 4%, #fff1c9 0 10%, transparent 30%),
-        radial-gradient(circle at 92% 12%, #ffe4d5 0 9%, transparent 26%),
-        var(--bg);
-      -webkit-tap-highlight-color: transparent;
-      overscroll-behavior: none;
+      padding:
+        max(16px, env(safe-area-inset-top))
+        16px
+        max(24px, env(safe-area-inset-bottom));
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: "Segoe UI", "Noto Sans Tamil", "Nirmala UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
     }
 
-    button { font: inherit; }
+    button {
+      font: inherit;
+    }
 
     .app {
-      width: min(720px, 100%);
-      min-height: 100dvh;
-      margin: 0 auto;
-      padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      width: min(100%, 480px);
     }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
     }
 
-    .title-wrap { min-width: 0; }
+    .version-badge {
+      display: inline-block;
+      margin-bottom: 7px;
+      padding: 5px 10px;
+      border: 1px solid var(--primary-border);
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
     h1 {
       margin: 0;
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
-      line-height: 1.25;
-      letter-spacing: .01em;
+      color: var(--text);
+      font-size: clamp(26px, 7vw, 32px);
+      line-height: 1.2;
     }
+
     .subtitle {
-      margin: 4px 0 0;
+      margin: 7px 0 0;
       color: var(--muted);
-      font-size: .88rem;
-    }
-    .version {
-      flex: 0 0 auto;
-      border: 1px solid #f0c9ac;
-      background: rgba(255,255,255,.72);
-      color: var(--accent-dark);
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: .78rem;
-      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .film-shell {
-      position: relative;
-      background: rgba(255,255,255,.72);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 10px 38px;
-      box-shadow: 0 8px 22px rgba(90,57,25,.08);
-      overflow: hidden;
-    }
-
-    .film-shell::before,
-    .film-shell::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 44px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .film-shell::before { left: 0; background: linear-gradient(90deg, rgba(255,248,234,.96), transparent); }
-    .film-shell::after { right: 0; background: linear-gradient(-90deg, rgba(255,248,234,.96), transparent); }
-
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 4;
-      width: 34px;
-      height: 44px;
-      border: 0;
-      border-radius: 14px;
-      background: #fff;
-      color: var(--accent-dark);
-      box-shadow: 0 5px 14px rgba(65,40,15,.13);
-      font-size: 1.4rem;
-      font-weight: 900;
-      cursor: pointer;
-    }
-    .arrow:disabled { opacity: .3; cursor: default; }
-    .arrow.left { left: 5px; }
-    .arrow.right { right: 5px; }
-
-    .film-viewport {
-      overflow: hidden;
-      touch-action: pan-y;
-    }
-
-    .film {
+    .tabs {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: calc((100% - 32px) / 5);
-      gap: 8px;
-      transition: transform .28s ease;
-      will-change: transform;
-    }
-
-    .letter-chip {
-      height: 58px;
-      border: 1px solid #eadfce;
-      border-radius: 15px;
-      background: #fff;
-      color: #5a4c42;
-      font-size: clamp(1.35rem, 7vw, 1.8rem);
-      font-weight: 800;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 3px 8px rgba(76,47,19,.06);
-      transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
-    }
-    .letter-chip.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 18px rgba(239,108,53,.28);
-    }
-
-    .main-card {
-      flex: 1;
-      min-height: 410px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: clamp(18px, 5vw, 28px);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      overflow: hidden;
-    }
-
-    .progress-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
-      color: var(--muted);
-      font-size: .82rem;
-      min-height: 24px;
+      margin-bottom: 14px;
     }
-    .tap-tip {
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: #fff3e8;
-      color: var(--accent-dark);
+
+    .tab-btn {
+      min-height: 48px;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 15px;
       font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .letter-stage {
-      flex: 1;
-      min-height: 205px;
-      display: grid;
-      place-items: center;
-      padding: 8px 0;
-    }
-
-    .big-letter {
-      width: min(210px, 60vw);
-      aspect-ratio: 1;
-      border: 0;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #fff3df, #ffd7b7);
-      color: var(--accent-dark);
-      font-size: clamp(6rem, 28vw, 10rem);
-      line-height: 1;
-      font-weight: 800;
-      display: grid;
-      place-items: center;
       cursor: pointer;
-      box-shadow: inset 0 0 0 2px rgba(239,108,53,.15), 0 18px 40px rgba(239,108,53,.19);
-      transition: transform .16s ease;
+      transition: all 0.18s ease;
+    }
+
+    .tab-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 5px 12px rgba(37,99,235,0.2);
+    }
+
+    .display-panel {
+      width: 100%;
+      min-height: 318px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      text-align: center;
+      touch-action: pan-y;
       user-select: none;
     }
-    .big-letter:active { transform: scale(.96); }
-    .big-letter.speaking { animation: pulse .58s ease; }
-    @keyframes pulse {
-      0%,100% { transform: scale(1); }
-      45% { transform: scale(1.07); }
+
+    .progress-text {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .info-panel {
-      width: 100%;
-      border-radius: 18px;
-      background: #fffaf3;
-      border: 1px solid #f1e5d5;
-      padding: 13px 15px;
-      min-height: 86px;
-      display: grid;
-      align-content: center;
-      gap: 5px;
+    .large-letter-btn {
+      display: block;
+      width: min(170px, 48vw);
+      aspect-ratio: 1;
+      margin: 0 auto 7px;
+      border: 2px solid var(--primary-border);
+      border-radius: 28px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: clamp(74px, 23vw, 104px);
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(37,99,235,0.03);
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .large-letter-btn:active,
+    .large-letter-btn.speaking {
+      transform: scale(0.96);
+      background: #dbeafe;
+    }
+
+    .tap-hint {
+      margin: 0 0 12px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .sound-line {
+      margin: 0;
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.45;
       overflow-wrap: anywhere;
     }
-    .letter-name {
+
+    .example-block {
+      min-height: 80px;
+      margin-top: 10px;
+      padding: 11px 10px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+    }
+
+    .example-tamil {
       margin: 0;
-      text-align: center;
-      font-size: clamp(1rem, 4.5vw, 1.25rem);
-      line-height: 1.45;
-      font-weight: 850;
-    }
-    .example {
-      margin: 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: clamp(.88rem, 3.8vw, 1rem);
-      line-height: 1.55;
+      color: var(--text-dark);
+      font-size: clamp(22px, 7vw, 28px);
+      font-weight: 800;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
     }
 
-    .recorder {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    .record-button {
-      min-height: 58px;
-      border: 0;
-      border-radius: 18px;
-      background: var(--green);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 850;
-      cursor: pointer;
-      box-shadow: 0 9px 20px rgba(40,139,99,.22);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .record-button.recording {
-      background: #c83e3e;
-      box-shadow: 0 9px 20px rgba(200,62,62,.22);
-    }
-    .dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: currentColor;
-      box-shadow: 0 0 0 5px rgba(255,255,255,.18);
-    }
-    .recording .dot { animation: blink 1s infinite; }
-    @keyframes blink { 50% { opacity: .35; } }
-
-    .recording-result {
-      display: none;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-      padding: 10px;
-      border-radius: 16px;
-      background: var(--green-soft);
-      border: 1px solid #bce7d6;
-    }
-    .recording-result.visible { display: grid; }
-    audio { width: 100%; min-width: 0; height: 38px; }
-    .delete-btn {
-      width: 42px;
-      height: 42px;
-      border: 0;
-      border-radius: 13px;
-      background: #fff;
-      color: #a53333;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .status {
-      min-height: 22px;
-      margin: 4px 0 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: .8rem;
+    .example-sound {
+      margin: 5px 0 0;
+      color: var(--primary);
+      font-size: 15px;
+      font-weight: 700;
       line-height: 1.4;
+      overflow-wrap: anywhere;
     }
 
-    .nav-hint {
-      text-align: center;
+    .example-meaning {
+      margin: 3px 0 0;
       color: var(--muted);
-      font-size: .76rem;
-      margin: -2px 0 0;
+      font-size: 13px;
+      line-height: 1.35;
     }
 
-    @media (max-height: 700px) {
-      .app { gap: 9px; padding-top: 10px; }
-      .film-shell { padding-top: 7px; padding-bottom: 7px; }
-      .letter-chip { height: 48px; }
-      .main-card { min-height: 355px; padding: 15px; }
-      .letter-stage { min-height: 165px; }
-      .big-letter { width: min(165px, 43vh); font-size: clamp(5rem, 23vw, 8rem); }
-      .info-panel { min-height: 72px; padding: 9px 12px; }
-      .record-button { min-height: 50px; }
+    .film-card {
+      margin-top: 14px;
+      padding: 12px 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      box-shadow: var(--shadow);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    .film-title {
+      margin: 0 0 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .film-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+      align-items: center;
+    }
+
+    .film-letter {
+      min-width: 0;
+      aspect-ratio: 1;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      background: white;
+      color: #334155;
+      font-size: clamp(22px, 7vw, 29px);
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .film-letter:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .film-letter.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 11px rgba(37,99,235,0.22);
+    }
+
+    .film-letter.placeholder {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .navigation {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .nav-btn {
+      min-height: 48px;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      background: white;
+      color: #334155;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .record-card {
+      margin-top: 14px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .record-heading {
+      margin: 0;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .record-help {
+      margin: 5px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .record-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .record-btn,
+    .play-btn {
+      min-height: 49px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .record-btn {
+      border: 1px solid #fecaca;
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .record-btn.recording {
+      border-color: #bbf7d0;
+      background: var(--success-light);
+      color: var(--success);
+      animation: pulse 1s infinite;
+    }
+
+    .play-btn {
+      border: 1px solid var(--border-dark);
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .play-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .record-status {
+      min-height: 18px;
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .audio-notice {
+      margin-top: 15px;
+      color: var(--light-muted);
+      font-size: 10.5px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(0.98); }
+    }
+
+    @media (max-width: 370px) {
+      body {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .display-panel {
+        min-height: 300px;
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      .film-strip {
+        gap: 5px;
+      }
+
+      .record-controls {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <main class="app">
-    <header>
-      <div class="title-wrap">
-        <h1>தமிழ் ஒலி பயிற்சி</h1>
-        <p class="subtitle">எழுத்தைத் தொட்டு கேளுங்கள் · உங்கள் குரலைப் பதிவு செய்யுங்கள்</p>
-      </div>
-      <div class="version">v4.2</div>
+    <header class="header">
+      <div class="version-badge">VERSION 4.2</div>
+      <h1>Tamil Letter Trainer</h1>
+      <p class="subtitle">Tap a Tamil letter to hear it, then record your own voice.</p>
     </header>
 
-    <section class="film-shell" aria-label="தமிழ் எழுத்துகள்">
-      <button class="arrow left" id="prevBtn" aria-label="முந்தைய எழுத்து">‹</button>
-      <div class="film-viewport" id="filmViewport">
-        <div class="film" id="film"></div>
-      </div>
-      <button class="arrow right" id="nextBtn" aria-label="அடுத்த எழுத்து">›</button>
+    <section class="tabs" aria-label="Letter category">
+      <button id="vowelTab" class="tab-btn active" type="button">Vowels (12)</button>
+      <button id="consonantTab" class="tab-btn" type="button">Consonants (18)</button>
     </section>
 
-    <section class="main-card">
-      <div class="progress-row">
-        <span id="counter">1 / 12</span>
-        <span class="tap-tip">🔊 எழுத்தைத் தொடவும்</span>
+    <section id="displayPanel" class="display-panel" aria-live="polite">
+      <div id="progressText" class="progress-text">Letter 1 of 12</div>
+
+      <button
+        id="largeLetterBtn"
+        class="large-letter-btn"
+        type="button"
+        aria-label="Hear the Tamil letter"
+      >அ</button>
+
+      <p class="tap-hint">Tap the letter to hear its sound</p>
+
+      <p id="soundLine" class="sound-line">Sound: short “a”</p>
+
+      <div class="example-block">
+        <p id="exampleTamil" class="example-tamil">அம்மா</p>
+        <p id="exampleSound" class="example-sound">Say: Ammaa</p>
+        <p id="exampleMeaning" class="example-meaning">Meaning: Mother</p>
       </div>
-
-      <div class="letter-stage">
-        <button class="big-letter" id="bigLetter" aria-label="எழுத்தின் ஒலியை கேட்க">அ</button>
-      </div>
-
-      <section class="info-panel" aria-live="polite">
-        <p class="letter-name" id="letterName">அ — அகரம்</p>
-        <p class="example" id="example">உதாரணம்: அம்மா</p>
-      </section>
-
-      <section class="recorder">
-        <button class="record-button" id="recordBtn">
-          <span class="dot" aria-hidden="true"></span>
-          <span id="recordLabel">பதிவு செய்</span>
-        </button>
-
-        <div class="recording-result" id="recordingResult">
-          <audio id="audioPlayback" controls preload="metadata"></audio>
-          <button class="delete-btn" id="deleteRecording" aria-label="பதிவை நீக்கு">✕</button>
-        </div>
-        <p class="status" id="status">ஒவ்வொரு எழுத்தையும் தெளிவாகச் சொல்லிப் பழகுங்கள்.</p>
-      </section>
     </section>
 
-    <p class="nav-hint">இடது / வலது நோக்கி ஸ்வைப் செய்தும் எழுத்தை மாற்றலாம்</p>
+    <section class="film-card" aria-label="Tamil letter film strip">
+      <p class="film-title">Swipe the card or choose a letter</p>
+      <div id="filmStrip" class="film-strip"></div>
+    </section>
+
+    <div class="navigation">
+      <button id="previousBtn" class="nav-btn" type="button">← Previous</button>
+      <button id="nextBtn" class="nav-btn" type="button">Next →</button>
+    </div>
+
+    <section class="record-card">
+      <h2 class="record-heading">Practice Your Voice</h2>
+      <p class="record-help">Say the letter or example word, then play it back.</p>
+
+      <div class="record-controls">
+        <button id="recordBtn" class="record-btn" type="button">● Start Recording</button>
+        <button id="playBtn" class="play-btn" type="button" disabled>▶ Play Recording</button>
+      </div>
+
+      <p id="recordStatus" class="record-status">No recording yet</p>
+      <audio id="recordedAudio" preload="metadata"></audio>
+    </section>
+
+    <p class="audio-notice">
+      Letter audio uses your device Tamil text-to-speech voice. Recording requires microphone permission.
+    </p>
   </main>
 
   <script>
-    const letters = [
-      { char: 'அ', name: 'அகரம்', example: 'அம்மா', utterance: 'அ' },
-      { char: 'ஆ', name: 'ஆகாரம்', example: 'ஆடு', utterance: 'ஆ' },
-      { char: 'இ', name: 'இகரம்', example: 'இலை', utterance: 'இ' },
-      { char: 'ஈ', name: 'ஈகாரம்', example: 'ஈ', utterance: 'ஈ' },
-      { char: 'உ', name: 'உகரம்', example: 'உடை', utterance: 'உ' },
-      { char: 'ஊ', name: 'ஊகாரம்', example: 'ஊஞ்சல்', utterance: 'ஊ' },
-      { char: 'எ', name: 'எகரம்', example: 'எலி', utterance: 'எ' },
-      { char: 'ஏ', name: 'ஏகாரம்', example: 'ஏணி', utterance: 'ஏ' },
-      { char: 'ஐ', name: 'ஐகாரம்', example: 'ஐந்து', utterance: 'ஐ' },
-      { char: 'ஒ', name: 'ஒகரம்', example: 'ஒட்டகம்', utterance: 'ஒ' },
-      { char: 'ஓ', name: 'ஓகாரம்', example: 'ஓடம்', utterance: 'ஓ' },
-      { char: 'ஔ', name: 'ஔகாரம்', example: 'ஔவையார்', utterance: 'ஔ' }
+    const vowelsData = [
+      { letter: "அ", sound: "short “a”", exampleTamil: "அம்மா", exampleSound: "Ammaa", meaning: "Mother" },
+      { letter: "ஆ", sound: "long “aa”", exampleTamil: "ஆடு", exampleSound: "Aadu", meaning: "Goat" },
+      { letter: "இ", sound: "short “i”", exampleTamil: "இலை", exampleSound: "Ilai", meaning: "Leaf" },
+      { letter: "ஈ", sound: "long “ee”", exampleTamil: "ஈட்டி", exampleSound: "Eetti", meaning: "Spear" },
+      { letter: "உ", sound: "short “u”", exampleTamil: "உரல்", exampleSound: "Ural", meaning: "Mortar" },
+      { letter: "ஊ", sound: "long “oo”", exampleTamil: "ஊஞ்சல்", exampleSound: "Oonjal", meaning: "Swing" },
+      { letter: "எ", sound: "short “e”", exampleTamil: "எலி", exampleSound: "Eli", meaning: "Mouse" },
+      { letter: "ஏ", sound: "long “ae”", exampleTamil: "ஏணி", exampleSound: "Aeni", meaning: "Ladder" },
+      { letter: "ஐ", sound: "“ai” sound", exampleTamil: "ஐந்து", exampleSound: "Ainthu", meaning: "Five" },
+      { letter: "ஒ", sound: "short “o”", exampleTamil: "ஒட்டகம்", exampleSound: "Ottagam", meaning: "Camel" },
+      { letter: "ஓ", sound: "long “oh”", exampleTamil: "ஓடம்", exampleSound: "Odam", meaning: "Boat" },
+      { letter: "ஔ", sound: "“au” sound", exampleTamil: "ஔவையார்", exampleSound: "Avvaiyar", meaning: "Tamil poet" }
     ];
 
-    const film = document.getElementById('film');
-    const filmViewport = document.getElementById('filmViewport');
-    const bigLetter = document.getElementById('bigLetter');
-    const letterName = document.getElementById('letterName');
-    const example = document.getElementById('example');
-    const counter = document.getElementById('counter');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const recordBtn = document.getElementById('recordBtn');
-    const recordLabel = document.getElementById('recordLabel');
-    const recordingResult = document.getElementById('recordingResult');
-    const audioPlayback = document.getElementById('audioPlayback');
-    const deleteRecording = document.getElementById('deleteRecording');
-    const statusText = document.getElementById('status');
+    const consonantsData = [
+      { letter: "க்", sound: "“k” sound", exampleTamil: "கல்", exampleSound: "Kal", meaning: "Stone" },
+      { letter: "ங்", sound: "“ng” sound", exampleTamil: "சிங்கம்", exampleSound: "Singam", meaning: "Lion" },
+      { letter: "ச்", sound: "“ch” sound", exampleTamil: "பச்சை", exampleSound: "Pachchai", meaning: "Green" },
+      { letter: "ஞ்", sound: "“nj” sound", exampleTamil: "மஞ்சள்", exampleSound: "Manjal", meaning: "Yellow" },
+      { letter: "ட்", sound: "hard “t” sound", exampleTamil: "பட்டம்", exampleSound: "Pattam", meaning: "Kite" },
+      { letter: "ண்", sound: "curled “n” sound", exampleTamil: "கண்", exampleSound: "Kan", meaning: "Eye" },
+      { letter: "த்", sound: "soft “th” sound", exampleTamil: "தவளை", exampleSound: "Thavalai", meaning: "Frog" },
+      { letter: "ந்", sound: "soft “n” sound", exampleTamil: "நண்டு", exampleSound: "Nandu", meaning: "Crab" },
+      { letter: "ப்", sound: "“p” sound", exampleTamil: "பந்து", exampleSound: "Panthu", meaning: "Ball" },
+      { letter: "ம்", sound: "“m” sound", exampleTamil: "மரம்", exampleSound: "Maram", meaning: "Tree" },
+      { letter: "ய்", sound: "“y” sound", exampleTamil: "பாய்", exampleSound: "Paai", meaning: "Mat" },
+      { letter: "ர்", sound: "soft “r” sound", exampleTamil: "ரயில்", exampleSound: "Rayil", meaning: "Train" },
+      { letter: "ல்", sound: "soft “l” sound", exampleTamil: "பல்", exampleSound: "Pal", meaning: "Tooth" },
+      { letter: "வ்", sound: "“v” sound", exampleTamil: "விளக்கு", exampleSound: "Vilakku", meaning: "Lamp" },
+      { letter: "ழ்", sound: "special Tamil “zh” sound", exampleTamil: "தமிழ்", exampleSound: "Tamizh", meaning: "Tamil" },
+      { letter: "ள்", sound: "curled “l” sound", exampleTamil: "வாள்", exampleSound: "Vaal", meaning: "Sword" },
+      { letter: "ற்", sound: "strong “r” sound", exampleTamil: "பறவை", exampleSound: "Paravai", meaning: "Bird" },
+      { letter: "ன்", sound: "ending “n” sound", exampleTamil: "மீன்", exampleSound: "Meen", meaning: "Fish" }
+    ];
 
+    const vowelTab = document.getElementById("vowelTab");
+    const consonantTab = document.getElementById("consonantTab");
+    const displayPanel = document.getElementById("displayPanel");
+    const progressText = document.getElementById("progressText");
+    const largeLetterBtn = document.getElementById("largeLetterBtn");
+    const soundLine = document.getElementById("soundLine");
+    const exampleTamil = document.getElementById("exampleTamil");
+    const exampleSound = document.getElementById("exampleSound");
+    const exampleMeaning = document.getElementById("exampleMeaning");
+    const filmStrip = document.getElementById("filmStrip");
+    const previousBtn = document.getElementById("previousBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const recordBtn = document.getElementById("recordBtn");
+    const playBtn = document.getElementById("playBtn");
+    const recordStatus = document.getElementById("recordStatus");
+    const recordedAudio = document.getElementById("recordedAudio");
+
+    let currentType = "vowels";
     let currentIndex = 0;
     let mediaRecorder = null;
-    let audioChunks = [];
-    let stream = null;
-    let recordedUrl = null;
+    let recordedChunks = [];
+    let recordedUrl = "";
     let touchStartX = 0;
     let touchStartY = 0;
 
-    letters.forEach((item, index) => {
-      const chip = document.createElement('button');
-      chip.className = 'letter-chip';
-      chip.textContent = item.char;
-      chip.setAttribute('aria-label', `${item.char} எழுத்து`);
-      chip.addEventListener('click', () => selectLetter(index, true));
-      film.appendChild(chip);
-    });
+    function getCurrentData() {
+      return currentType === "vowels" ? vowelsData : consonantsData;
+    }
 
-    function selectLetter(index, speak = false) {
-      currentIndex = Math.max(0, Math.min(letters.length - 1, index));
-      const item = letters[currentIndex];
+    function updateScreen(speak = false) {
+      const data = getCurrentData();
+      const item = data[currentIndex];
 
-      [...film.children].forEach((chip, i) => {
-        chip.classList.toggle('active', i === currentIndex);
-        chip.setAttribute('aria-current', i === currentIndex ? 'true' : 'false');
+      progressText.textContent = `Letter ${currentIndex + 1} of ${data.length}`;
+      largeLetterBtn.textContent = item.letter;
+      largeLetterBtn.setAttribute("aria-label", `Hear ${item.exampleSound}`);
+      soundLine.textContent = `Sound: ${item.sound}`;
+      exampleTamil.textContent = item.exampleTamil;
+      exampleSound.textContent = `Say: ${item.exampleSound}`;
+      exampleMeaning.textContent = `Meaning: ${item.meaning}`;
+
+      previousBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === data.length - 1;
+
+      renderFilmStrip();
+
+      if (speak) {
+        speakCurrentLetter();
+      }
+    }
+
+    function renderFilmStrip() {
+      const data = getCurrentData();
+      filmStrip.innerHTML = "";
+
+      let start = currentIndex - 2;
+      let end = currentIndex + 2;
+
+      if (start < 0) {
+        end += Math.abs(start);
+        start = 0;
+      }
+
+      if (end >= data.length) {
+        const difference = end - data.length + 1;
+        start = Math.max(0, start - difference);
+        end = data.length - 1;
+      }
+
+      const visible = [];
+      for (let index = start; index <= end; index++) {
+        visible.push(index);
+      }
+
+      while (visible.length < 5) {
+        visible.push(null);
+      }
+
+      visible.forEach(index => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "film-letter";
+
+        if (index === null) {
+          button.classList.add("placeholder");
+          button.setAttribute("aria-hidden", "true");
+          filmStrip.appendChild(button);
+          return;
+        }
+
+        button.textContent = data[index].letter;
+        button.setAttribute("aria-label", `Select ${data[index].exampleSound}`);
+
+        if (index === currentIndex) {
+          button.classList.add("active");
+          button.setAttribute("aria-current", "true");
+        }
+
+        button.addEventListener("click", () => {
+          currentIndex = index;
+          updateScreen(true);
+        });
+
+        filmStrip.appendChild(button);
       });
-
-      bigLetter.textContent = item.char;
-      letterName.textContent = `${item.char} — ${item.name}`;
-      example.textContent = `உதாரணம்: ${item.example}`;
-      counter.textContent = `${currentIndex + 1} / ${letters.length}`;
-      prevBtn.disabled = currentIndex === 0;
-      nextBtn.disabled = currentIndex === letters.length - 1;
-
-      centerFilmStrip();
-      resetRecordingForNewLetter();
-      if (speak) speakCurrent();
     }
 
-    function centerFilmStrip() {
-      const viewportWidth = filmViewport.clientWidth;
-      const chip = film.children[currentIndex];
-      if (!chip) return;
-      const chipWidth = chip.getBoundingClientRect().width;
-      const gap = 8;
-      const totalWidth = letters.length * chipWidth + (letters.length - 1) * gap;
-      const desired = viewportWidth / 2 - (currentIndex * (chipWidth + gap) + chipWidth / 2);
-      const minTranslate = Math.min(0, viewportWidth - totalWidth);
-      const translate = Math.max(minTranslate, Math.min(0, desired));
-      film.style.transform = `translateX(${translate}px)`;
+    function switchCategory(type) {
+      if (type === currentType) return;
+
+      currentType = type;
+      currentIndex = 0;
+
+      vowelTab.classList.toggle("active", type === "vowels");
+      consonantTab.classList.toggle("active", type === "consonants");
+
+      stopRecordingIfNeeded();
+      clearRecording();
+      updateScreen(true);
     }
 
-    function getTamilVoice() {
-      const voices = window.speechSynthesis?.getVoices?.() || [];
-      return voices.find(v => v.lang?.toLowerCase().startsWith('ta')) ||
-             voices.find(v => v.lang?.toLowerCase().includes('in')) ||
-             null;
-    }
+    function speakCurrentLetter() {
+      const item = getCurrentData()[currentIndex];
 
-    function speakCurrent() {
-      if (!('speechSynthesis' in window)) {
-        statusText.textContent = 'இந்த உலாவியில் தமிழ் ஒலி வசதி கிடைக்கவில்லை.';
+      if (!("speechSynthesis" in window)) {
+        recordStatus.textContent = "Tamil speech is not supported on this device.";
         return;
       }
+
       window.speechSynthesis.cancel();
-      const item = letters[currentIndex];
-      const utterance = new SpeechSynthesisUtterance(item.utterance);
-      utterance.lang = 'ta-IN';
+
+      const utterance = new SpeechSynthesisUtterance(item.letter);
+      utterance.lang = "ta-IN";
       utterance.rate = 0.72;
       utterance.pitch = 1;
-      const voice = getTamilVoice();
-      if (voice) utterance.voice = voice;
+
       utterance.onstart = () => {
-        bigLetter.classList.remove('speaking');
-        void bigLetter.offsetWidth;
-        bigLetter.classList.add('speaking');
-        statusText.textContent = `${item.char} எழுத்தின் ஒலியை கவனமாகக் கேளுங்கள்.`;
+        largeLetterBtn.classList.add("speaking");
       };
+
       utterance.onend = () => {
-        bigLetter.classList.remove('speaking');
-        statusText.textContent = 'இப்போது அதே ஒலியைச் சொல்லிப் பதிவு செய்யுங்கள்.';
+        largeLetterBtn.classList.remove("speaking");
       };
+
+      utterance.onerror = () => {
+        largeLetterBtn.classList.remove("speaking");
+        recordStatus.textContent = "Tamil voice is unavailable. Install a Tamil text-to-speech voice in device settings.";
+      };
+
       window.speechSynthesis.speak(utterance);
     }
 
+    function goPrevious() {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        updateScreen(true);
+      }
+    }
+
+    function goNext() {
+      const data = getCurrentData();
+      if (currentIndex < data.length - 1) {
+        currentIndex += 1;
+        updateScreen(true);
+      }
+    }
+
     async function toggleRecording() {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
         mediaRecorder.stop();
         return;
       }
 
-      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-        statusText.textContent = 'இந்த உலாவியில் ஒலிப்பதிவு வசதி கிடைக்கவில்லை.';
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        recordStatus.textContent = "Recording is not supported in this browser.";
         return;
       }
 
       try {
-        window.speechSynthesis?.cancel();
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        const options = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ? { mimeType: 'audio/webm;codecs=opus' }
-          : undefined;
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recordedChunks = [];
+
+        const options = {};
+        if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+          options.mimeType = "audio/webm;codecs=opus";
+        }
+
         mediaRecorder = new MediaRecorder(stream, options);
+
         mediaRecorder.ondataavailable = event => {
-          if (event.data.size > 0) audioChunks.push(event.data);
+          if (event.data && event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
         };
-        mediaRecorder.onstop = finishRecording;
+
+        mediaRecorder.onstart = () => {
+          recordBtn.classList.add("recording");
+          recordBtn.textContent = "■ Stop Recording";
+          playBtn.disabled = true;
+          recordStatus.textContent = "Recording... say the letter or example word.";
+        };
+
+        mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(track => track.stop());
+
+          if (recordedUrl) {
+            URL.revokeObjectURL(recordedUrl);
+          }
+
+          const mimeType = mediaRecorder.mimeType || "audio/webm";
+          const blob = new Blob(recordedChunks, { type: mimeType });
+          recordedUrl = URL.createObjectURL(blob);
+          recordedAudio.src = recordedUrl;
+
+          recordBtn.classList.remove("recording");
+          recordBtn.textContent = "● Record Again";
+          playBtn.disabled = false;
+          recordStatus.textContent = "Recording ready. Tap Play Recording.";
+        };
+
+        mediaRecorder.onerror = () => {
+          stream.getTracks().forEach(track => track.stop());
+          recordBtn.classList.remove("recording");
+          recordBtn.textContent = "● Start Recording";
+          recordStatus.textContent = "Recording failed. Please try again.";
+        };
+
         mediaRecorder.start();
-        recordBtn.classList.add('recording');
-        recordLabel.textContent = 'நிறுத்து';
-        statusText.textContent = `${letters[currentIndex].char} என்று தெளிவாகச் சொல்லுங்கள்…`;
       } catch (error) {
-        statusText.textContent = 'மைக்ரோஃபோன் அனுமதி தேவை. உலாவி அமைப்பில் அனுமதிக்கவும்.';
+        recordStatus.textContent = "Microphone permission is needed to record your voice.";
       }
     }
 
-    function finishRecording() {
-      const mimeType = mediaRecorder?.mimeType || 'audio/webm';
-      const blob = new Blob(audioChunks, { type: mimeType });
-      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
-      recordedUrl = URL.createObjectURL(blob);
-      audioPlayback.src = recordedUrl;
-      recordingResult.classList.add('visible');
-      recordBtn.classList.remove('recording');
-      recordLabel.textContent = 'மீண்டும் பதிவு செய்';
-      statusText.textContent = 'உங்கள் பதிவை கேட்டு, எழுத்தின் ஒலியுடன் ஒப்பிடுங்கள்.';
-      stopStream();
-    }
+    function playRecording() {
+      if (!recordedAudio.src) return;
 
-    function stopStream() {
-      if (stream) stream.getTracks().forEach(track => track.stop());
-      stream = null;
+      recordedAudio.currentTime = 0;
+      recordedAudio.play()
+        .then(() => {
+          recordStatus.textContent = "Playing your recording...";
+        })
+        .catch(() => {
+          recordStatus.textContent = "Unable to play the recording.";
+        });
     }
 
     function clearRecording() {
-      audioPlayback.pause();
-      audioPlayback.removeAttribute('src');
-      audioPlayback.load();
-      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
-      recordedUrl = null;
-      recordingResult.classList.remove('visible');
-      recordLabel.textContent = 'பதிவு செய்';
-      statusText.textContent = 'ஒவ்வொரு எழுத்தையும் தெளிவாகச் சொல்லிப் பழகுங்கள்.';
+      if (recordedUrl) {
+        URL.revokeObjectURL(recordedUrl);
+      }
+
+      recordedUrl = "";
+      recordedChunks = [];
+      recordedAudio.removeAttribute("src");
+      recordedAudio.load();
+
+      recordBtn.classList.remove("recording");
+      recordBtn.textContent = "● Start Recording";
+      playBtn.disabled = true;
+      recordStatus.textContent = "No recording yet";
     }
 
-    function resetRecordingForNewLetter() {
-      if (mediaRecorder?.state === 'recording') mediaRecorder.stop();
-      stopStream();
-      clearRecording();
+    function stopRecordingIfNeeded() {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
     }
 
-    bigLetter.addEventListener('click', speakCurrent);
-    prevBtn.addEventListener('click', () => selectLetter(currentIndex - 1, true));
-    nextBtn.addEventListener('click', () => selectLetter(currentIndex + 1, true));
-    recordBtn.addEventListener('click', toggleRecording);
-    deleteRecording.addEventListener('click', clearRecording);
+    vowelTab.addEventListener("click", () => switchCategory("vowels"));
+    consonantTab.addEventListener("click", () => switchCategory("consonants"));
+    largeLetterBtn.addEventListener("click", speakCurrentLetter);
+    previousBtn.addEventListener("click", goPrevious);
+    nextBtn.addEventListener("click", goNext);
+    recordBtn.addEventListener("click", toggleRecording);
+    playBtn.addEventListener("click", playRecording);
 
-    filmViewport.addEventListener('touchstart', event => {
+    recordedAudio.addEventListener("ended", () => {
+      recordStatus.textContent = "Playback finished.";
+    });
+
+    displayPanel.addEventListener("touchstart", event => {
       const touch = event.changedTouches[0];
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
     }, { passive: true });
 
-    filmViewport.addEventListener('touchend', event => {
+    displayPanel.addEventListener("touchend", event => {
       const touch = event.changedTouches[0];
-      const dx = touch.clientX - touchStartX;
-      const dy = touch.clientY - touchStartY;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
-        selectLetter(currentIndex + (dx < 0 ? 1 : -1), true);
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+
+      if (Math.abs(deltaX) < 45 || Math.abs(deltaX) < Math.abs(deltaY)) {
+        return;
+      }
+
+      if (deltaX < 0) {
+        goNext();
+      } else {
+        goPrevious();
       }
     }, { passive: true });
 
-    document.addEventListener('keydown', event => {
-      if (event.key === 'ArrowLeft') selectLetter(currentIndex - 1, true);
-      if (event.key === 'ArrowRight') selectLetter(currentIndex + 1, true);
-      if (event.key === 'Enter' || event.key === ' ') {
-        if (document.activeElement === document.body) speakCurrent();
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") goPrevious();
+      if (event.key === "ArrowRight") goNext();
+      if (event.key === "Enter" && document.activeElement === largeLetterBtn) {
+        speakCurrentLetter();
       }
     });
 
-    window.addEventListener('resize', centerFilmStrip);
-    window.speechSynthesis?.addEventListener?.('voiceschanged', () => {});
-    window.addEventListener('beforeunload', () => {
-      stopStream();
-      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+    window.addEventListener("beforeunload", () => {
+      if (recordedUrl) {
+        URL.revokeObjectURL(recordedUrl);
+      }
     });
 
-    selectLetter(0, false);
+    updateScreen(false);
   </script>
 </body>
 </html>
