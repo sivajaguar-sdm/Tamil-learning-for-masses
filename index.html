@@ -1,84 +1,610 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tamil Trainer 4.1</title>
-<style>
-body{margin:0;font-family:system-ui;background:#f5f3fb}
-.wrap{max-width:520px;margin:auto;padding:16px}
-h2{text-align:center;margin:8px 0;color:#5b2bbd}
-.strip{display:flex;overflow-x:auto;gap:10px;padding:10px 4px 16px;scrollbar-width:none}
-.strip::-webkit-scrollbar{display:none}
-.dot{min-width:54px;height:54px;border-radius:27px;border:2px solid #cdbdf3;
-display:flex;align-items:center;justify-content:center;
-font-size:28px;font-weight:bold;color:#5b2bbd;background:#fff;
-transition:.25s;cursor:pointer;flex-shrink:0}
-.dot.active{background:#5b2bbd;color:#fff;transform:scale(1.2);border-color:#5b2bbd}
-.card{background:#fff;border-radius:22px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
-.big{font-size:170px;text-align:center;color:#5b2bbd;cursor:pointer;line-height:1.1}
-.tap{text-align:center;color:#777;margin-top:-10px}
-button{width:100%;padding:15px;border:none;border-radius:16px;font-size:20px;font-weight:bold;margin-top:12px}
-.listen{background:#5b2bbd;color:#fff}
-.record{background:#0b9f57;color:#fff}
-.nav{display:flex;gap:10px;margin-top:14px}
-.nav button{margin:0}
-.prev{background:#ececec}.next{background:#5b2bbd;color:#fff}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#fff7e8" />
+  <title>தமிழ் ஒலி பயிற்சி 4.2</title>
+  <style>
+    :root {
+      --bg: #fff8ea;
+      --card: #ffffff;
+      --ink: #2a2a32;
+      --muted: #6e6b75;
+      --accent: #ef6c35;
+      --accent-dark: #c94f20;
+      --accent-soft: #ffe1c7;
+      --green: #288b63;
+      --green-soft: #dcf6eb;
+      --line: #eadfce;
+      --shadow: 0 14px 36px rgba(90, 57, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans Tamil", "Nirmala UI", Latha, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%, #fff1c9 0 10%, transparent 30%),
+        radial-gradient(circle at 92% 12%, #ffe4d5 0 9%, transparent 26%),
+        var(--bg);
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
+
+    button { font: inherit; }
+
+    .app {
+      width: min(720px, 100%);
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-wrap { min-width: 0; }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      line-height: 1.25;
+      letter-spacing: .01em;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    .version {
+      flex: 0 0 auto;
+      border: 1px solid #f0c9ac;
+      background: rgba(255,255,255,.72);
+      color: var(--accent-dark);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .film-shell {
+      position: relative;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 10px 38px;
+      box-shadow: 0 8px 22px rgba(90,57,25,.08);
+      overflow: hidden;
+    }
+
+    .film-shell::before,
+    .film-shell::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .film-shell::before { left: 0; background: linear-gradient(90deg, rgba(255,248,234,.96), transparent); }
+    .film-shell::after { right: 0; background: linear-gradient(-90deg, rgba(255,248,234,.96), transparent); }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 4;
+      width: 34px;
+      height: 44px;
+      border: 0;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--accent-dark);
+      box-shadow: 0 5px 14px rgba(65,40,15,.13);
+      font-size: 1.4rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .arrow:disabled { opacity: .3; cursor: default; }
+    .arrow.left { left: 5px; }
+    .arrow.right { right: 5px; }
+
+    .film-viewport {
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+
+    .film {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 32px) / 5);
+      gap: 8px;
+      transition: transform .28s ease;
+      will-change: transform;
+    }
+
+    .letter-chip {
+      height: 58px;
+      border: 1px solid #eadfce;
+      border-radius: 15px;
+      background: #fff;
+      color: #5a4c42;
+      font-size: clamp(1.35rem, 7vw, 1.8rem);
+      font-weight: 800;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 3px 8px rgba(76,47,19,.06);
+      transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+    }
+    .letter-chip.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 18px rgba(239,108,53,.28);
+    }
+
+    .main-card {
+      flex: 1;
+      min-height: 410px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 5vw, 28px);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: .82rem;
+      min-height: 24px;
+    }
+    .tap-tip {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #fff3e8;
+      color: var(--accent-dark);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .letter-stage {
+      flex: 1;
+      min-height: 205px;
+      display: grid;
+      place-items: center;
+      padding: 8px 0;
+    }
+
+    .big-letter {
+      width: min(210px, 60vw);
+      aspect-ratio: 1;
+      border: 0;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff3df, #ffd7b7);
+      color: var(--accent-dark);
+      font-size: clamp(6rem, 28vw, 10rem);
+      line-height: 1;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 2px rgba(239,108,53,.15), 0 18px 40px rgba(239,108,53,.19);
+      transition: transform .16s ease;
+      user-select: none;
+    }
+    .big-letter:active { transform: scale(.96); }
+    .big-letter.speaking { animation: pulse .58s ease; }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      45% { transform: scale(1.07); }
+    }
+
+    .info-panel {
+      width: 100%;
+      border-radius: 18px;
+      background: #fffaf3;
+      border: 1px solid #f1e5d5;
+      padding: 13px 15px;
+      min-height: 86px;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      overflow-wrap: anywhere;
+    }
+    .letter-name {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(1rem, 4.5vw, 1.25rem);
+      line-height: 1.45;
+      font-weight: 850;
+    }
+    .example {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(.88rem, 3.8vw, 1rem);
+      line-height: 1.55;
+    }
+
+    .recorder {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .record-button {
+      min-height: 58px;
+      border: 0;
+      border-radius: 18px;
+      background: var(--green);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 9px 20px rgba(40,139,99,.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .record-button.recording {
+      background: #c83e3e;
+      box-shadow: 0 9px 20px rgba(200,62,62,.22);
+    }
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 5px rgba(255,255,255,.18);
+    }
+    .recording .dot { animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: .35; } }
+
+    .recording-result {
+      display: none;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 16px;
+      background: var(--green-soft);
+      border: 1px solid #bce7d6;
+    }
+    .recording-result.visible { display: grid; }
+    audio { width: 100%; min-width: 0; height: 38px; }
+    .delete-btn {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 13px;
+      background: #fff;
+      color: #a53333;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 22px;
+      margin: 4px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+
+    .nav-hint {
+      text-align: center;
+      color: var(--muted);
+      font-size: .76rem;
+      margin: -2px 0 0;
+    }
+
+    @media (max-height: 700px) {
+      .app { gap: 9px; padding-top: 10px; }
+      .film-shell { padding-top: 7px; padding-bottom: 7px; }
+      .letter-chip { height: 48px; }
+      .main-card { min-height: 355px; padding: 15px; }
+      .letter-stage { min-height: 165px; }
+      .big-letter { width: min(165px, 43vh); font-size: clamp(5rem, 23vw, 8rem); }
+      .info-panel { min-height: 72px; padding: 9px 12px; }
+      .record-button { min-height: 50px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-<h2>Tamil Pronunciation Trainer 4.1</h2>
-<div class="strip" id="strip"></div>
-<div class="card">
-<div id="big" class="big"></div>
-<div class="tap">👆 Tap the letter to hear it</div>
-<button class="listen" onclick="speak()">🔊 Listen</button>
-<button class="record" onclick="alert('Recorder will be added in next version')">🎤 Record</button>
-<div class="nav">
-<button class="prev" onclick="move(-1)">← Previous</button>
-<button class="next" onclick="move(1)">Next →</button>
-</div>
-</div>
-</div>
-<script>
-const letters=["அ","ஆ","இ","ஈ","உ","ஊ","எ","ஏ","ஐ","ஒ","ஓ","ஔ"];
-let index=0;
-const strip=document.getElementById("strip");
-const big=document.getElementById("big");
-letters.forEach((l,i)=>{
- let d=document.createElement("div");
- d.className="dot";
- d.textContent=l;
- d.onclick=()=>{index=i;render();speak();}
- strip.appendChild(d);
-});
-function render(){
- big.textContent=letters[index];
- [...strip.children].forEach((c,i)=>c.classList.toggle("active",i===index));
- strip.children[index].scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
-}
-function move(d){
- index=Math.max(0,Math.min(letters.length-1,index+d));
- render(); speak();
-}
-function speak(){
- speechSynthesis.cancel();
- let u=new SpeechSynthesisUtterance(letters[index]);
- u.lang="ta-IN";
- let v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.startsWith("ta"));
- if(v)u.voice=v;
- speechSynthesis.speak(u);
-}
-big.onclick=speak;
-let sx=0;
-document.querySelector(".card").ontouchstart=e=>sx=e.touches[0].clientX;
-document.querySelector(".card").ontouchend=e=>{
- let dx=e.changedTouches[0].clientX-sx;
- if(Math.abs(dx)>60) move(dx<0?1:-1);
-};
-render();
-</script>
+  <main class="app">
+    <header>
+      <div class="title-wrap">
+        <h1>தமிழ் ஒலி பயிற்சி</h1>
+        <p class="subtitle">எழுத்தைத் தொட்டு கேளுங்கள் · உங்கள் குரலைப் பதிவு செய்யுங்கள்</p>
+      </div>
+      <div class="version">v4.2</div>
+    </header>
+
+    <section class="film-shell" aria-label="தமிழ் எழுத்துகள்">
+      <button class="arrow left" id="prevBtn" aria-label="முந்தைய எழுத்து">‹</button>
+      <div class="film-viewport" id="filmViewport">
+        <div class="film" id="film"></div>
+      </div>
+      <button class="arrow right" id="nextBtn" aria-label="அடுத்த எழுத்து">›</button>
+    </section>
+
+    <section class="main-card">
+      <div class="progress-row">
+        <span id="counter">1 / 12</span>
+        <span class="tap-tip">🔊 எழுத்தைத் தொடவும்</span>
+      </div>
+
+      <div class="letter-stage">
+        <button class="big-letter" id="bigLetter" aria-label="எழுத்தின் ஒலியை கேட்க">அ</button>
+      </div>
+
+      <section class="info-panel" aria-live="polite">
+        <p class="letter-name" id="letterName">அ — அகரம்</p>
+        <p class="example" id="example">உதாரணம்: அம்மா</p>
+      </section>
+
+      <section class="recorder">
+        <button class="record-button" id="recordBtn">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="recordLabel">பதிவு செய்</span>
+        </button>
+
+        <div class="recording-result" id="recordingResult">
+          <audio id="audioPlayback" controls preload="metadata"></audio>
+          <button class="delete-btn" id="deleteRecording" aria-label="பதிவை நீக்கு">✕</button>
+        </div>
+        <p class="status" id="status">ஒவ்வொரு எழுத்தையும் தெளிவாகச் சொல்லிப் பழகுங்கள்.</p>
+      </section>
+    </section>
+
+    <p class="nav-hint">இடது / வலது நோக்கி ஸ்வைப் செய்தும் எழுத்தை மாற்றலாம்</p>
+  </main>
+
+  <script>
+    const letters = [
+      { char: 'அ', name: 'அகரம்', example: 'அம்மா', utterance: 'அ' },
+      { char: 'ஆ', name: 'ஆகாரம்', example: 'ஆடு', utterance: 'ஆ' },
+      { char: 'இ', name: 'இகரம்', example: 'இலை', utterance: 'இ' },
+      { char: 'ஈ', name: 'ஈகாரம்', example: 'ஈ', utterance: 'ஈ' },
+      { char: 'உ', name: 'உகரம்', example: 'உடை', utterance: 'உ' },
+      { char: 'ஊ', name: 'ஊகாரம்', example: 'ஊஞ்சல்', utterance: 'ஊ' },
+      { char: 'எ', name: 'எகரம்', example: 'எலி', utterance: 'எ' },
+      { char: 'ஏ', name: 'ஏகாரம்', example: 'ஏணி', utterance: 'ஏ' },
+      { char: 'ஐ', name: 'ஐகாரம்', example: 'ஐந்து', utterance: 'ஐ' },
+      { char: 'ஒ', name: 'ஒகரம்', example: 'ஒட்டகம்', utterance: 'ஒ' },
+      { char: 'ஓ', name: 'ஓகாரம்', example: 'ஓடம்', utterance: 'ஓ' },
+      { char: 'ஔ', name: 'ஔகாரம்', example: 'ஔவையார்', utterance: 'ஔ' }
+    ];
+
+    const film = document.getElementById('film');
+    const filmViewport = document.getElementById('filmViewport');
+    const bigLetter = document.getElementById('bigLetter');
+    const letterName = document.getElementById('letterName');
+    const example = document.getElementById('example');
+    const counter = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const recordLabel = document.getElementById('recordLabel');
+    const recordingResult = document.getElementById('recordingResult');
+    const audioPlayback = document.getElementById('audioPlayback');
+    const deleteRecording = document.getElementById('deleteRecording');
+    const statusText = document.getElementById('status');
+
+    let currentIndex = 0;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let stream = null;
+    let recordedUrl = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    letters.forEach((item, index) => {
+      const chip = document.createElement('button');
+      chip.className = 'letter-chip';
+      chip.textContent = item.char;
+      chip.setAttribute('aria-label', `${item.char} எழுத்து`);
+      chip.addEventListener('click', () => selectLetter(index, true));
+      film.appendChild(chip);
+    });
+
+    function selectLetter(index, speak = false) {
+      currentIndex = Math.max(0, Math.min(letters.length - 1, index));
+      const item = letters[currentIndex];
+
+      [...film.children].forEach((chip, i) => {
+        chip.classList.toggle('active', i === currentIndex);
+        chip.setAttribute('aria-current', i === currentIndex ? 'true' : 'false');
+      });
+
+      bigLetter.textContent = item.char;
+      letterName.textContent = `${item.char} — ${item.name}`;
+      example.textContent = `உதாரணம்: ${item.example}`;
+      counter.textContent = `${currentIndex + 1} / ${letters.length}`;
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === letters.length - 1;
+
+      centerFilmStrip();
+      resetRecordingForNewLetter();
+      if (speak) speakCurrent();
+    }
+
+    function centerFilmStrip() {
+      const viewportWidth = filmViewport.clientWidth;
+      const chip = film.children[currentIndex];
+      if (!chip) return;
+      const chipWidth = chip.getBoundingClientRect().width;
+      const gap = 8;
+      const totalWidth = letters.length * chipWidth + (letters.length - 1) * gap;
+      const desired = viewportWidth / 2 - (currentIndex * (chipWidth + gap) + chipWidth / 2);
+      const minTranslate = Math.min(0, viewportWidth - totalWidth);
+      const translate = Math.max(minTranslate, Math.min(0, desired));
+      film.style.transform = `translateX(${translate}px)`;
+    }
+
+    function getTamilVoice() {
+      const voices = window.speechSynthesis?.getVoices?.() || [];
+      return voices.find(v => v.lang?.toLowerCase().startsWith('ta')) ||
+             voices.find(v => v.lang?.toLowerCase().includes('in')) ||
+             null;
+    }
+
+    function speakCurrent() {
+      if (!('speechSynthesis' in window)) {
+        statusText.textContent = 'இந்த உலாவியில் தமிழ் ஒலி வசதி கிடைக்கவில்லை.';
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const item = letters[currentIndex];
+      const utterance = new SpeechSynthesisUtterance(item.utterance);
+      utterance.lang = 'ta-IN';
+      utterance.rate = 0.72;
+      utterance.pitch = 1;
+      const voice = getTamilVoice();
+      if (voice) utterance.voice = voice;
+      utterance.onstart = () => {
+        bigLetter.classList.remove('speaking');
+        void bigLetter.offsetWidth;
+        bigLetter.classList.add('speaking');
+        statusText.textContent = `${item.char} எழுத்தின் ஒலியை கவனமாகக் கேளுங்கள்.`;
+      };
+      utterance.onend = () => {
+        bigLetter.classList.remove('speaking');
+        statusText.textContent = 'இப்போது அதே ஒலியைச் சொல்லிப் பதிவு செய்யுங்கள்.';
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    async function toggleRecording() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        return;
+      }
+
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        statusText.textContent = 'இந்த உலாவியில் ஒலிப்பதிவு வசதி கிடைக்கவில்லை.';
+        return;
+      }
+
+      try {
+        window.speechSynthesis?.cancel();
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        const options = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+          ? { mimeType: 'audio/webm;codecs=opus' }
+          : undefined;
+        mediaRecorder = new MediaRecorder(stream, options);
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) audioChunks.push(event.data);
+        };
+        mediaRecorder.onstop = finishRecording;
+        mediaRecorder.start();
+        recordBtn.classList.add('recording');
+        recordLabel.textContent = 'நிறுத்து';
+        statusText.textContent = `${letters[currentIndex].char} என்று தெளிவாகச் சொல்லுங்கள்…`;
+      } catch (error) {
+        statusText.textContent = 'மைக்ரோஃபோன் அனுமதி தேவை. உலாவி அமைப்பில் அனுமதிக்கவும்.';
+      }
+    }
+
+    function finishRecording() {
+      const mimeType = mediaRecorder?.mimeType || 'audio/webm';
+      const blob = new Blob(audioChunks, { type: mimeType });
+      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+      recordedUrl = URL.createObjectURL(blob);
+      audioPlayback.src = recordedUrl;
+      recordingResult.classList.add('visible');
+      recordBtn.classList.remove('recording');
+      recordLabel.textContent = 'மீண்டும் பதிவு செய்';
+      statusText.textContent = 'உங்கள் பதிவை கேட்டு, எழுத்தின் ஒலியுடன் ஒப்பிடுங்கள்.';
+      stopStream();
+    }
+
+    function stopStream() {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    function clearRecording() {
+      audioPlayback.pause();
+      audioPlayback.removeAttribute('src');
+      audioPlayback.load();
+      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+      recordedUrl = null;
+      recordingResult.classList.remove('visible');
+      recordLabel.textContent = 'பதிவு செய்';
+      statusText.textContent = 'ஒவ்வொரு எழுத்தையும் தெளிவாகச் சொல்லிப் பழகுங்கள்.';
+    }
+
+    function resetRecordingForNewLetter() {
+      if (mediaRecorder?.state === 'recording') mediaRecorder.stop();
+      stopStream();
+      clearRecording();
+    }
+
+    bigLetter.addEventListener('click', speakCurrent);
+    prevBtn.addEventListener('click', () => selectLetter(currentIndex - 1, true));
+    nextBtn.addEventListener('click', () => selectLetter(currentIndex + 1, true));
+    recordBtn.addEventListener('click', toggleRecording);
+    deleteRecording.addEventListener('click', clearRecording);
+
+    filmViewport.addEventListener('touchstart', event => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    filmViewport.addEventListener('touchend', event => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+        selectLetter(currentIndex + (dx < 0 ? 1 : -1), true);
+      }
+    }, { passive: true });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') selectLetter(currentIndex - 1, true);
+      if (event.key === 'ArrowRight') selectLetter(currentIndex + 1, true);
+      if (event.key === 'Enter' || event.key === ' ') {
+        if (document.activeElement === document.body) speakCurrent();
+      }
+    });
+
+    window.addEventListener('resize', centerFilmStrip);
+    window.speechSynthesis?.addEventListener?.('voiceschanged', () => {});
+    window.addEventListener('beforeunload', () => {
+      stopStream();
+      if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+    });
+
+    selectLetter(0, false);
+  </script>
 </body>
 </html>
