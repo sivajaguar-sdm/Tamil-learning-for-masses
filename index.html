@@ -3,598 +3,214 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#5b21b6">
-<title>Tamil Letters and Pronunciation</title>
+<meta name="theme-color" content="#6d28d9">
+<title>Tamil Handwriting 2.0 — அ</title>
 <style>
 *{box-sizing:border-box}
 :root{
- --bg:#f7f7fb;
- --card:#ffffff;
- --text:#182033;
- --muted:#697086;
- --primary:#5b21b6;
- --primary-dark:#43158f;
- --soft:#f2edff;
- --line:#e5e7ef;
- --shadow:0 12px 30px rgba(24,32,51,.08)
+ --ink:#5b21b6;--ink2:#7c3aed;--bg:#f7f6fb;--card:#fff;--text:#1f2937;
+ --muted:#667085;--line:#e7e3ef;--green:#169b62;--red:#d94848;--gold:#a86500;
 }
-html{scroll-behavior:smooth}
-body{
- margin:0;
- min-height:100vh;
- background:linear-gradient(180deg,#fafaff,#f4f5fa);
- color:var(--text);
- font-family:Inter,system-ui,-apple-system,"Noto Sans Tamil","Nirmala UI",sans-serif
-}
-header{
- position:sticky;
- top:0;
- z-index:20;
- background:rgba(255,255,255,.96);
- backdrop-filter:blur(14px);
- border-bottom:1px solid var(--line)
-}
-.headerInner{
- max-width:900px;
- margin:auto;
- padding:14px 16px;
- display:flex;
- align-items:center;
- gap:12px
-}
-.logo{
- width:46px;
- height:46px;
- border-radius:16px;
- display:grid;
- place-items:center;
- color:#fff;
- background:linear-gradient(135deg,#6d28d9,#4f46e5);
- font-size:1.45rem;
- font-weight:900
-}
-h1{
- margin:0;
- font-size:1.13rem;
- line-height:1.2
-}
-header p{
- margin:3px 0 0;
- color:var(--muted);
- font-size:.87rem
-}
-main{
- max-width:900px;
- margin:auto;
- padding:18px 14px 50px
-}
-.intro{
- border-radius:27px;
- padding:24px;
- color:#fff;
- background:linear-gradient(135deg,#5b21b6,#4338ca);
- box-shadow:var(--shadow)
-}
-.intro h2{
- margin:0 0 9px;
- font-size:clamp(1.8rem,8vw,2.8rem)
-}
-.intro p{
- margin:0;
- color:#eeeaff;
- line-height:1.6
-}
-.playAll{
- margin-top:18px;
- min-height:50px;
- padding:10px 18px;
- border:0;
- border-radius:16px;
- background:#fff;
- color:var(--primary);
- font-weight:900
-}
-.section{
- margin-top:24px
-}
-.sectionHeader{
- display:flex;
- align-items:end;
- justify-content:space-between;
- gap:12px;
- margin:0 2px 12px
-}
-.sectionHeader h2{
- margin:0;
- font-size:1.25rem
-}
-.sectionHeader p{
- margin:4px 0 0;
- color:var(--muted);
- font-size:.9rem
-}
-.letterGrid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
- gap:12px
-}
-.letterCard{
- border:1px solid var(--line);
- border-radius:22px;
- background:var(--card);
- padding:18px 12px;
- text-align:center;
- box-shadow:0 7px 20px rgba(24,32,51,.045)
-}
-.letter{
- font-size:clamp(3.2rem,13vw,5rem);
- color:var(--primary);
- font-weight:900;
- line-height:1.05
-}
-.sound{
- margin-top:8px;
- font-weight:800;
- color:#384052
-}
-.example{
- margin-top:5px;
- font-size:.85rem;
- color:var(--muted);
- min-height:20px
-}
-.speakButton{
- margin-top:13px;
- width:100%;
- min-height:44px;
- border:0;
- border-radius:14px;
- background:var(--soft);
- color:var(--primary);
- font-weight:850
-}
-.speakButton:active{
- background:#e4d9ff
-}
-.guide{
- margin-top:24px;
- padding:19px;
- border:1px solid var(--line);
- border-radius:22px;
- background:#fff;
- line-height:1.65;
- color:var(--muted)
-}
-.guide b{color:var(--text)}
-.voiceStatus{
- margin-top:14px;
- padding:12px 14px;
- border-radius:15px;
- background:#fff;
- border:1px solid var(--line);
- color:var(--muted);
- font-size:.88rem
-}
-@media(max-width:430px){
- main{padding-left:10px;padding-right:10px}
- .intro{padding:21px}
- .letterGrid{grid-template-columns:repeat(2,1fr);gap:10px}
- .letterCard{padding:16px 10px}
-}
-
-/* ===== Teacher-style writing lesson ===== */
-.cardActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
-.cardActions .speakButton{margin-top:0}
-.writeButton{
- min-height:44px;border:0;border-radius:14px;background:#fff5dc;
- color:#8a5600;font-weight:900
-}
-.writeButton:active{background:#ffe7ad}
-
-.teacherOverlay{
- position:fixed;inset:0;z-index:100;display:none;align-items:center;
- justify-content:center;padding:12px;background:rgba(18,20,31,.68);
- backdrop-filter:blur(8px)
-}
-.teacherOverlay.open{display:flex}
-.teacherDialog{
- width:min(100%,640px);max-height:95vh;overflow:auto;background:#fff;
- border-radius:28px;padding:18px;box-shadow:0 28px 72px rgba(0,0,0,.30)
-}
-.teacherTop{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.teacherTop h2{margin:0;font-size:1.18rem}
-.closeTeacher{
- width:42px;height:42px;border:1px solid var(--line);border-radius:14px;
- background:#fff;font-size:1.25rem
-}
-.formationIntro{
- margin:12px 0 0;padding:12px 14px;border-radius:16px;background:#f4f0ff;
- color:#50466b;line-height:1.45;font-size:.91rem
-}
-.writingBoard{
- position:relative;margin-top:14px;aspect-ratio:4/3;border-radius:24px;
- overflow:hidden;border:1px solid #e4def3;background:#fff
-}
-.writingBoard canvas{display:block;width:100%;height:100%}
-.boardLegend{
- display:flex;justify-content:center;gap:15px;flex-wrap:wrap;
- margin-top:10px;color:var(--muted);font-size:.84rem
-}
-.legendDot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px}
-.green{background:#20a464}.red{background:#dc3f45}.purple{background:#5b21b6}
-.stepText{
- min-height:58px;margin-top:13px;padding:13px 15px;border-radius:17px;
- background:#faf9ff;border:1px solid #ece8f7;text-align:center
-}
-.stepText b{color:var(--primary);font-size:1.05rem}
-.stepText span{display:block;color:var(--muted);margin-top:4px}
-.teacherControls{
- display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px
-}
-.teacherControls button{
- min-height:47px;border-radius:15px;border:1px solid var(--line);
- background:#fff;font-weight:850
-}
-.teacherControls .playFormation{background:var(--primary);color:#fff;border-color:var(--primary)}
-.practiceHint{
- margin-top:14px;text-align:center;color:var(--muted);font-size:.87rem;
- line-height:1.5
-}
-@media(max-width:480px){
- .teacherDialog{padding:14px;border-radius:23px}
- .teacherControls{grid-template-columns:1fr 1fr}
-}
-
+body{margin:0;background:linear-gradient(#faf9ff,#f4f2f8);font-family:Inter,system-ui,-apple-system,"Noto Sans Tamil","Nirmala UI",sans-serif;color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header{max-width:820px;margin:auto;padding:13px 16px;display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--ink2),#4338ca);color:#fff;font-size:1.8rem;font-weight:900}
+h1{font-size:1.08rem;margin:0}.sub{font-size:.84rem;color:var(--muted);margin-top:3px}
+main{max-width:820px;margin:auto;padding:16px 12px 48px}
+.hero{padding:21px;border-radius:26px;background:linear-gradient(135deg,#6024b8,#4338ca);color:#fff;box-shadow:0 14px 36px rgba(69,46,142,.18)}
+.heroRow{display:flex;align-items:center;gap:20px}
+.heroLetter{font-size:clamp(5.5rem,24vw,9rem);font-weight:900;line-height:1}
+.hero h2{margin:0 0 7px;font-size:1.55rem}.hero p{margin:0;line-height:1.55;color:#eeeafe}
+.hear{margin-top:14px;border:0;border-radius:15px;min-height:46px;padding:0 18px;background:#fff;color:var(--ink);font-weight:900}
+.notice{margin-top:13px;padding:11px 13px;border-radius:15px;background:#fff8e8;border:1px solid #f1d99e;color:#6e4b00;font-size:.83rem;line-height:1.5}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.tab{min-height:47px;border:1px solid var(--line);background:#fff;border-radius:15px;font-weight:850;color:#525866}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none}.panel.active{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:16px;box-shadow:0 10px 28px rgba(31,41,55,.05)}
+.card h3{margin:0;font-size:1.14rem}.cardLead{margin:6px 0 14px;color:var(--muted);font-size:.9rem;line-height:1.5}
+.board{position:relative;aspect-ratio:4/3;border:1px solid #e7e1f2;border-radius:22px;overflow:hidden;background:
+linear-gradient(transparent 24.7%,#ebe6f4 25%,transparent 25.3%),
+linear-gradient(transparent 49.7%,#ded6ec 50%,transparent 50.3%),
+linear-gradient(transparent 74.7%,#ebe6f4 75%,transparent 75.3%),
+#fff}
+.board svg,.board canvas{width:100%;height:100%;display:block;touch-action:none}
+.model{fill:none;stroke:#ddd5e8;stroke-width:19;stroke-linecap:round;stroke-linejoin:round}
+.stroke{fill:none;stroke:var(--ink);stroke-width:19;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000}
+.startDot{fill:var(--green);stroke:#fff;stroke-width:4}.endDot{fill:var(--red);stroke:#fff;stroke-width:4}
+.num{font:bold 15px system-ui;fill:#fff;text-anchor:middle;dominant-baseline:middle}
+.arrow{fill:var(--ink)}
+.pencil{font-size:30px;opacity:0}
+.stepBox{margin-top:12px;padding:12px 14px;text-align:center;border-radius:16px;background:#f8f6ff;border:1px solid #ece7fa;min-height:63px}
+.stepBox b{color:var(--ink)}.stepBox span{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.controls button{min-height:45px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:850}
+.controls .primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:.82rem}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.g{background:var(--green)}.r{background:var(--red)}.p{background:var(--ink)}
+.traceActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.traceActions button{min-height:46px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:850}
+.traceActions .clear{background:#fff3e5;color:#905500}
+.status{margin-top:10px;padding:11px 13px;border-radius:14px;background:#f8f6ff;color:var(--muted);font-size:.87rem;text-align:center}
+.examples{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.example{padding:14px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:center}
+.example .emoji{font-size:2rem}.example b{display:block;font-size:1.25rem;margin-top:5px}.example span{color:var(--muted);font-size:.85rem}
+@media(max-width:520px){.heroRow{align-items:flex-start}.controls{grid-template-columns:1fr 1fr}.tabs{gap:6px}.tab{font-size:.82rem}.card{padding:12px}.examples{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
- <div class="headerInner">
-  <div class="logo">அ</div>
-  <div>
-   <h1>Tamil Letters</h1>
-   <p>Basic letters and pronunciation</p>
-  </div>
- </div>
-</header>
+<header><div class="header"><div class="logo">அ</div><div><h1>Tamil Handwriting — Version 2.0</h1><div class="sub">One carefully focused lesson: அ</div></div></div></header>
 
 <main>
- <section class="intro">
-  <h2>தமிழ் எழுத்துகள்</h2>
-  <p>Tap the speaker button on any card to hear the Tamil letter. Begin with vowels, then learn consonants.</p>
-  <button class="playAll" id="playVowels">🔊 Play all vowels</button>
- </section>
-
- <section class="section">
-  <div class="sectionHeader">
-   <div>
-    <h2>உயிர் எழுத்துகள்</h2>
-    <p>12 Tamil vowels</p>
-   </div>
-  </div>
-  <div class="letterGrid" id="vowelGrid"></div>
- </section>
-
- <section class="section">
-  <div class="sectionHeader">
-   <div>
-    <h2>மெய் எழுத்துகள்</h2>
-    <p>18 Tamil consonants</p>
-   </div>
-  </div>
-  <div class="letterGrid" id="consonantGrid"></div>
- </section>
-
- <section class="section">
-  <div class="sectionHeader">
-   <div>
-    <h2>ஆய்த எழுத்து</h2>
-    <p>Special Tamil letter</p>
-   </div>
-  </div>
-  <div class="letterGrid">
-   <article class="letterCard">
-    <div class="letter">ஃ</div>
-    <div class="sound">Aytham</div>
-    <div class="example">ஃ</div>
-    <div class="cardActions"><button class="speakButton" data-speak="ஃ">🔊 Hear</button><button class="writeButton" data-write="ஃ" data-sound="Aytham">✍️ Learn to write</button></div>
-   </article>
-  </div>
- </section>
-
- <div class="guide">
-  <b>How to practise:</b><br>
-  Listen to one letter three times. Say it slowly. Then say the example word. Learn only five or six letters in one session.
+<section class="hero">
+ <div class="heroRow">
+  <div class="heroLetter">அ</div>
+  <div><h2>உயிர் எழுத்து — அ</h2><p>Listen, watch slowly, trace the guide, and then write without help.</p><button class="hear" id="hearLetter">🔊 Hear “அ”</button></div>
  </div>
+</section>
 
- <div class="voiceStatus" id="voiceStatus">Preparing Tamil pronunciation…</div>
+<div class="notice"><b>Teacher note:</b> Handwriting style can vary slightly between schools and teachers. This lesson uses one simple rounded formation and keeps the animated route aligned with the visible model.</div>
 
-<div class="teacherOverlay" id="teacherOverlay" role="dialog" aria-modal="true">
- <div class="teacherDialog">
-  <div class="teacherTop">
-   <h2><span id="teacherLetterTitle">அ</span> — எழுதும் முறை</h2>
-   <button class="closeTeacher" id="closeTeacher" aria-label="Close">×</button>
+<nav class="tabs">
+ <button class="tab active" data-panel="watch">1. Watch</button>
+ <button class="tab" data-panel="trace">2. Trace</button>
+ <button class="tab" data-panel="write">3. Write</button>
+</nav>
+
+<section class="panel active" id="watch">
+ <div class="card">
+  <h3>Watch how the letter is formed</h3>
+  <p class="cardLead">Begin at the green point. Follow the numbered movement and pause before the next part.</p>
+  <div class="board">
+   <svg viewBox="0 0 400 300" id="demoSvg" aria-label="Formation demonstration for Tamil letter அ">
+    <path class="model" d="M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69"/>
+    <path class="model" d="M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214"/>
+    <path class="model" d="M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"/>
+    <path class="stroke" id="s1" d="M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69"/>
+    <path class="stroke" id="s2" d="M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214"/>
+    <path class="stroke" id="s3" d="M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"/>
+    <g id="markers"></g>
+    <text id="pencil" class="pencil" x="0" y="0">✏️</text>
+   </svg>
   </div>
-  <div class="formationIntro">
-   Follow the <b>green starting point</b>. Watch each numbered stroke separately.
-   The red point shows where that stroke finishes.
-  </div>
-  <div class="writingBoard" id="writingBoard">
-   <canvas id="writingCanvas" width="800" height="600"></canvas>
-  </div>
-  <div class="boardLegend">
-   <span><i class="legendDot green"></i>Start</span>
-   <span><i class="legendDot purple"></i>Writing path</span>
-   <span><i class="legendDot red"></i>Finish</span>
-  </div>
-  <div class="stepText" id="stepText"><b>Ready</b><span>Press Play to begin.</span></div>
-  <div class="teacherControls">
-   <button id="previousStroke">← Previous</button>
-   <button class="playFormation" id="playFormation">▶ Play</button>
-   <button id="nextStroke">Next →</button>
-   <button id="hearTeacher">🔊 Sound</button>
-  </div>
-  <div class="practiceHint">
-   Watch once, trace in the air with your finger, and then practise on paper.
+  <div class="legend"><span><i class="dot g"></i>Start</span><span><i class="dot p"></i>Writing movement</span><span><i class="dot r"></i>Finish</span></div>
+  <div class="stepBox" id="stepBox"><b>Ready</b><span>Press Play all to watch slowly.</span></div>
+  <div class="controls">
+   <button id="prev">← Previous</button>
+   <button class="primary" id="playOne">▶ Play step</button>
+   <button id="next">Next →</button>
+   <button id="playAll">▶ Play all</button>
   </div>
  </div>
-</div>
+</section>
 
+<section class="panel" id="trace">
+ <div class="card">
+  <h3>Trace over the guide</h3>
+  <p class="cardLead">Use your finger or mouse. Follow the broad pale route slowly.</p>
+  <div class="board"><canvas id="traceCanvas" width="800" height="600"></canvas></div>
+  <div class="traceActions"><button class="clear" id="clearTrace">↻ Clear</button><button id="showGuide">👁 Hide guide</button></div>
+  <div class="status" id="traceStatus">Start near the green point and trace the complete letter.</div>
+ </div>
+</section>
+
+<section class="panel" id="write">
+ <div class="card">
+  <h3>Write without the letter guide</h3>
+  <p class="cardLead">The notebook lines remain, but the letter is hidden. Try to remember its shape.</p>
+  <div class="board"><canvas id="freeCanvas" width="800" height="600"></canvas></div>
+  <div class="traceActions"><button class="clear" id="clearFree">↻ Clear</button><button id="copyModel">👁 Show model briefly</button></div>
+  <div class="status">Say “அ” as you write. Practise three times, not too quickly.</div>
+ </div>
+</section>
+
+<section class="examples">
+ <div class="example"><div class="emoji">👩</div><b>அம்மா</b><span>Amma — mother</span></div>
+ <div class="example"><div class="emoji">🐿️</div><b>அணில்</b><span>Anil — squirrel</span></div>
+</section>
 </main>
 
 <script>
-const vowels=[
- ["அ","a","அம்மா"],
- ["ஆ","aa","ஆடு"],
- ["இ","i","இலை"],
- ["ஈ","ee","ஈ"],
- ["உ","u","உடை"],
- ["ஊ","oo","ஊசி"],
- ["எ","e","எலி"],
- ["ஏ","ae","ஏணி"],
- ["ஐ","ai","ஐந்து"],
- ["ஒ","o","ஒட்டகம்"],
- ["ஓ","oh","ஓடு"],
- ["ஔ","au","ஔவை"]
-];
+const speech=window.speechSynthesis;
+function speak(text){if(!speech)return; speech.cancel(); const u=new SpeechSynthesisUtterance(text);u.lang="ta-IN";u.rate=.72;speech.speak(u)}
+document.getElementById("hearLetter").onclick=()=>speak("அ");
 
-const consonants=[
- ["க்","k","கல்"],
- ["ங்","ng","சங்கு"],
- ["ச்","ch","சங்கு"],
- ["ஞ்","nj","ஞாயிறு"],
- ["ட்","t","பட்டு"],
- ["ண்","n","மண்"],
- ["த்","th","தமிழ்"],
- ["ந்","n","நதி"],
- ["ப்","p","பல்"],
- ["ம்","m","மரம்"],
- ["ய்","y","யானை"],
- ["ர்","r","ரதம்"],
- ["ல்","l","இலை"],
- ["வ்","v","வனம்"],
- ["ழ்","zh","தமிழ்"],
- ["ள்","l","பள்ளி"],
- ["ற்","tr","காற்று"],
- ["ன்","n","அவன்"]
-];
-
-let tamilVoice=null;
-
-function loadVoices(){
- const voices=window.speechSynthesis?.getVoices?.()||[];
- tamilVoice=voices.find(v=>(v.lang||"").toLowerCase().startsWith("ta"))||null;
- document.getElementById("voiceStatus").textContent=tamilVoice
-   ? `Tamil voice ready: ${tamilVoice.name}`
-   : "Tamil voice not found. The app will still request Tamil pronunciation using ta-IN.";
-}
-
-function speakTamil(text,rate=.72){
- if(!("speechSynthesis" in window)){
-  document.getElementById("voiceStatus").textContent="Speech is not supported on this browser.";
-  return;
- }
- speechSynthesis.cancel();
- const utterance=new SpeechSynthesisUtterance(text);
- utterance.lang="ta-IN";
- utterance.rate=rate;
- utterance.pitch=1;
- if(tamilVoice)utterance.voice=tamilVoice;
- speechSynthesis.speak(utterance);
-}
-
-function createCard([letter,sound,example]){
- return `<article class="letterCard">
-   <div class="letter">${letter}</div>
-   <div class="sound">${sound}</div>
-   <div class="example">${example}</div>
-   <div class="cardActions">
-    <button class="speakButton" data-speak="${letter}">🔊 Hear</button>
-    <button class="writeButton" data-write="${letter}" data-sound="${sound}">✍️ Learn to write</button>
-   </div>
- </article>`;
-}
-
-document.getElementById("vowelGrid").innerHTML=vowels.map(createCard).join("");
-document.getElementById("consonantGrid").innerHTML=consonants.map(createCard).join("");
-
-document.addEventListener("click",event=>{
- const button=event.target.closest("[data-speak]");
- if(button)speakTamil(button.dataset.speak);
+document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
 });
 
-document.getElementById("playVowels").addEventListener("click",()=>{
- speakTamil(vowels.map(item=>item[0]).join(" "),.58);
-});
+const paths=[...document.querySelectorAll(".stroke")];
+const markerData=[
+ {s:[244,67],e:[222,69],arrow:[176,57,164,65],label:"Draw the rounded main body from the upper-right starting point."},
+ {s:[221,70],e:[225,214],arrow:[260,119,258,137],label:"Continue from the upper join, curve downward, and finish near the lower middle."},
+ {s:[175,169],e:[271,231],arrow:[201,241,221,245],label:"Begin at the lower-left join and finish with the rounded lower sweep."}
+];
+let step=0,playing=false,allMode=false;
+const markers=document.getElementById("markers"),pencil=document.getElementById("pencil"),stepBox=document.getElementById("stepBox");
 
-
-const formationRoutes={"அ":[[[58,20],[44,18],[31,27],[27,43],[33,58],[47,64],[59,59],[65,47]],[[62,23],[69,31],[70,46],[65,59],[58,70]],[[47,64],[44,78],[51,86],[66,84]]],"ஆ":[[[52,18],[38,19],[27,30],[25,45],[31,58],[44,63],[56,58],[62,46]],[[59,22],[67,31],[68,48],[62,63],[55,72]],[[43,63],[40,77],[48,86],[61,84]],[[72,19],[75,35],[75,52],[78,67],[86,71]]],"இ":[[[62,20],[48,18],[35,25],[31,38],[35,49],[49,53],[62,48]],[[61,48],[51,58],[43,68],[45,80],[58,85],[70,80]]],"ஈ":[[[61,20],[47,18],[34,25],[31,38],[35,49],[49,53],[62,48]],[[61,48],[51,58],[43,68],[45,80],[58,85],[70,80]],[[72,19],[76,34],[77,51],[79,68],[87,72]]],"உ":[[[38,22],[31,31],[29,45],[35,57],[47,61],[59,55],[64,43],[61,31],[51,25]],[[48,61],[46,73],[52,83],[65,85],[76,78]]],"ஊ":[[[37,22],[30,32],[29,45],[35,57],[47,61],[59,55],[64,43],[61,31],[51,25]],[[48,61],[46,73],[52,83],[65,85],[76,78]],[[71,22],[78,27],[80,39],[77,51]]],"எ":[[[61,19],[47,18],[35,24],[29,35],[31,47],[42,53],[56,52]],[[56,52],[46,60],[39,70],[43,82],[57,86],[70,80]]],"ஏ":[[[60,19],[46,18],[34,24],[29,35],[31,47],[42,53],[56,52]],[[56,52],[46,60],[39,70],[43,82],[57,86],[70,80]],[[72,19],[78,28],[78,43]]],"ஐ":[[[35,23],[48,19],[61,23],[66,35],[62,47],[50,52],[38,48],[33,37],[35,23]],[[50,52],[41,63],[40,76],[50,84],[64,83],[73,75]],[[69,23],[77,31],[79,44],[75,55]]],"ஒ":[[[34,24],[47,18],[60,22],[66,34],[63,46],[52,52],[39,49],[33,38],[34,24]],[[52,52],[44,62],[42,74],[49,83],[63,85],[75,78]]],"ஓ":[[[34,24],[47,18],[60,22],[66,34],[63,46],[52,52],[39,49],[33,38],[34,24]],[[52,52],[44,62],[42,74],[49,83],[63,85],[75,78]],[[72,20],[78,28],[79,42]]],"ஔ":[[[32,24],[45,18],[58,22],[64,34],[61,46],[50,52],[38,49],[31,38],[32,24]],[[50,52],[42,62],[41,74],[48,83],[61,85],[72,78]],[[70,20],[77,28],[78,41]],[[76,54],[83,62],[84,75],[78,84]]],"க்":[[[31,29],[43,22],[57,24],[66,35],[65,49],[56,58],[43,59],[34,52],[30,40],[31,29]],[[64,50],[72,57],[74,70],[69,81]],[[55,16],[58,13]]],"ங்":[[[29,31],[41,23],[55,24],[65,34],[66,47],[58,57],[44,60],[33,54],[29,43],[29,31]],[[44,60],[43,73],[50,82],[63,84],[74,78]],[[55,16],[58,13]]],"ச்":[[[66,25],[53,21],[40,25],[33,35],[35,46],[47,51],[60,48]],[[59,48],[50,57],[45,68],[49,79],[62,84],[74,78]],[[55,16],[58,13]]],"ஞ்":[[[31,28],[43,22],[57,24],[65,34],[64,47],[55,55],[42,55],[34,48],[31,38]],[[42,55],[36,65],[38,77],[49,84],[63,83],[74,76]],[[55,16],[58,13]]],"ட்":[[[35,24],[49,20],[62,25],[68,36],[65,48],[54,54],[42,51],[35,42],[35,24]],[[54,54],[50,66],[54,79],[67,85]],[[55,16],[58,13]]],"ண்":[[[30,28],[43,21],[57,24],[66,35],[66,48],[57,57],[44,59],[34,53],[30,42],[30,28]],[[45,59],[40,70],[44,81],[57,85],[70,81]],[[55,16],[58,13]]],"த்":[[[32,27],[45,21],[59,25],[67,36],[64,49],[53,55],[41,51],[34,42],[32,27]],[[53,55],[45,65],[45,77],[54,84],[68,83]],[[55,16],[58,13]]],"ந்":[[[30,29],[43,22],[57,24],[66,34],[67,47],[58,57],[44,60],[33,54],[29,43],[30,29]],[[44,60],[39,70],[42,81],[54,85],[68,82]],[[55,16],[58,13]]],"ப்":[[[31,29],[44,22],[58,25],[66,36],[63,49],[52,56],[39,53],[32,43],[31,29]],[[52,56],[48,68],[52,81],[66,85]],[[55,16],[58,13]]],"ம்":[[[29,30],[42,22],[56,24],[65,34],[66,47],[58,57],[44,59],[33,53],[29,42],[29,30]],[[44,59],[45,72],[55,81],[68,83],[77,76]],[[55,16],[58,13]]],"ய்":[[[34,25],[48,20],[61,25],[67,37],[63,49],[51,54],[40,49],[34,39],[34,25]],[[51,54],[43,64],[43,76],[52,83],[66,84],[75,77]],[[55,16],[58,13]]],"ர்":[[[32,28],[44,22],[57,25],[65,35],[63,47],[53,53],[41,51],[34,43],[32,28]],[[53,53],[56,66],[63,78],[75,82]],[[55,16],[58,13]]],"ல்":[[[33,25],[47,20],[61,25],[67,37],[63,49],[52,55],[40,51],[34,42],[33,25]],[[52,55],[47,66],[50,78],[61,84],[74,80]],[[55,16],[58,13]]],"வ்":[[[30,29],[43,22],[57,25],[66,36],[64,49],[54,56],[41,54],[33,45],[30,29]],[[54,56],[61,65],[68,76],[79,80]],[[55,16],[58,13]]],"ழ்":[[[31,27],[44,21],[57,24],[66,35],[64,47],[53,54],[41,51],[34,42],[31,27]],[[53,54],[46,64],[47,76],[57,83],[70,82]],[[68,54],[75,63],[77,75],[72,84]],[[55,16],[58,13]]],"ள்":[[[31,28],[44,21],[58,25],[66,36],[64,49],[53,55],[41,52],[33,43],[31,28]],[[53,55],[47,66],[49,78],[60,84],[73,81]],[[69,55],[75,65],[75,78]],[[55,16],[58,13]]],"ற்":[[[32,27],[45,21],[59,25],[67,36],[64,49],[53,55],[41,51],[34,42],[32,27]],[[53,55],[61,63],[69,74],[79,78]],[[47,64],[43,75],[50,84]],[[55,16],[58,13]]],"ன்":[[[30,29],[43,22],[57,24],[66,34],[67,47],[58,57],[44,60],[33,54],[29,43],[30,29]],[[44,60],[50,70],[59,80],[72,83]],[[55,16],[58,13]]],"ஃ":[[[42,31],[43,32]],[[61,31],[62,32]],[[51,55],[52,56]]]};
-let selectedLetter="அ";
-let selectedSound="";
-let activeStroke=0;
-let playTimer=null;
-let animFrame=null;
-
-const canvas=document.getElementById("writingCanvas");
-const ctx=canvas.getContext("2d");
-
-function boardPoint(point){
- return [point[0]/100*canvas.width,point[1]/100*canvas.height];
+function resetPaths(){paths.forEach(p=>{p.style.transition="none";p.style.strokeDashoffset="1000"});pencil.style.opacity=0}
+function drawMarkers(i){
+ markers.innerHTML="";
+ const d=markerData[i];
+ markers.innerHTML=`<circle class="startDot" cx="${d.s[0]}" cy="${d.s[1]}" r="11"/><text class="num" x="${d.s[0]}" y="${d.s[1]}">${i+1}</text><circle class="endDot" cx="${d.e[0]}" cy="${d.e[1]}" r="7"/><path class="arrow" d="M${d.arrow[0]} ${d.arrow[1]} L${d.arrow[2]} ${d.arrow[3]} L${d.arrow[2]+8} ${d.arrow[3]-3} Z"/>`;
+ stepBox.innerHTML=`<b>Step ${i+1} of 3</b><span>${d.label}</span>`;
 }
-
-function drawArrow(a,b,color="#5b21b6"){
- const [x1,y1]=boardPoint(a),[x2,y2]=boardPoint(b);
- const angle=Math.atan2(y2-y1,x2-x1);
- const size=11;
- ctx.beginPath();
- ctx.moveTo(x2,y2);
- ctx.lineTo(x2-size*Math.cos(angle-Math.PI/6),y2-size*Math.sin(angle-Math.PI/6));
- ctx.lineTo(x2-size*Math.cos(angle+Math.PI/6),y2-size*Math.sin(angle+Math.PI/6));
- ctx.closePath();ctx.fillStyle=color;ctx.fill();
+function showStep(i){
+ step=Math.max(0,Math.min(2,i));resetPaths();
+ paths.forEach((p,n)=>{if(n<step)p.style.strokeDashoffset="0"});
+ drawMarkers(step);
 }
-
-function drawBoardBase(){
- ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);
-
- // four handwriting guide lines
- ctx.strokeStyle="#e7e2f0";ctx.lineWidth=2;
- [115,230,370,485].forEach(y=>{ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(760,y);ctx.stroke();});
- ctx.setLineDash([10,10]);ctx.strokeStyle="#eeeaf5";
- ctx.beginPath();ctx.moveTo(400,35);ctx.lineTo(400,565);ctx.stroke();ctx.setLineDash([]);
-
- // accurate final glyph shown as a light tracing model
- ctx.save();
- ctx.font='bold 330px "Noto Sans Tamil","Nirmala UI",sans-serif';
- ctx.textAlign="center";ctx.textBaseline="middle";
- ctx.fillStyle="#f1eef7";ctx.fillText(selectedLetter,400,305);
- ctx.restore();
-}
-
-function drawCompletedStroke(points,index,alpha=1){
- if(!points||points.length<2)return;
- ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle="#5b21b6";ctx.lineWidth=18;
- ctx.lineCap="round";ctx.lineJoin="round";
- ctx.beginPath();
- points.forEach((p,i)=>{const [x,y]=boardPoint(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
- ctx.stroke();ctx.restore();
-
- const [sx,sy]=boardPoint(points[0]),[ex,ey]=boardPoint(points[points.length-1]);
- ctx.fillStyle="#20a464";ctx.beginPath();ctx.arc(sx,sy,15,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#fff";ctx.font="bold 18px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(index+1),sx,sy);
- ctx.fillStyle="#dc3f45";ctx.beginPath();ctx.arc(ex,ey,10,0,Math.PI*2);ctx.fill();
-
- if(points.length>1){
-  const arrowIndex=Math.max(1,Math.floor(points.length*.55));
-  drawArrow(points[arrowIndex-1],points[arrowIndex]);
- }
-}
-
-function renderStrokeStep(){
- cancelAnimationFrame(animFrame);
- drawBoardBase();
- const strokes=formationRoutes[selectedLetter]||[];
- strokes.forEach((stroke,i)=>{
-  if(i<activeStroke)drawCompletedStroke(stroke,i,.38);
- });
- if(strokes[activeStroke])drawCompletedStroke(strokes[activeStroke],activeStroke,1);
-
- const step=document.getElementById("stepText");
- if(strokes.length){
-  step.innerHTML=`<b>Stroke ${activeStroke+1} of ${strokes.length}</b><span>Begin at the green ${activeStroke+1} and follow the arrow to the red point.</span>`;
- }else{
-  step.innerHTML="<b>Formation guide unavailable</b><span>Listen and trace the pale letter slowly.</span>";
- }
-}
-
-function animateCurrentStroke(){
- clearTimeout(playTimer);cancelAnimationFrame(animFrame);
- const strokes=formationRoutes[selectedLetter]||[];
- const stroke=strokes[activeStroke];
- if(!stroke||stroke.length<2){renderStrokeStep();return;}
-
- const start=performance.now();
- const duration=Math.max(900,stroke.length*330);
-
+function animateStep(i,done){
+ if(playing)return;playing=true;step=i;drawMarkers(i);
+ paths.forEach((p,n)=>{p.style.strokeDashoffset=n<i?"0":"1000"});
+ const path=paths[i],len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
+ const start=performance.now(),duration=2300;
  function frame(now){
   const t=Math.min(1,(now-start)/duration);
-  drawBoardBase();
-  strokes.forEach((s,i)=>{if(i<activeStroke)drawCompletedStroke(s,i,.38);});
+  path.style.strokeDashoffset=len*(1-t);
+  const pt=path.getPointAtLength(len*t);pencil.setAttribute("x",pt.x+8);pencil.setAttribute("y",pt.y-9);pencil.style.opacity=1;
+  if(t<1)requestAnimationFrame(frame); else {pencil.style.opacity=0;playing=false;if(done)done()}
+ }
+ requestAnimationFrame(frame);
+}
+document.getElementById("playOne").onclick=()=>animateStep(step);
+document.getElementById("prev").onclick=()=>showStep(step-1);
+document.getElementById("next").onclick=()=>showStep(step+1);
+document.getElementById("playAll").onclick=()=>{
+ if(playing)return;showStep(0);
+ const run=i=>{step=i;animateStep(i,()=>{if(i<2)setTimeout(()=>run(i+1),600)})};run(0);
+};
+showStep(0);
 
-  // guide path for current stroke
-  ctx.strokeStyle="#cfc4e8";ctx.lineWidth=12;ctx.lineCap="round";ctx.lineJoin="round";
-  ctx.setLineDash([8,11]);ctx.beginPath();
-  stroke.forEach((p,i)=>{const [x,y]=boardPoint(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-  ctx.stroke();ctx.setLineDash([]);
-
-  const total=(stroke.length-1)*t;
-  const full=Math.floor(total);
-  const frac=total-full;
-  const partial=stroke.slice(0,full+1);
-  if(full<stroke.length-1){
-   const a=stroke[full],b=stroke[full+1];
-   partial.push([a[0]+(b[0]-a[0])*frac,a[1]+(b[1]-a[1])*frac]);
-  }
-
-  ctx.strokeStyle="#5b21b6";ctx.lineWidth=18;ctx.lineCap="round";ctx.lineJoin="round";
-  ctx.beginPath();
-  partial.forEach((p,i)=>{const [x,y]=boardPoint(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-  ctx.stroke();
-
-  const [sx,sy]=boardPoint(stroke[0]);
-  ctx.fillStyle="#20a464";ctx.beginPath();ctx.arc(sx,sy,15,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle="#fff";ctx.font="bold 18px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(activeStroke+1),sx,sy);
-
-  const penPoint=partial[partial.length-1];
-  const [px,py]=boardPoint(penPoint);
-  ctx.font="38px serif";ctx.fillText("✏️",px+20,py-22);
-
-  if(t<1)animFrame=requestAnimationFrame(frame);
-  else{
-   renderStrokeStep();
-   if(activeStroke<strokes.length-1){
-    playTimer=setTimeout(()=>{activeStroke++;animateCurrentStroke();},650);
-   }
+// Canvas drawing
+function setupCanvas(id,withGuide){
+ const c=document.getElementById(id),ctx=c.getContext("2d");let drawing=false,last=null,guide=withGuide;
+ function base(){
+  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle="#e7e2ef";ctx.lineWidth=3;[150,300,450].forEach(y=>{ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(770,y);ctx.stroke()});
+  if(guide){
+   ctx.save();ctx.scale(2,2);ctx.strokeStyle="#ddd5e8";ctx.lineWidth=19;ctx.lineCap="round";ctx.lineJoin="round";
+   ["M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69",
+    "M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214",
+    "M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"].forEach(d=>{const p=new Path2D(d);ctx.stroke(p)});
+   ctx.fillStyle="#169b62";ctx.beginPath();ctx.arc(244,67,10,0,Math.PI*2);ctx.fill();ctx.restore();
   }
  }
- animFrame=requestAnimationFrame(frame);
+ function pos(e){const r=c.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return[(p.clientX-r.left)*c.width/r.width,(p.clientY-r.top)*c.height/r.height]}
+ function start(e){e.preventDefault();drawing=true;last=pos(e)}
+ function move(e){if(!drawing)return;e.preventDefault();const q=pos(e);ctx.strokeStyle="#5b21b6";ctx.lineWidth=22;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(...last);ctx.lineTo(...q);ctx.stroke();last=q}
+ function end(){drawing=false;last=null}
+ ["pointerdown"].forEach(t=>c.addEventListener(t,start));c.addEventListener("pointermove",move);window.addEventListener("pointerup",end);
+ base();
+ return {clear:base,toggle(){guide=!guide;base();return guide},showTemp(){guide=true;base();setTimeout(()=>{guide=false;base()},1800)}};
 }
-
-function openTeacher(letter,sound){
- selectedLetter=letter;selectedSound=sound||"";activeStroke=0;
- document.getElementById("teacherLetterTitle").textContent=letter;
- document.getElementById("teacherOverlay").classList.add("open");
- document.body.style.overflow="hidden";
- requestAnimationFrame(()=>{renderStrokeStep();});
-}
-
-function closeTeacher(){
- clearTimeout(playTimer);cancelAnimationFrame(animFrame);
- document.getElementById("teacherOverlay").classList.remove("open");
- document.body.style.overflow="";
-}
-
-document.addEventListener("click",event=>{
- const button=event.target.closest("[data-write]");
- if(button)openTeacher(button.dataset.write,button.dataset.sound);
-});
-
-document.getElementById("playFormation").addEventListener("click",()=>{activeStroke=0;animateCurrentStroke();});
-document.getElementById("previousStroke").addEventListener("click",()=>{
- const count=(formationRoutes[selectedLetter]||[]).length;
- activeStroke=Math.max(0,activeStroke-1);renderStrokeStep();
-});
-document.getElementById("nextStroke").addEventListener("click",()=>{
- const count=(formationRoutes[selectedLetter]||[]).length;
- activeStroke=Math.min(Math.max(0,count-1),activeStroke+1);renderStrokeStep();
-});
-document.getElementById("hearTeacher").addEventListener("click",()=>speakTamil(selectedLetter));
-document.getElementById("closeTeacher").addEventListener("click",closeTeacher);
-document.getElementById("teacherOverlay").addEventListener("click",e=>{if(e.target.id==="teacherOverlay")closeTeacher();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTeacher();});
-
-loadVoices();
-if("speechSynthesis" in window)speechSynthesis.onvoiceschanged=loadVoices;
+const tracer=setupCanvas("traceCanvas",true),free=setupCanvas("freeCanvas",false);
+document.getElementById("clearTrace").onclick=tracer.clear;
+document.getElementById("showGuide").onclick=e=>{const on=tracer.toggle();e.target.textContent=on?"👁 Hide guide":"👁 Show guide"};
+document.getElementById("clearFree").onclick=free.clear;
+document.getElementById("copyModel").onclick=free.showTemp;
 </script>
 </body>
 </html>
