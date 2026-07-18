@@ -3,214 +3,448 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6d28d9">
-<title>Tamil Handwriting 2.0 — அ</title>
+<meta name="theme-color" content="#5b21b6">
+<title>Tamil Pronunciation Trainer 3.0</title>
 <style>
 *{box-sizing:border-box}
 :root{
- --ink:#5b21b6;--ink2:#7c3aed;--bg:#f7f6fb;--card:#fff;--text:#1f2937;
- --muted:#667085;--line:#e7e3ef;--green:#169b62;--red:#d94848;--gold:#a86500;
+  --primary:#5b21b6;
+  --primary2:#7c3aed;
+  --accent:#0f9f6e;
+  --danger:#d93d52;
+  --bg:#f7f5fb;
+  --card:#ffffff;
+  --text:#202331;
+  --muted:#6f7482;
+  --line:#e8e3f0;
+  --soft:#f1edfb;
+  --shadow:0 14px 38px rgba(61,42,111,.10);
 }
-body{margin:0;background:linear-gradient(#faf9ff,#f4f2f8);font-family:Inter,system-ui,-apple-system,"Noto Sans Tamil","Nirmala UI",sans-serif;color:var(--text)}
-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.header{max-width:820px;margin:auto;padding:13px 16px;display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--ink2),#4338ca);color:#fff;font-size:1.8rem;font-weight:900}
-h1{font-size:1.08rem;margin:0}.sub{font-size:.84rem;color:var(--muted);margin-top:3px}
-main{max-width:820px;margin:auto;padding:16px 12px 48px}
-.hero{padding:21px;border-radius:26px;background:linear-gradient(135deg,#6024b8,#4338ca);color:#fff;box-shadow:0 14px 36px rgba(69,46,142,.18)}
-.heroRow{display:flex;align-items:center;gap:20px}
-.heroLetter{font-size:clamp(5.5rem,24vw,9rem);font-weight:900;line-height:1}
-.hero h2{margin:0 0 7px;font-size:1.55rem}.hero p{margin:0;line-height:1.55;color:#eeeafe}
-.hear{margin-top:14px;border:0;border-radius:15px;min-height:46px;padding:0 18px;background:#fff;color:var(--ink);font-weight:900}
-.notice{margin-top:13px;padding:11px 13px;border-radius:15px;background:#fff8e8;border:1px solid #f1d99e;color:#6e4b00;font-size:.83rem;line-height:1.5}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
-.tab{min-height:47px;border:1px solid var(--line);background:#fff;border-radius:15px;font-weight:850;color:#525866}
-.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-.panel{display:none}.panel.active{display:block}
-.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:16px;box-shadow:0 10px 28px rgba(31,41,55,.05)}
-.card h3{margin:0;font-size:1.14rem}.cardLead{margin:6px 0 14px;color:var(--muted);font-size:.9rem;line-height:1.5}
-.board{position:relative;aspect-ratio:4/3;border:1px solid #e7e1f2;border-radius:22px;overflow:hidden;background:
-linear-gradient(transparent 24.7%,#ebe6f4 25%,transparent 25.3%),
-linear-gradient(transparent 49.7%,#ded6ec 50%,transparent 50.3%),
-linear-gradient(transparent 74.7%,#ebe6f4 75%,transparent 75.3%),
-#fff}
-.board svg,.board canvas{width:100%;height:100%;display:block;touch-action:none}
-.model{fill:none;stroke:#ddd5e8;stroke-width:19;stroke-linecap:round;stroke-linejoin:round}
-.stroke{fill:none;stroke:var(--ink);stroke-width:19;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000}
-.startDot{fill:var(--green);stroke:#fff;stroke-width:4}.endDot{fill:var(--red);stroke:#fff;stroke-width:4}
-.num{font:bold 15px system-ui;fill:#fff;text-anchor:middle;dominant-baseline:middle}
-.arrow{fill:var(--ink)}
-.pencil{font-size:30px;opacity:0}
-.stepBox{margin-top:12px;padding:12px 14px;text-align:center;border-radius:16px;background:#f8f6ff;border:1px solid #ece7fa;min-height:63px}
-.stepBox b{color:var(--ink)}.stepBox span{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
-.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.controls button{min-height:45px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:850}
-.controls .primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:.82rem}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.g{background:var(--green)}.r{background:var(--red)}.p{background:var(--ink)}
-.traceActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-.traceActions button{min-height:46px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:850}
-.traceActions .clear{background:#fff3e5;color:#905500}
-.status{margin-top:10px;padding:11px 13px;border-radius:14px;background:#f8f6ff;color:var(--muted);font-size:.87rem;text-align:center}
-.examples{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.example{padding:14px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:center}
-.example .emoji{font-size:2rem}.example b{display:block;font-size:1.25rem;margin-top:5px}.example span{color:var(--muted);font-size:.85rem}
-@media(max-width:520px){.heroRow{align-items:flex-start}.controls{grid-template-columns:1fr 1fr}.tabs{gap:6px}.tab{font-size:.82rem}.card{padding:12px}.examples{grid-template-columns:1fr}}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,"Noto Sans Tamil","Nirmala UI",sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,#faf9ff,#f3f0f8);
+}
+button{font:inherit}
+.app{min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:860px;margin:auto;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{
+  width:46px;height:46px;border-radius:15px;
+  background:linear-gradient(135deg,var(--primary2),#4338ca);
+  color:white;display:grid;place-items:center;
+  font-size:1.65rem;font-weight:900;
+}
+.brand h1{font-size:1.03rem;margin:0}
+.brand p{margin:2px 0 0;font-size:.79rem;color:var(--muted)}
+.icon-btn{
+  border:1px solid var(--line);background:#fff;color:var(--primary);
+  width:42px;height:42px;border-radius:14px;font-weight:900;
+}
+main{max-width:860px;margin:auto;padding:18px 14px 48px}
+.screen{display:none}.screen.active{display:block}
+.hero{
+  border-radius:28px;padding:22px;
+  background:linear-gradient(135deg,#5b21b6,#4338ca);
+  color:#fff;box-shadow:0 18px 42px rgba(76,48,155,.22);
+}
+.hero h2{margin:0 0 8px;font-size:1.7rem}
+.hero p{margin:0;color:#ebe7ff;line-height:1.55}
+.continue-btn{
+  margin-top:18px;width:100%;min-height:52px;border:0;border-radius:17px;
+  background:#fff;color:var(--primary);font-weight:900;font-size:1rem;
+}
+.section-title{margin:22px 2px 11px;font-size:1.1rem}
+.progress-card,.lesson-grid,.practice-card{
+  background:#fff;border:1px solid var(--line);border-radius:24px;
+  box-shadow:var(--shadow);
+}
+.progress-card{padding:17px}
+.progress-row{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.progress-row b{font-size:1rem}
+.progress-row span{color:var(--muted);font-size:.9rem}
+.progress-track{
+  height:11px;margin-top:12px;background:#ece8f3;border-radius:999px;overflow:hidden
+}
+.progress-fill{
+  height:100%;width:0;background:linear-gradient(90deg,var(--primary2),#4338ca);
+  border-radius:999px;transition:width .35s ease
+}
+.lesson-grid{padding:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.lesson-tile{
+  min-height:78px;border:1px solid var(--line);background:#fff;border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-weight:900;color:var(--text);position:relative;
+}
+.lesson-tile .tamil{font-size:2rem;line-height:1}
+.lesson-tile small{font-size:.72rem;color:var(--muted);margin-top:7px}
+.lesson-tile.done{background:#f0fbf7;border-color:#bfe9d8}
+.lesson-tile.done::after{
+  content:"✓";position:absolute;top:7px;right:8px;width:20px;height:20px;
+  border-radius:50%;background:var(--accent);color:#fff;font-size:.72rem;
+  display:grid;place-items:center;
+}
+.lesson-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px
+}
+.lesson-head button{
+  border:1px solid var(--line);background:#fff;border-radius:14px;
+  min-height:43px;padding:0 14px;font-weight:850;color:var(--primary)
+}
+.counter{font-size:.85rem;color:var(--muted);font-weight:750}
+.practice-card{padding:18px}
+.category{text-align:center;color:var(--muted);font-size:.83rem;font-weight:800;letter-spacing:.03em}
+.big-letter{
+  text-align:center;font-size:clamp(7rem,28vw,11rem);
+  line-height:1.05;font-weight:900;color:var(--primary);
+  margin:8px 0 4px;
+}
+.roman{text-align:center;color:var(--muted);font-size:.92rem}
+.mode-tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:19px 0 13px
+}
+.mode-tab{
+  min-height:48px;border:1px solid var(--line);background:#fff;border-radius:15px;
+  font-weight:900;color:#555b68
+}
+.mode-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.mode-panel{display:none}.mode-panel.active{display:block}
+.action-box{
+  min-height:166px;border-radius:20px;background:var(--soft);padding:17px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center
+}
+.action-box h3{margin:0 0 7px;font-size:1.12rem}
+.action-box p{margin:0 0 14px;color:var(--muted);font-size:.9rem;line-height:1.5}
+.action-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.primary,.secondary,.record,.stop{
+  border-radius:15px;min-height:48px;padding:0 17px;font-weight:900
+}
+.primary{border:0;background:var(--primary);color:#fff}
+.secondary{border:1px solid var(--line);background:#fff;color:var(--primary)}
+.record{border:0;background:var(--danger);color:#fff}
+.stop{border:0;background:#222;color:#fff}
+.countdown{font-size:3rem;font-weight:950;color:var(--primary);min-height:58px}
+.recording-dot{
+  width:14px;height:14px;border-radius:50%;background:var(--danger);
+  animation:pulse 1s infinite;display:none;margin-bottom:10px
+}
+@keyframes pulse{50%{opacity:.35;transform:scale(.8)}}
+.audio-wrap{width:100%;display:none;margin-top:11px}
+audio{width:100%}
+.lesson-nav{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:14px
+}
+.lesson-nav button{
+  min-height:48px;border-radius:15px;border:1px solid var(--line);
+  background:#fff;font-weight:900;color:var(--primary)
+}
+.lesson-nav .next{background:var(--primary);color:#fff;border-color:var(--primary)}
+.complete-note{
+  margin-top:12px;padding:11px 13px;border-radius:15px;background:#f1fbf7;
+  color:#147a57;text-align:center;font-size:.86rem;display:none
+}
+.note{
+  margin-top:18px;padding:13px 15px;border:1px solid #f2dca8;background:#fff8e8;
+  border-radius:17px;color:#70500c;font-size:.82rem;line-height:1.5
+}
+.footer-note{margin-top:18px;text-align:center;color:var(--muted);font-size:.78rem}
+@media(max-width:560px){
+  .lesson-grid{grid-template-columns:repeat(3,1fr)}
+  .practice-card{padding:14px}
+  .lesson-nav{grid-template-columns:1fr 1fr}
+  .lesson-nav .home{grid-column:1/-1;grid-row:2}
+}
 </style>
 </head>
 <body>
-<header><div class="header"><div class="logo">அ</div><div><h1>Tamil Handwriting — Version 2.0</h1><div class="sub">One carefully focused lesson: அ</div></div></div></header>
+<div class="app">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo">அ</div>
+      <div><h1>Tamil Pronunciation Trainer</h1><p>Listen • Read • Record</p></div>
+    </div>
+    <button class="icon-btn" id="homeTop" aria-label="Home">⌂</button>
+  </div>
+</header>
 
 <main>
-<section class="hero">
- <div class="heroRow">
-  <div class="heroLetter">அ</div>
-  <div><h2>உயிர் எழுத்து — அ</h2><p>Listen, watch slowly, trace the guide, and then write without help.</p><button class="hear" id="hearLetter">🔊 Hear “அ”</button></div>
- </div>
-</section>
-
-<div class="notice"><b>Teacher note:</b> Handwriting style can vary slightly between schools and teachers. This lesson uses one simple rounded formation and keeps the animated route aligned with the visible model.</div>
-
-<nav class="tabs">
- <button class="tab active" data-panel="watch">1. Watch</button>
- <button class="tab" data-panel="trace">2. Trace</button>
- <button class="tab" data-panel="write">3. Write</button>
-</nav>
-
-<section class="panel active" id="watch">
- <div class="card">
-  <h3>Watch how the letter is formed</h3>
-  <p class="cardLead">Begin at the green point. Follow the numbered movement and pause before the next part.</p>
-  <div class="board">
-   <svg viewBox="0 0 400 300" id="demoSvg" aria-label="Formation demonstration for Tamil letter அ">
-    <path class="model" d="M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69"/>
-    <path class="model" d="M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214"/>
-    <path class="model" d="M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"/>
-    <path class="stroke" id="s1" d="M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69"/>
-    <path class="stroke" id="s2" d="M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214"/>
-    <path class="stroke" id="s3" d="M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"/>
-    <g id="markers"></g>
-    <text id="pencil" class="pencil" x="0" y="0">✏️</text>
-   </svg>
+<section class="screen active" id="homeScreen">
+  <div class="hero">
+    <h2>Learn Tamil one sound at a time</h2>
+    <p>Practise each உயிர் எழுத்து using the same simple routine: listen, read aloud, and record your voice.</p>
+    <button class="continue-btn" id="continueBtn">▶ Start lesson</button>
   </div>
-  <div class="legend"><span><i class="dot g"></i>Start</span><span><i class="dot p"></i>Writing movement</span><span><i class="dot r"></i>Finish</span></div>
-  <div class="stepBox" id="stepBox"><b>Ready</b><span>Press Play all to watch slowly.</span></div>
-  <div class="controls">
-   <button id="prev">← Previous</button>
-   <button class="primary" id="playOne">▶ Play step</button>
-   <button id="next">Next →</button>
-   <button id="playAll">▶ Play all</button>
+
+  <h3 class="section-title">Your progress</h3>
+  <div class="progress-card">
+    <div class="progress-row">
+      <b>உயிர் எழுத்துகள்</b>
+      <span id="progressText">0 / 12 completed</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
- </div>
+
+  <h3 class="section-title">Choose a letter</h3>
+  <div class="lesson-grid" id="lessonGrid"></div>
+
+  <div class="note">
+    <b>Microphone note:</b> Recording requires browser microphone permission. Some browsers allow microphone access only when the page is opened through HTTPS or a local web server.
+  </div>
 </section>
 
-<section class="panel" id="trace">
- <div class="card">
-  <h3>Trace over the guide</h3>
-  <p class="cardLead">Use your finger or mouse. Follow the broad pale route slowly.</p>
-  <div class="board"><canvas id="traceCanvas" width="800" height="600"></canvas></div>
-  <div class="traceActions"><button class="clear" id="clearTrace">↻ Clear</button><button id="showGuide">👁 Hide guide</button></div>
-  <div class="status" id="traceStatus">Start near the green point and trace the complete letter.</div>
- </div>
-</section>
+<section class="screen" id="lessonScreen">
+  <div class="lesson-head">
+    <button id="backHome">← Home</button>
+    <div class="counter" id="counter">Letter 1 of 12</div>
+  </div>
 
-<section class="panel" id="write">
- <div class="card">
-  <h3>Write without the letter guide</h3>
-  <p class="cardLead">The notebook lines remain, but the letter is hidden. Try to remember its shape.</p>
-  <div class="board"><canvas id="freeCanvas" width="800" height="600"></canvas></div>
-  <div class="traceActions"><button class="clear" id="clearFree">↻ Clear</button><button id="copyModel">👁 Show model briefly</button></div>
-  <div class="status">Say “அ” as you write. Practise three times, not too quickly.</div>
- </div>
-</section>
+  <div class="practice-card">
+    <div class="category">உயிர் எழுத்து</div>
+    <div class="big-letter" id="bigLetter">அ</div>
+    <div class="roman" id="romanText">Short “a” sound</div>
 
-<section class="examples">
- <div class="example"><div class="emoji">👩</div><b>அம்மா</b><span>Amma — mother</span></div>
- <div class="example"><div class="emoji">🐿️</div><b>அணில்</b><span>Anil — squirrel</span></div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="listen">🔊 Listen</button>
+      <button class="mode-tab" data-mode="read">📖 Read</button>
+      <button class="mode-tab" data-mode="record">🎤 Record</button>
+    </div>
+
+    <div class="mode-panel active" id="listenPanel">
+      <div class="action-box">
+        <h3>Listen carefully</h3>
+        <p>Play the letter slowly, normally, or three times.</p>
+        <div class="action-row">
+          <button class="secondary" id="slowBtn">🐢 Slow</button>
+          <button class="primary" id="normalBtn">🔊 Normal</button>
+          <button class="secondary" id="repeatBtn">↻ Repeat ×3</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="readPanel">
+      <div class="action-box">
+        <h3>Read the letter aloud</h3>
+        <p>Tap Start. Read the letter after the countdown.</p>
+        <div class="countdown" id="countdown">—</div>
+        <button class="primary" id="startRead">Start reading</button>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="recordPanel">
+      <div class="action-box">
+        <div class="recording-dot" id="recordingDot"></div>
+        <h3 id="recordTitle">Record your voice</h3>
+        <p id="recordHelp">Record yourself saying the letter, then play it back and compare.</p>
+        <div class="action-row">
+          <button class="record" id="recordBtn">● Start recording</button>
+          <button class="stop" id="stopBtn" disabled>■ Stop</button>
+          <button class="secondary" id="playModelBtn">🔊 Hear model</button>
+        </div>
+        <div class="audio-wrap" id="audioWrap"><audio id="playback" controls></audio></div>
+      </div>
+    </div>
+
+    <div class="complete-note" id="completeNote">✓ This letter has been marked as practised.</div>
+
+    <div class="lesson-nav">
+      <button id="prevBtn">← Previous</button>
+      <button class="home" id="markBtn">✓ Mark practised</button>
+      <button class="next" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <div class="footer-note">Progress is stored only in this browser.</div>
 </section>
 </main>
+</div>
 
 <script>
-const speech=window.speechSynthesis;
-function speak(text){if(!speech)return; speech.cancel(); const u=new SpeechSynthesisUtterance(text);u.lang="ta-IN";u.rate=.72;speech.speak(u)}
-document.getElementById("hearLetter").onclick=()=>speak("அ");
-
-document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{
- document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
- document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
- btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
-});
-
-const paths=[...document.querySelectorAll(".stroke")];
-const markerData=[
- {s:[244,67],e:[222,69],arrow:[176,57,164,65],label:"Draw the rounded main body from the upper-right starting point."},
- {s:[221,70],e:[225,214],arrow:[260,119,258,137],label:"Continue from the upper join, curve downward, and finish near the lower middle."},
- {s:[175,169],e:[271,231],arrow:[201,241,221,245],label:"Begin at the lower-left join and finish with the rounded lower sweep."}
+const lessons = [
+  {letter:"அ", roman:"Short “a” sound", speak:"அ"},
+  {letter:"ஆ", roman:"Long “aa” sound", speak:"ஆ"},
+  {letter:"இ", roman:"Short “i” sound", speak:"இ"},
+  {letter:"ஈ", roman:"Long “ee” sound", speak:"ஈ"},
+  {letter:"உ", roman:"Short “u” sound", speak:"உ"},
+  {letter:"ஊ", roman:"Long “oo” sound", speak:"ஊ"},
+  {letter:"எ", roman:"Short “e” sound", speak:"எ"},
+  {letter:"ஏ", roman:"Long “ay” sound", speak:"ஏ"},
+  {letter:"ஐ", roman:"“ai” sound", speak:"ஐ"},
+  {letter:"ஒ", roman:"Short “o” sound", speak:"ஒ"},
+  {letter:"ஓ", roman:"Long “oh” sound", speak:"ஓ"},
+  {letter:"ஔ", roman:"“au” sound", speak:"ஔ"}
 ];
-let step=0,playing=false,allMode=false;
-const markers=document.getElementById("markers"),pencil=document.getElementById("pencil"),stepBox=document.getElementById("stepBox");
 
-function resetPaths(){paths.forEach(p=>{p.style.transition="none";p.style.strokeDashoffset="1000"});pencil.style.opacity=0}
-function drawMarkers(i){
- markers.innerHTML="";
- const d=markerData[i];
- markers.innerHTML=`<circle class="startDot" cx="${d.s[0]}" cy="${d.s[1]}" r="11"/><text class="num" x="${d.s[0]}" y="${d.s[1]}">${i+1}</text><circle class="endDot" cx="${d.e[0]}" cy="${d.e[1]}" r="7"/><path class="arrow" d="M${d.arrow[0]} ${d.arrow[1]} L${d.arrow[2]} ${d.arrow[3]} L${d.arrow[2]+8} ${d.arrow[3]-3} Z"/>`;
- stepBox.innerHTML=`<b>Step ${i+1} of 3</b><span>${d.label}</span>`;
-}
-function showStep(i){
- step=Math.max(0,Math.min(2,i));resetPaths();
- paths.forEach((p,n)=>{if(n<step)p.style.strokeDashoffset="0"});
- drawMarkers(step);
-}
-function animateStep(i,done){
- if(playing)return;playing=true;step=i;drawMarkers(i);
- paths.forEach((p,n)=>{p.style.strokeDashoffset=n<i?"0":"1000"});
- const path=paths[i],len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
- const start=performance.now(),duration=2300;
- function frame(now){
-  const t=Math.min(1,(now-start)/duration);
-  path.style.strokeDashoffset=len*(1-t);
-  const pt=path.getPointAtLength(len*t);pencil.setAttribute("x",pt.x+8);pencil.setAttribute("y",pt.y-9);pencil.style.opacity=1;
-  if(t<1)requestAnimationFrame(frame); else {pencil.style.opacity=0;playing=false;if(done)done()}
- }
- requestAnimationFrame(frame);
-}
-document.getElementById("playOne").onclick=()=>animateStep(step);
-document.getElementById("prev").onclick=()=>showStep(step-1);
-document.getElementById("next").onclick=()=>showStep(step+1);
-document.getElementById("playAll").onclick=()=>{
- if(playing)return;showStep(0);
- const run=i=>{step=i;animateStep(i,()=>{if(i<2)setTimeout(()=>run(i+1),600)})};run(0);
-};
-showStep(0);
+let current = Number(localStorage.getItem("tamilTrainerCurrent") || 0);
+if(current < 0 || current >= lessons.length) current = 0;
+let completed = JSON.parse(localStorage.getItem("tamilTrainerCompleted") || "[]");
+let mediaRecorder = null;
+let audioChunks = [];
+let audioUrl = null;
+let readTimer = null;
 
-// Canvas drawing
-function setupCanvas(id,withGuide){
- const c=document.getElementById(id),ctx=c.getContext("2d");let drawing=false,last=null,guide=withGuide;
- function base(){
-  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height);
-  ctx.strokeStyle="#e7e2ef";ctx.lineWidth=3;[150,300,450].forEach(y=>{ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(770,y);ctx.stroke()});
-  if(guide){
-   ctx.save();ctx.scale(2,2);ctx.strokeStyle="#ddd5e8";ctx.lineWidth=19;ctx.lineCap="round";ctx.lineJoin="round";
-   ["M244 67 C207 50 160 57 137 89 C116 119 127 158 158 169 C192 181 227 164 237 132 C245 105 239 83 222 69",
-    "M221 70 C254 81 268 112 260 148 C254 175 238 196 225 214",
-    "M175 169 C162 195 165 224 187 238 C211 254 247 248 271 231"].forEach(d=>{const p=new Path2D(d);ctx.stroke(p)});
-   ctx.fillStyle="#169b62";ctx.beginPath();ctx.arc(244,67,10,0,Math.PI*2);ctx.fill();ctx.restore();
+const $ = id => document.getElementById(id);
+const homeScreen = $("homeScreen"), lessonScreen = $("lessonScreen");
+
+function save(){
+  localStorage.setItem("tamilTrainerCurrent", String(current));
+  localStorage.setItem("tamilTrainerCompleted", JSON.stringify(completed));
+}
+function showScreen(name){
+  homeScreen.classList.toggle("active", name==="home");
+  lessonScreen.classList.toggle("active", name==="lesson");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateHome(){
+  const grid = $("lessonGrid");
+  grid.innerHTML = "";
+  lessons.forEach((l,i)=>{
+    const b = document.createElement("button");
+    b.className = "lesson-tile" + (completed.includes(i) ? " done" : "");
+    b.innerHTML = `<span class="tamil">${l.letter}</span><small>Lesson ${i+1}</small>`;
+    b.onclick = ()=>{current=i;save();renderLesson();showScreen("lesson")};
+    grid.appendChild(b);
+  });
+  $("progressText").textContent = `${completed.length} / ${lessons.length} completed`;
+  $("progressFill").style.width = `${(completed.length/lessons.length)*100}%`;
+  $("continueBtn").textContent = completed.length ? "▶ Continue learning" : "▶ Start lesson";
+}
+function renderLesson(){
+  const l = lessons[current];
+  $("bigLetter").textContent = l.letter;
+  $("romanText").textContent = l.roman;
+  $("counter").textContent = `Letter ${current+1} of ${lessons.length}`;
+  $("prevBtn").disabled = current===0;
+  $("nextBtn").textContent = current===lessons.length-1 ? "Finish" : "Next →";
+  const done = completed.includes(current);
+  $("completeNote").style.display = done ? "block" : "none";
+  $("markBtn").textContent = done ? "✓ Practised" : "✓ Mark practised";
+  resetRecordingUI();
+}
+function speak(rate=0.82, repeat=1){
+  if(!("speechSynthesis" in window)){
+    alert("Speech playback is not supported in this browser.");
+    return;
   }
- }
- function pos(e){const r=c.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return[(p.clientX-r.left)*c.width/r.width,(p.clientY-r.top)*c.height/r.height]}
- function start(e){e.preventDefault();drawing=true;last=pos(e)}
- function move(e){if(!drawing)return;e.preventDefault();const q=pos(e);ctx.strokeStyle="#5b21b6";ctx.lineWidth=22;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(...last);ctx.lineTo(...q);ctx.stroke();last=q}
- function end(){drawing=false;last=null}
- ["pointerdown"].forEach(t=>c.addEventListener(t,start));c.addEventListener("pointermove",move);window.addEventListener("pointerup",end);
- base();
- return {clear:base,toggle(){guide=!guide;base();return guide},showTemp(){guide=true;base();setTimeout(()=>{guide=false;base()},1800)}};
+  speechSynthesis.cancel();
+  let count = 0;
+  const playNext = ()=>{
+    const u = new SpeechSynthesisUtterance(lessons[current].speak);
+    u.lang = "ta-IN";
+    u.rate = rate;
+    u.pitch = 1;
+    u.onend = ()=>{count++; if(count<repeat) setTimeout(playNext,450)};
+    speechSynthesis.speak(u);
+  };
+  playNext();
 }
-const tracer=setupCanvas("traceCanvas",true),free=setupCanvas("freeCanvas",false);
-document.getElementById("clearTrace").onclick=tracer.clear;
-document.getElementById("showGuide").onclick=e=>{const on=tracer.toggle();e.target.textContent=on?"👁 Hide guide":"👁 Show guide"};
-document.getElementById("clearFree").onclick=free.clear;
-document.getElementById("copyModel").onclick=free.showTemp;
+function setMode(mode){
+  document.querySelectorAll(".mode-tab").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));
+  document.querySelectorAll(".mode-panel").forEach(p=>p.classList.remove("active"));
+  $(mode+"Panel").classList.add("active");
+}
+document.querySelectorAll(".mode-tab").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+$("slowBtn").onclick=()=>speak(.55,1);
+$("normalBtn").onclick=()=>speak(.82,1);
+$("repeatBtn").onclick=()=>speak(.72,3);
+$("playModelBtn").onclick=()=>speak(.72,1);
+
+$("startRead").onclick=()=>{
+  clearInterval(readTimer);
+  let n=3;
+  $("countdown").textContent=n;
+  $("startRead").disabled=true;
+  readTimer=setInterval(()=>{
+    n--;
+    if(n>0){$("countdown").textContent=n}
+    else{
+      clearInterval(readTimer);
+      $("countdown").textContent="Read!";
+      speak(.72,1);
+      setTimeout(()=>{$("countdown").textContent="✓";$("startRead").disabled=false},1800);
+    }
+  },800);
+};
+
+async function startRecording(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    audioChunks=[];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable=e=>{if(e.data.size) audioChunks.push(e.data)};
+    mediaRecorder.onstop=()=>{
+      const blob = new Blob(audioChunks,{type:mediaRecorder.mimeType || "audio/webm"});
+      if(audioUrl) URL.revokeObjectURL(audioUrl);
+      audioUrl = URL.createObjectURL(blob);
+      $("playback").src = audioUrl;
+      $("audioWrap").style.display="block";
+      $("recordTitle").textContent="Your recording is ready";
+      $("recordHelp").textContent="Play it back and compare it with the model pronunciation.";
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    mediaRecorder.start();
+    $("recordBtn").disabled=true;
+    $("stopBtn").disabled=false;
+    $("recordingDot").style.display="block";
+    $("recordTitle").textContent="Recording…";
+    $("recordHelp").textContent=`Say “${lessons[current].letter}” clearly.`;
+  }catch(err){
+    alert("Microphone access was not available. Check browser permission and open the page through HTTPS or a local server.");
+  }
+}
+function stopRecording(){
+  if(mediaRecorder && mediaRecorder.state==="recording"){
+    mediaRecorder.stop();
+    $("recordBtn").disabled=false;
+    $("recordBtn").textContent="● Record again";
+    $("stopBtn").disabled=true;
+    $("recordingDot").style.display="none";
+  }
+}
+function resetRecordingUI(){
+  if(mediaRecorder && mediaRecorder.state==="recording") mediaRecorder.stop();
+  $("recordBtn").disabled=false;
+  $("recordBtn").textContent="● Start recording";
+  $("stopBtn").disabled=true;
+  $("recordingDot").style.display="none";
+  $("recordTitle").textContent="Record your voice";
+  $("recordHelp").textContent="Record yourself saying the letter, then play it back and compare.";
+  $("audioWrap").style.display="none";
+  $("playback").removeAttribute("src");
+  if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null}
+}
+$("recordBtn").onclick=startRecording;
+$("stopBtn").onclick=stopRecording;
+
+$("markBtn").onclick=()=>{
+  if(!completed.includes(current)) completed.push(current);
+  completed.sort((a,b)=>a-b);
+  save();renderLesson();updateHome();
+};
+$("prevBtn").onclick=()=>{if(current>0){current--;save();renderLesson()}};
+$("nextBtn").onclick=()=>{
+  if(!completed.includes(current)){completed.push(current);completed.sort((a,b)=>a-b)}
+  if(current<lessons.length-1){current++;save();renderLesson()}
+  else{save();updateHome();showScreen("home")}
+};
+function goHome(){save();updateHome();showScreen("home")}
+$("backHome").onclick=goHome;
+$("homeTop").onclick=goHome;
+$("continueBtn").onclick=()=>{renderLesson();showScreen("lesson")};
+
+updateHome();
+renderLesson();
 </script>
 </body>
 </html>
