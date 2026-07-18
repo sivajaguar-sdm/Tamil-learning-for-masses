@@ -1,58 +1,84 @@
 
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tamil Trainer 4.0</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tamil Trainer 4.1</title>
 <style>
-body{margin:0;font-family:system-ui;background:#f6f3fc;color:#222}
-.wrap{max-width:520px;margin:auto;padding:18px}
-.card{background:#fff;border-radius:24px;padding:20px;box-shadow:0 8px 25px rgba(0,0,0,.08)}
-h1{font-size:22px;margin:0 0 8px}
-.small{text-align:center;color:#666}
-.letter{font-size:170px;text-align:center;color:#6127c4;padding:20px 0;user-select:none;cursor:pointer}
-.tap{text-align:center;color:#777;margin-top:-10px;margin-bottom:18px}
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;margin:10px 0;font-size:20px;font-weight:700}
-.listen{background:#6127c4;color:#fff}.record{background:#0f9d58;color:#fff}
-.nav{display:flex;gap:10px;margin-top:16px}
-.nav button{flex:1;padding:14px;border-radius:14px;border:none;font-size:18px}
-.prev{background:#eee}.next{background:#6127c4;color:#fff}
-.progress{margin:16px 0;height:10px;background:#e7def8;border-radius:99px}.fill{height:100%;background:#6127c4;width:8%}
-</style></head><body>
+body{margin:0;font-family:system-ui;background:#f5f3fb}
+.wrap{max-width:520px;margin:auto;padding:16px}
+h2{text-align:center;margin:8px 0;color:#5b2bbd}
+.strip{display:flex;overflow-x:auto;gap:10px;padding:10px 4px 16px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.dot{min-width:54px;height:54px;border-radius:27px;border:2px solid #cdbdf3;
+display:flex;align-items:center;justify-content:center;
+font-size:28px;font-weight:bold;color:#5b2bbd;background:#fff;
+transition:.25s;cursor:pointer;flex-shrink:0}
+.dot.active{background:#5b2bbd;color:#fff;transform:scale(1.2);border-color:#5b2bbd}
+.card{background:#fff;border-radius:22px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.big{font-size:170px;text-align:center;color:#5b2bbd;cursor:pointer;line-height:1.1}
+.tap{text-align:center;color:#777;margin-top:-10px}
+button{width:100%;padding:15px;border:none;border-radius:16px;font-size:20px;font-weight:bold;margin-top:12px}
+.listen{background:#5b2bbd;color:#fff}
+.record{background:#0b9f57;color:#fff}
+.nav{display:flex;gap:10px;margin-top:14px}
+.nav button{margin:0}
+.prev{background:#ececec}.next{background:#5b2bbd;color:#fff}
+</style>
+</head>
+<body>
 <div class="wrap">
-<h1>Tamil Pronunciation Trainer 4.0</h1>
-<div class="small">Swipe ◀ ▶ or use buttons</div>
-<div class="progress"><div class="fill" id="fill"></div></div>
-<div class="card" id="card">
-<div class="letter" id="letter">அ</div>
+<h2>Tamil Pronunciation Trainer 4.1</h2>
+<div class="strip" id="strip"></div>
+<div class="card">
+<div id="big" class="big"></div>
 <div class="tap">👆 Tap the letter to hear it</div>
-<button class="btn listen" onclick="speak()">🔊 Listen</button>
-<button class="btn record" onclick="alert('Recording module will be integrated in next build.')">🎤 Record</button>
+<button class="listen" onclick="speak()">🔊 Listen</button>
+<button class="record" onclick="alert('Recorder will be added in next version')">🎤 Record</button>
 <div class="nav">
-<button class="prev" onclick="prev()">← Previous</button>
-<button class="next" onclick="next()">Next →</button>
+<button class="prev" onclick="move(-1)">← Previous</button>
+<button class="next" onclick="move(1)">Next →</button>
 </div>
-</div></div>
+</div>
+</div>
 <script>
 const letters=["அ","ஆ","இ","ஈ","உ","ஊ","எ","ஏ","ஐ","ஒ","ஓ","ஔ"];
-let i=0;
-const el=document.getElementById("letter");
-const fill=document.getElementById("fill");
-function render(){el.textContent=letters[i];fill.style.width=((i+1)/letters.length*100)+"%";setTimeout(speak,300);}
+let index=0;
+const strip=document.getElementById("strip");
+const big=document.getElementById("big");
+letters.forEach((l,i)=>{
+ let d=document.createElement("div");
+ d.className="dot";
+ d.textContent=l;
+ d.onclick=()=>{index=i;render();speak();}
+ strip.appendChild(d);
+});
+function render(){
+ big.textContent=letters[index];
+ [...strip.children].forEach((c,i)=>c.classList.toggle("active",i===index));
+ strip.children[index].scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
+}
+function move(d){
+ index=Math.max(0,Math.min(letters.length-1,index+d));
+ render(); speak();
+}
 function speak(){
  speechSynthesis.cancel();
- let u=new SpeechSynthesisUtterance(letters[i]);
+ let u=new SpeechSynthesisUtterance(letters[index]);
  u.lang="ta-IN";
- let v=speechSynthesis.getVoices().find(x=>x.lang.startsWith("ta"));
+ let v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.startsWith("ta"));
  if(v)u.voice=v;
  speechSynthesis.speak(u);
 }
-el.onclick=speak;
-function next(){if(i<letters.length-1)i++;render();}
-function prev(){if(i>0)i--;render();}
-let sx=0,sy=0;
-card.ontouchstart=e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;}
-card.ontouchend=e=>{
+big.onclick=speak;
+let sx=0;
+document.querySelector(".card").ontouchstart=e=>sx=e.touches[0].clientX;
+document.querySelector(".card").ontouchend=e=>{
  let dx=e.changedTouches[0].clientX-sx;
- let dy=e.changedTouches[0].clientY-sy;
- if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){if(dx<0)next();else prev();}
+ if(Math.abs(dx)>60) move(dx<0?1:-1);
 };
 render();
-</script></body></html>
+</script>
+</body>
+</html>
