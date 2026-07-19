@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Expiry Tracker v4.0.1</title>
+<style>
+body{font-family:Arial;margin:0;background:#eef3fb}
+header{background:#2457c5;color:white;padding:16px}
+main{max-width:900px;margin:auto;padding:16px}
+.card{background:white;padding:16px;border-radius:12px;margin:12px 0}
+.preview{display:flex;gap:10px;flex-wrap:wrap}
+.preview img{width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #bbb}
+button{padding:10px 14px;border:0;border-radius:8px;margin:4px;cursor:pointer}
+.primary{background:#2457c5;color:#fff}
+.danger{background:#d32f2f;color:#fff}
+</style>
+</head>
+<body>
+<header><h2>Expiry Tracker v4.0.1</h2></header>
+<main>
+<div class="card">
+<h3>Product Photos</h3>
+<input type="file" id="photos" accept="image/*" multiple>
+<div class="preview" id="preview"></div>
+<button class="primary" onclick="newItem()">➕ Add New Item</button>
+<button class="danger" onclick="clearPhotos()">🗑 Clear All Photos</button>
+<p id="status"></p>
+</div>
+<script>
+const preview=document.getElementById("preview");
+const input=document.getElementById("photos");
+let photos=[];
+
+input.onchange=e=>{
+ for(const f of e.target.files){
+   const r=new FileReader();
+   r.onload=()=>{
+      photos.push(r.result);
+      const img=document.createElement("img");
+      img.src=r.result;
+      preview.appendChild(img);
+   };
+   r.readAsDataURL(f);
+ }
+ input.value="";
+};
+
+function clearPhotos(){
+ photos=[];
+ preview.innerHTML="";
+ input.value="";
+ document.getElementById("status").textContent="Previous photos cleared. Ready for the next product.";
+}
+
+function newItem(){
+ clearPhotos();
+ document.getElementById("status").textContent="Started a new product. Capture fresh photos.";
+}
+</script>
+</main>
+</body>
+</html>
