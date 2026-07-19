@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2457c5">
+<title>Expiry Tracker v3.1 Hybrid AI</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#69758b;--line:#dfe5ef;--primary:#2457c5;--primary2:#183f95;--soft:#eaf0ff;--success:#16794a;--warning:#a96300;--danger:#c23b3b;--shadow:0 10px 28px rgba(30,50,90,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#edf3ff,#f8fafc 300px);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1020px;margin:auto;min-height:100vh;padding:0 14px 105px}
+header{position:sticky;top:0;z-index:30;margin:0 -14px;padding:16px 18px 13px;background:rgba(245,247,251,.94);backdrop-filter:blur(14px);border-bottom:1px solid #dce3ef}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}h1{font-size:1.34rem;margin:0}.sub{margin:4px 0 0;color:var(--muted);font-size:.86rem}.head-actions{display:flex;gap:8px}.iconbtn{border:0;background:var(--soft);color:var(--primary);height:43px;min-width:43px;padding:0 12px;border-radius:13px;font-weight:760}
+.notice{margin:13px 0;padding:11px 13px;border-radius:14px;background:#fff8e8;color:#745000;border:1px solid #efd797;font-size:.83rem;line-height:1.45}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:13px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px;box-shadow:var(--shadow)}.stat b{display:block;font-size:1.3rem}.stat span{font-size:.76rem;color:var(--muted)}
+.toolbar{display:grid;grid-template-columns:1fr auto;gap:9px;margin:11px 0}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 11px;background:#fff;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:#8ca9ef;box-shadow:0 0 0 3px #e8efff}
+.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 8px}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 12px;border-radius:999px}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.list{display:grid;gap:11px}.empty{background:#fff;border:1px dashed #b9c4d7;border-radius:18px;text-align:center;padding:36px 18px;color:var(--muted)}.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.item-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.title-row{display:flex;gap:9px;align-items:center}.item-icon{width:41px;height:41px;border-radius:12px;display:grid;place-items:center;background:var(--soft);font-size:1.18rem;flex:none}.item h3{margin:0;font-size:1.01rem}.meta{color:var(--muted);font-size:.81rem;margin-top:3px}.remaining{margin:11px 0 5px;font-weight:760;font-size:.91rem}.remaining small{display:block;font-weight:500;color:var(--muted);margin-top:3px}.badge{font-size:.73rem;padding:6px 8px;border-radius:999px;font-weight:760;white-space:nowrap}.ok{background:#e8f7ef;color:var(--success)}.soon{background:#fff3dc;color:var(--warning)}.over{background:#ffe8e8;color:var(--danger)}.done{background:#edf0f5;color:#637083}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.btn{border:0;border-radius:10px;padding:8px 11px;font-weight:690;background:#eef2f8;color:#34405a}.btn.primary{background:var(--primary);color:#fff}.btn.primary2{background:var(--primary2);color:#fff}.btn.success{background:#e7f7ef;color:var(--success)}.btn.danger{background:#ffeaea;color:var(--danger)}.btn.outline{background:#fff;border:1px solid #b9c8e9;color:var(--primary)}
+.fabs{position:fixed;right:max(17px,calc((100vw - 1020px)/2 + 17px));bottom:18px;display:flex;gap:9px;z-index:20}.fab{border:0;border-radius:17px;padding:14px 16px;font-weight:770;box-shadow:0 14px 30px rgba(36,87,197,.28)}.fab.import{background:#fff;color:var(--primary);border:1px solid #cbd7f4}.fab.add{background:var(--primary);color:#fff}
+dialog{width:min(720px,calc(100vw - 20px));max-height:94vh;border:0;border-radius:22px;padding:0;box-shadow:0 25px 80px rgba(0,0,0,.28)}dialog::backdrop{background:rgba(15,23,42,.60)}.modal-head{position:sticky;top:0;z-index:5;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:16px 17px;border-bottom:1px solid var(--line)}.modal-head h2{font-size:1.08rem;margin:0}.close{border:0;background:#eef2f8;width:35px;height:35px;border-radius:10px}form,.modal-body{padding:15px 17px 20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{margin-bottom:11px}.full{grid-column:1/-1}label{display:block;font-size:.81rem;color:var(--muted);margin-bottom:6px;font-weight:690}.switch{display:flex;align-items:center;gap:8px;color:var(--text);font-size:.89rem}.switch input{width:auto}
+.panel{border:1px dashed #aebbd2;border-radius:16px;padding:12px;background:#f8faff}.step-title{font-weight:800;margin-bottom:8px}.help{font-size:.77rem;color:var(--muted);line-height:1.45;margin:7px 0 0}video,.preview{width:100%;border-radius:12px;background:#111;max-height:350px;object-fit:contain;display:block}.row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.photo-strip{display:flex;gap:8px;overflow:auto;margin-top:8px}.thumb{position:relative;min-width:84px;width:84px;height:84px;border-radius:12px;overflow:hidden;border:2px solid transparent;background:#111}.thumb.active{border-color:var(--primary)}.thumb img{width:100%;height:100%;object-fit:cover}.thumb button{position:absolute;right:3px;top:3px;border:0;background:rgba(0,0,0,.68);color:#fff;width:24px;height:24px;border-radius:50%}
+.ai-config{display:grid;grid-template-columns:1fr 1fr;gap:9px}.status{font-size:.83rem;font-weight:700;color:var(--primary);margin-top:9px}.result-card{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.confidence{display:inline-block;border-radius:999px;padding:5px 8px;font-size:.74rem;font-weight:760;background:#e8f7ef;color:var(--success)}.raw{font-family:ui-monospace,monospace;font-size:.76rem;white-space:pre-wrap;max-height:180px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px;margin-top:9px}.warning{color:#8a5500;background:#fff7df;border:1px solid #efd797;padding:9px;border-radius:11px;font-size:.78rem;line-height:1.4}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-preview{display:grid;gap:8px;margin-top:12px}.import-row{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px}.import-row b{display:block}.import-row span{font-size:.8rem;color:var(--muted)}
+@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.grid,.toolbar,.ai-config,.result-grid{grid-template-columns:1fr}.full{grid-column:auto}.fabs{right:17px}.fab{padding:13px}.fab span{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div><h1>Expiry Tracker</h1><p class="sub">Version 3.1 · Local OCR first, AI when needed</p></div><div class="head-actions"><button class="iconbtn" id="settingsBtn">⚙</button><button class="iconbtn" id="notifyBtn">🔔</button></div></div></header>
+<div class="notice"><b>Hybrid mode:</b> local OCR and barcode scanning run first without using Gemini. Photos are sent to Gemini only when you deliberately tap <b>Ask Gemini AI</b>. Saved tracker data stays in this browser.</div>
+<section class="stats"><div class="stat"><b id="totalStat">0</b><span>Total active</span></div><div class="stat"><b id="weekStat">0</b><span>Due in 7 days</span></div><div class="stat"><b id="overStat">0</b><span>Overdue</span></div><div class="stat"><b id="doneStat">0</b><span>Taken care</span></div></section>
+<div class="toolbar"><input id="search" placeholder="Search items, notes or category…"><select id="sort"><option value="dateAsc">Nearest expiry first</option><option value="dateDesc">Latest expiry first</option><option value="name">Name A–Z</option><option value="created">Recently added</option></select></div>
+<div class="tabs" id="tabs"></div><main class="list" id="itemList"></main>
+</div>
+<div class="fabs"><button class="fab import" id="importBtn">📄 <span>Import</span></button><button class="fab add" id="addBtn">＋ <span>Add item</span></button></div>
+
+<dialog id="settingsDialog">
+<div class="modal-head"><h2>AI settings</h2><button class="close" id="closeSettings">✕</button></div>
+<div class="modal-body">
+<div class="warning"><b>API-key safety:</b> this GitHub Pages app runs entirely in the browser. Your key is kept only in session storage and disappears when the browser session ends. A production app should use a private backend so the API key is never exposed to client-side code.</div>
+<div class="field" style="margin-top:12px"><label>Gemini API key</label><input id="apiKey" type="password" autocomplete="off" placeholder="Paste your Gemini API key"></div>
+<div class="field"><label>Gemini model</label><input id="modelName" value="gemini-2.5-flash" placeholder="gemini-2.5-flash"></div>
+<div class="form-actions"><button class="btn" id="clearKey">Clear key</button><button class="btn primary" id="saveSettings">Save for this session</button></div>
+</div>
+</dialog>
+
+<dialog id="itemDialog">
+<div class="modal-head"><h2 id="modalTitle">Add item</h2><button class="close" id="closeItem">✕</button></div>
+<form id="itemForm">
+<input type="hidden" id="itemId">
+<div class="grid">
+<div class="field"><label>Item / payment / event name</label><input id="name" required placeholder="Milk, face cream, warranty…"></div>
+<div class="field"><label>Category</label><select id="category"><option>Groceries</option><option>Cosmetics</option><option>Electronics</option><option>Payments</option><option>Events</option><option>Other</option></select></div>
+<div class="field"><label>Expiry / due date</label><input id="expiry" type="date" required></div>
+<div class="field"><label>Purchase / start date</label><input id="purchase" type="date"></div>
+
+<div class="field full panel">
+<div class="step-title">AI photo analysis</div>
+<video id="camera" playsinline hidden></video>
+<img id="mainPreview" class="preview" hidden alt="Selected label">
+<canvas id="captureCanvas" hidden></canvas>
+<div class="row">
+<button type="button" class="btn" id="startCamera">📷 Open camera</button>
+<button type="button" class="btn primary" id="captureBtn" hidden>Capture</button>
+<button type="button" class="btn" id="stopCamera" hidden>Close camera</button>
+<button type="button" class="btn outline" id="uploadImageBtn">Upload photos</button>
+<input id="imageInput" type="file" accept="image/*" multiple hidden>
+</div>
+<div class="photo-strip" id="photoStrip"></div>
+<div class="row">
+<button type="button" class="btn primary" id="localAnalyzeBtn">🔎 Try local scan</button>
+<button type="button" class="btn outline" id="localBarcodeBtn">▦ Scan barcode</button>
+<button type="button" class="btn primary2" id="analyzeBtn" disabled>✨ Ask Gemini AI</button>
+</div>
+<div class="status" id="localStatus"></div>
+<div id="localResult" class="result-card" hidden>
+<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>Local scan result</b><span class="confidence" id="localConfidence"></span></div>
+<div class="result-grid" style="margin-top:9px">
+<div><label>Detected date</label><input id="localDate" type="date"></div>
+<div><label>Detected barcode</label><input id="localBarcode"></div>
+</div>
+<label style="margin-top:9px">Recognized text</label>
+<div class="raw" id="localText"></div>
+<div class="row">
+<button type="button" class="btn primary" id="applyLocal">Apply local result</button>
+<button type="button" class="btn primary2" id="useAIFallback">Local scan failed — use AI</button>
+</div>
+</div>
+<div class="status" id="aiStatus"></div>
+<div id="aiResult" class="result-card" hidden>
+<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>AI extraction result</b><span class="confidence" id="confidence"></span></div>
+<div class="result-grid" style="margin-top:9px">
+<div><label>Detected product</label><input id="aiProduct"></div>
+<div><label>Detected category</label><select id="aiCategory"><option>Groceries</option><option>Cosmetics</option><option>Electronics</option><option>Payments</option><option>Events</option><option>Other</option></select></div>
+<div><label>Manufactured / start date</label><input id="aiManufactured" type="date"></div>
+<div><label>Expiry / due date</label><input id="aiExpiry" type="date"></div>
+<div><label>Batch / reference</label><input id="aiBatch"></div>
+<div><label>Barcode</label><input id="aiBarcode"></div>
+</div>
+<label style="margin-top:9px">AI notes</label><textarea id="aiNotes" rows="3"></textarea>
+<div class="row"><button type="button" class="btn primary" id="applyAI">Apply verified result</button></div>
+<div class="raw" id="rawAI" hidden></div>
+</div>
+<p class="help">Start with <b>Try local scan</b>. It uses browser OCR and costs nothing. Use Gemini only when the local scan cannot read the label reliably.</p>
+</div>
+
+<div class="field full"><label>Notes</label><textarea id="notes" rows="3" placeholder="Warranty, amount, batch number or source…"></textarea></div>
+<div class="field full"><label class="switch"><input id="reminders" type="checkbox" checked> Enable reminders at 7 days, 3 days, 1 day and on the due date</label></div>
+</div>
+<div class="form-actions"><button type="button" class="btn" id="cancelItem">Cancel</button><button class="btn primary" type="submit">Save item</button></div>
+</form>
+</dialog>
+
+<dialog id="importDialog">
+<div class="modal-head"><h2>Import spreadsheet or document</h2><button class="close" id="closeImport">✕</button></div>
+<div class="modal-body">
+<div class="panel">
+<label>Select TXT, CSV, Excel, image or PDF</label>
+<input id="fileInput" type="file" accept=".txt,.csv,.xlsx,.xls,.pdf,image/*,text/plain,text/csv,application/pdf">
+<p class="help">CSV and Excel are read locally. Images and PDFs use Gemini only when you explicitly choose AI document analysis.</p>
+<div class="status" id="importStatus"></div>
+<div class="row"><button class="btn primary2" id="analyzeDocument" type="button" hidden>Analyze document with Gemini</button></div>
+</div>
+<div id="documentResult" class="result-card" hidden></div>
+<div class="import-preview" id="importPreview"></div>
+<div class="form-actions"><button class="btn" id="cancelImport">Close</button><button class="btn primary" id="confirmImport" hidden>Import selected rows</button></div>
+</div>
+</dialog>
+
+<script>
+(()=>{
+const KEY="expiryTracker.items.v1",ALERT_KEY="expiryTracker.alerts.v1";
+const cats=["All","Groceries","Cosmetics","Electronics","Payments","Events","Other","Taken care"];
+const icons={Groceries:"🛒",Cosmetics:"🧴",Electronics:"🔌",Payments:"💳",Events:"📅",Other:"📦"};
+let items=JSON.parse(localStorage.getItem(KEY)||"[]"),sent=JSON.parse(localStorage.getItem(ALERT_KEY)||"{}"),active="All",stream=null,photos=[],activePhoto=0,pendingRows=[],importFile=null;
+const $=id=>document.getElementById(id),save=()=>localStorage.setItem(KEY,JSON.stringify(items));
+const day0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const parseISO=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const fmt=s=>parseISO(s).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+const diff=s=>Math.round((parseISO(s)-day0())/864e5);
+const esc=(s="")=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+function remainingParts(s){const start=day0(),end=parseISO(s);if(end<start)return null;let c=new Date(start),years=0,months=0;while(true){let n=new Date(c);n.setFullYear(n.getFullYear()+1);if(n<=end){years++;c=n}else break}while(true){let n=new Date(c);n.setMonth(n.getMonth()+1);if(n<=end){months++;c=n}else break}const days=Math.floor((end-c)/864e5);return{years,months,weeks:Math.floor(days/7),days:days%7,total:Math.floor((end-start)/864e5)}}
+function remainingLabel(i){if(i.done)return"Reminder closed";const d=diff(i.expiry);if(d<0)return`Expired ${Math.abs(d)} day${Math.abs(d)!==1?"s":""} ago`;if(d===0)return"Expires today";const p=remainingParts(i.expiry),a=[];if(p.years)a.push(`${p.years} year${p.years!==1?"s":""}`);if(p.months)a.push(`${p.months} month${p.months!==1?"s":""}`);if(p.weeks)a.push(`${p.weeks} week${p.weeks!==1?"s":""}`);if(p.days||!a.length)a.push(`${p.days} day${p.days!==1?"s":""}`);return a.join(", ")}
+function status(i){if(i.done)return{text:"Taken care",cls:"done"};const d=diff(i.expiry);if(d<0)return{text:`${Math.abs(d)}d overdue`,cls:"over"};if(d===0)return{text:"Due today",cls:"over"};if(d<=7)return{text:`${d}d left`,cls:"soon"};return{text:"Active",cls:"ok"}}
+function renderTabs(){$("tabs").innerHTML=cats.map(c=>`<button class="tab ${active===c?"active":""}" data-c="${c}">${c}</button>`).join("");document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{active=b.dataset.c;render()})}
+function currentList(){const q=$("search").value.trim().toLowerCase();let a=items.filter(i=>(active==="All"||active==="Taken care"?active==="All"||i.done:i.category===active&&!i.done)&&(!q||[i.name,i.category,i.notes].join(" ").toLowerCase().includes(q)));const s=$("sort").value;a.sort((x,y)=>s==="dateDesc"?y.expiry.localeCompare(x.expiry):s==="name"?x.name.localeCompare(y.name):s==="created"?(y.createdAt||0)-(x.createdAt||0):x.expiry.localeCompare(y.expiry));return a}
+function render(){renderTabs();const a=currentList();$("itemList").innerHTML=a.length?a.map(i=>{const s=status(i),d=diff(i.expiry);return`<article class="item"><div class="item-top"><div class="title-row"><div class="item-icon">${icons[i.category]||"📦"}</div><div><h3>${esc(i.name)}</h3><div class="meta">${esc(i.category)} · ${fmt(i.expiry)}${i.notes?` · ${esc(i.notes)}`:""}</div></div></div><span class="badge ${s.cls}">${s.text}</span></div><div class="remaining">${remainingLabel(i)}<small>${d>0?`${d} total calendar days remaining`:d===0?"Due today":`${Math.abs(d)} total days overdue`}</small></div><div class="actions"><button class="btn success" onclick="markDone('${i.id}')">${i.done?"↩ Reopen":"✓ Taken care"}</button><button class="btn" onclick="editItem('${i.id}')">✎ Edit</button><button class="btn danger" onclick="deleteItem('${i.id}')">Delete</button></div></article>`}).join(""):`<div class="empty">No matching items.<br><br>Use <b>Add item</b> or <b>Import</b>.</div>`;const act=items.filter(i=>!i.done);$("totalStat").textContent=act.length;$("weekStat").textContent=act.filter(i=>diff(i.expiry)>=0&&diff(i.expiry)<=7).length;$("overStat").textContent=act.filter(i=>diff(i.expiry)<0).length;$("doneStat").textContent=items.filter(i=>i.done).length}
+
+function stopCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("camera").hidden=true;$("captureBtn").hidden=true;$("stopCamera").hidden=true;$("startCamera").hidden=false}
+function resetPhotos(){photos=[];activePhoto=0;renderPhotos();$("mainPreview").hidden=true;$("localResult").hidden=true;$("aiResult").hidden=true;$("localStatus").textContent="";$("aiStatus").textContent="";$("analyzeBtn").disabled=true}
+function openForm(i=null){$("modalTitle").textContent=i?"Edit item":"Add item";$("itemId").value=i?.id||"";$("name").value=i?.name||"";$("category").value=i?.category||"Groceries";$("expiry").value=i?.expiry||"";$("purchase").value=i?.purchase||iso(new Date);$("notes").value=i?.notes||"";$("reminders").checked=i?.reminders!==false;stopCamera();resetPhotos();$("itemDialog").showModal()}
+window.editItem=id=>openForm(items.find(i=>i.id===id));window.markDone=id=>{const i=items.find(x=>x.id===id);i.done=!i.done;save();render()};window.deleteItem=id=>{const i=items.find(x=>x.id===id);if(i&&confirm(`Delete "${i.name}"?`)){items=items.filter(x=>x.id!==id);save();render()}};
+$("itemForm").onsubmit=e=>{e.preventDefault();const id=$("itemId").value||(crypto.randomUUID?.()||String(Date.now())),old=items.find(i=>i.id===id),data={id,name:$("name").value.trim(),category:$("category").value,expiry:$("expiry").value,purchase:$("purchase").value,notes:$("notes").value.trim(),reminders:$("reminders").checked,done:old?.done||false,createdAt:old?.createdAt||Date.now()};old?Object.assign(old,data):items.push(data);save();$("itemDialog").close();stopCamera();render();checkReminders()};
+$("addBtn").onclick=()=>openForm();$("closeItem").onclick=$("cancelItem").onclick=()=>{$("itemDialog").close();stopCamera()};$("search").oninput=render;$("sort").onchange=render;
+
+$("settingsBtn").onclick=()=>{$("apiKey").value=sessionStorage.getItem("geminiApiKey")||"";$("modelName").value=sessionStorage.getItem("geminiModel")||"gemini-2.5-flash";$("settingsDialog").showModal()};
+$("closeSettings").onclick=()=>$("settingsDialog").close();
+$("saveSettings").onclick=()=>{sessionStorage.setItem("geminiApiKey",$("apiKey").value.trim());sessionStorage.setItem("geminiModel",$("modelName").value.trim()||"gemini-2.5-flash");$("settingsDialog").close();alert("AI settings saved for this browser session.")};
+$("clearKey").onclick=()=>{sessionStorage.removeItem("geminiApiKey");$("apiKey").value=""};
+
+$("startCamera").onclick=async()=>{try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});$("camera").srcObject=stream;await $("camera").play();$("camera").hidden=false;$("captureBtn").hidden=false;$("stopCamera").hidden=false;$("startCamera").hidden=true}catch(e){alert("Camera access failed. Open the HTTPS GitHub Pages link and allow camera access.")}};
+$("stopCamera").onclick=stopCamera;
+$("captureBtn").onclick=()=>{if(photos.length>=3)return alert("Maximum three photos.");const v=$("camera"),c=$("captureCanvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0,c.width,c.height);addPhoto(c.toDataURL("image/jpeg",.92));stopCamera()};
+$("uploadImageBtn").onclick=()=>$("imageInput").click();
+$("imageInput").onchange=e=>{[...e.target.files].slice(0,3-photos.length).forEach(f=>{const r=new FileReader();r.onload=()=>addPhoto(r.result);r.readAsDataURL(f)});e.target.value=""};
+function addPhoto(src){photos.push(src);activePhoto=photos.length-1;renderPhotos();showActivePhoto()}
+function showActivePhoto(){if(!photos.length)return;$("mainPreview").src=photos[activePhoto];$("mainPreview").hidden=false}
+function renderPhotos(){$("photoStrip").innerHTML=photos.map((p,i)=>`<div class="thumb ${i===activePhoto?"active":""}" data-i="${i}"><img src="${p}"><button type="button" data-del="${i}">×</button></div>`).join("");$("photoStrip").querySelectorAll(".thumb").forEach(t=>t.onclick=e=>{if(e.target.dataset.del!==undefined)return;activePhoto=+t.dataset.i;renderPhotos();showActivePhoto()});$("photoStrip").querySelectorAll("[data-del]").forEach(b=>b.onclick=e=>{e.stopPropagation();photos.splice(+b.dataset.del,1);activePhoto=Math.max(0,Math.min(activePhoto,photos.length-1));renderPhotos();if(photos.length)showActivePhoto();else $("mainPreview").hidden=true})}
+
+
+const monthMap={jan:1,january:1,feb:2,february:2,mar:3,march:3,apr:4,april:4,may:5,jun:6,june:6,jul:7,july:7,aug:8,august:8,sep:9,sept:9,september:9,oct:10,october:10,nov:11,november:11,dec:12,december:12};
+function validDate(y,m,d){const x=new Date(y,m-1,d);return y>=2000&&y<=2100&&x.getFullYear()===y&&x.getMonth()===m-1&&x.getDate()===d}
+function extractLocalDates(text){
+ const found=new Map(),add=(y,m,d,label="date")=>{y=+y;m=+m;d=+d;if(y<100)y+=2000;if(validDate(y,m,d)){const k=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;found.set(k,{date:k,label})}};
+ let r,m;
+ r=/\b(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})\b/g;while((m=r.exec(text)))add(m[3],m[2],m[1]);
+ r=/\b(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})\b/g;while((m=r.exec(text)))add(m[1],m[2],m[3]);
+ r=/\b(\d{1,2})\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{2,4})\b/gi;
+ while((m=r.exec(text)))add(m[3],monthMap[m[2].toLowerCase()],m[1]);
+ r=/\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|SEPT|OCT|NOV|DEC)[\s\-\/.]*(\d{2,4})\b/gi;
+ while((m=r.exec(text))){let y=+m[2];if(y<100)y+=2000;const mo=monthMap[m[1].toLowerCase()];add(y,mo,new Date(y,mo,0).getDate(),"month-end")}
+ r=/\b(\d{1,2})[\/.\-](\d{2,4})\b/g;
+ while((m=r.exec(text))){let y=+m[2];if(y<100)y+=2000;const mo=+m[1];if(mo>=1&&mo<=12)add(y,mo,new Date(y,mo,0).getDate(),"month-end")}
+ return [...found.values()].sort((a,b)=>a.date.localeCompare(b.date));
+}
+function canvasVariant(img,mode){
+ const c=document.createElement("canvas"),max=1500,scale=Math.min(3,Math.max(1,max/img.width));
+ c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+ const ctx=c.getContext("2d");ctx.drawImage(img,0,0,c.width,c.height);
+ if(mode==="original")return c;
+ const im=ctx.getImageData(0,0,c.width,c.height),d=im.data;
+ for(let i=0;i<d.length;i+=4){const g=.299*d[i]+.587*d[i+1]+.114*d[i+2];let v=g;
+   if(mode==="contrast")v=(g-105)*2+128;
+   if(mode==="threshold")v=g>135?255:0;
+   v=Math.max(0,Math.min(255,v));d[i]=d[i+1]=d[i+2]=v;
+ }
+ ctx.putImageData(im,0,0);return c;
+}
+function loadImg(src){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=src})}
+
+function imagePart(dataUrl){const [meta,data]=dataUrl.split(",");return{inline_data:{mime_type:(meta.match(/data:(.*?);/)||[])[1]||"image/jpeg",data}}}
+async function callGemini(parts,prompt){
+ const key=sessionStorage.getItem("geminiApiKey"),model=sessionStorage.getItem("geminiModel")||"gemini-2.5-flash";
+ if(!key){$("settingsBtn").click();throw new Error("Add a Gemini API key in settings first.")}
+ const body={contents:[{role:"user",parts:[{text:prompt},...parts]}],generationConfig:{temperature:0.1,responseMimeType:"application/json"}};
+ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify(body)});
+ if(!res.ok){const t=await res.text();throw new Error(`Gemini API error ${res.status}: ${t.slice(0,250)}`)}
+ const json=await res.json(),text=json?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+ return{text,json,parsed:parseJSON(text)}
+}
+function parseJSON(text){try{return JSON.parse(text)}catch(e){const m=text.match(/\{[\s\S]*\}/);if(m)try{return JSON.parse(m[0])}catch(_){ }return null}}
+const imagePrompt=`You are an expiry-date extraction system. Inspect all supplied product-label, invoice, warranty or receipt images together. Return ONLY valid JSON with this exact structure:
+{"product_name":"","category":"Groceries|Cosmetics|Electronics|Payments|Events|Other","manufactured_date":"YYYY-MM-DD or empty","expiry_date":"YYYY-MM-DD or empty","batch_reference":"","barcode":"","confidence":0,"notes":"","evidence":[]}
+Rules:
+1. Distinguish manufacturing/packed date from expiry/use-by/best-before date.
+2. A printed month-year such as JUN-27 means the final calendar day of that month only when it clearly represents expiry/use-by; otherwise leave uncertain.
+3. If text says use within N months from manufacturing, calculate expiry only when the manufacturing date and duration are both clearly visible.
+4. Do not guess unreadable digits. Leave fields empty and explain uncertainty in notes.
+5. confidence is an integer from 0 to 100.
+6. evidence is a short array of visible text fragments supporting the answer.`;
+
+
+$("useAIFallback").onclick=()=>{$("analyzeBtn").disabled=false;$("aiStatus").textContent="AI fallback enabled. Tap Ask Gemini AI when ready."};
+$("localAnalyzeBtn").onclick=async()=>{
+ if(!photos.length)return alert("Capture or upload at least one photo.");
+ $("localAnalyzeBtn").disabled=true;$("localStatus").textContent="Running local OCR without AI…";$("localResult").hidden=true;
+ let combined="",bestDate="",passes=0;
+ try{
+  for(let p=0;p<photos.length;p++){
+   const img=await loadImg(photos[p]);
+   for(const mode of ["original","contrast","threshold"]){
+    passes++;
+    const canvas=canvasVariant(img,mode);
+    const result=await Tesseract.recognize(canvas,"eng",{logger:m=>{if(m.status==="recognizing text")$("localStatus").textContent=`Local OCR pass ${passes} · ${Math.round((m.progress||0)*100)}%`}});
+    combined+=`\n--- Photo ${p+1} · ${mode} ---\n${result.data.text||""}`;
+   }
+  }
+  const dates=extractLocalDates(combined);
+  bestDate=dates[dates.length-1]?.date||"";
+  $("localDate").value=bestDate;
+  $("localText").textContent=combined.trim()||"No readable text.";
+  const score=bestDate?Math.min(90,55+dates.length*10):20;
+  $("localConfidence").textContent=`${score}% confidence`;
+  $("localResult").hidden=false;
+  $("analyzeBtn").disabled=!!bestDate;
+  $("localStatus").textContent=bestDate?`Local scan found ${fmt(bestDate)}. Review it before applying.`:"Local scan could not find a reliable date. AI fallback is available.";
+ }catch(e){console.error(e);$("localStatus").textContent="Local OCR failed. You can use Gemini AI fallback.";$("analyzeBtn").disabled=false}
+ finally{$("localAnalyzeBtn").disabled=false}
+};
+$("applyLocal").onclick=()=>{if($("localDate").value)$("expiry").value=$("localDate").value;const extra=[$("localBarcode").value?`Barcode: ${$("localBarcode").value}`:"",$("localText").textContent?`Local OCR used. Please verify the date.`:""].filter(Boolean).join("\n");$("notes").value=[$("notes").value,extra].filter(Boolean).join("\n");$("localStatus").textContent="Local result applied. Verify the date before saving."};
+$("localBarcodeBtn").onclick=async()=>{
+ if(!photos.length)return alert("Capture or upload a barcode photo first.");
+ if(!("BarcodeDetector"in window)){return alert("Barcode scanning is not supported in this browser.");}
+ try{
+  const detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128","qr_code"]});
+  for(const p of photos){
+   const im=await loadImg(p),codes=await detector.detect(im);
+   if(codes.length){$("localBarcode").value=codes.map(c=>c.rawValue).join(", ");$("localResult").hidden=false;$("localStatus").textContent="Barcode detected locally.";return}
+  }
+  $("localStatus").textContent="No barcode detected locally.";
+ }catch(e){$("localStatus").textContent="Local barcode scan failed."}
+};
+
+$("analyzeBtn").onclick=async()=>{
+ if(!photos.length)return alert("Capture or upload at least one photo.");
+ try{$("aiStatus").textContent="Gemini is examining the photos…";$("analyzeBtn").disabled=true;const result=await callGemini(photos.map(imagePart),imagePrompt),d=result.parsed;if(!d)throw new Error("The AI response was not valid JSON.");$("aiProduct").value=d.product_name||"";$("aiCategory").value=["Groceries","Cosmetics","Electronics","Payments","Events","Other"].includes(d.category)?d.category:"Other";$("aiManufactured").value=/^\d{4}-\d{2}-\d{2}$/.test(d.manufactured_date||"")?d.manufactured_date:"";$("aiExpiry").value=/^\d{4}-\d{2}-\d{2}$/.test(d.expiry_date||"")?d.expiry_date:"";$("aiBatch").value=d.batch_reference||"";$("aiBarcode").value=d.barcode||"";$("aiNotes").value=[d.notes,(d.evidence||[]).length?`Evidence: ${d.evidence.join(" | ")}`:""].filter(Boolean).join("\n");$("confidence").textContent=`${Number(d.confidence)||0}% confidence`;$("rawAI").textContent=result.text;$("rawAI").hidden=true;$("aiResult").hidden=false;$("aiStatus").textContent="Analysis complete. Review every field before applying."}catch(e){console.error(e);$("aiStatus").textContent=e.message||"AI analysis failed."}finally{$("analyzeBtn").disabled=false}
+};
+$("applyAI").onclick=()=>{if($("aiProduct").value)$("name").value=$("aiProduct").value;$("category").value=$("aiCategory").value;if($("aiExpiry").value)$("expiry").value=$("aiExpiry").value;if($("aiManufactured").value)$("purchase").value=$("aiManufactured").value;const extra=[$("aiBatch").value?`Batch/reference: ${$("aiBatch").value}`:"",$("aiBarcode").value?`Barcode: ${$("aiBarcode").value}`:"",$("aiNotes").value].filter(Boolean).join("\n");$("notes").value=[$("notes").value,extra].filter(Boolean).join("\n");$("aiStatus").textContent="Verified AI result applied to the editable item fields."};
+
+$("notifyBtn").onclick=async()=>{if(!("Notification"in window))return alert("Notifications are not supported.");const p=await Notification.requestPermission();if(p==="granted"){new Notification("Reminders enabled",{body:"Expiry Tracker notifications are enabled."});checkReminders()}};
+function checkReminders(){const td=iso(new Date);let changed=false;items.forEach(i=>{if(i.done||!i.reminders)return;const d=diff(i.expiry);if(![7,3,1,0].includes(d))return;const k=`${i.id}:${d}:${td}`;if(sent[k])return;const msg=d===7?`${i.name} is due in one week.`:d===3?`${i.name} is due in three days.`:d===1?`${i.name} is due tomorrow.`:`${i.name} is due today.`;if("Notification"in window&&Notification.permission==="granted")new Notification("Expiry Reminder",{body:msg,tag:k});sent[k]=1;changed=true});if(changed)localStorage.setItem(ALERT_KEY,JSON.stringify(sent))}
+
+$("importBtn").onclick=()=>{importFile=null;pendingRows=[];$("fileInput").value="";$("importStatus").textContent="";$("importPreview").innerHTML="";$("documentResult").hidden=true;$("analyzeDocument").hidden=true;$("confirmImport").hidden=true;$("importDialog").showModal()};
+$("closeImport").onclick=$("cancelImport").onclick=()=>$("importDialog").close();
+function cell(row,names){const key=Object.keys(row).find(k=>names.some(n=>k.toLowerCase().replace(/[^a-z]/g,"").includes(n)));return key?row[key]:""}
+function normalizeDate(v){if(!v)return"";if(v instanceof Date)return iso(v);if(typeof v==="number"&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);return d?`${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`:""}const s=String(v).trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;const m=s.match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return`${y}-${String(+m[2]).padStart(2,"0")}-${String(+m[1]).padStart(2,"0")}`}return""}
+function normalizeCategory(v){const s=String(v||"Other").toLowerCase();return s.includes("groc")?"Groceries":s.includes("cos")?"Cosmetics":s.includes("elect")?"Electronics":s.includes("pay")?"Payments":s.includes("event")?"Events":"Other"}
+function previewRows(rows){pendingRows=rows.filter(r=>r.name&&r.expiry);$("importPreview").innerHTML=pendingRows.length?pendingRows.map((r,i)=>`<label class="import-row"><input type="checkbox" data-i="${i}" checked style="width:auto;float:right"><b>${esc(r.name)}</b><span>${esc(r.category)} · ${fmt(r.expiry)}${r.notes?` · ${esc(r.notes)}`:""}</span></label>`).join(""):`<div class="empty">No complete rows with both name and expiry date were found.</div>`;$("confirmImport").hidden=!pendingRows.length}
+$("fileInput").onchange=async e=>{importFile=e.target.files[0];if(!importFile)return;const ext=importFile.name.split(".").pop().toLowerCase();$("importStatus").textContent=`Selected ${importFile.name}.`;if(["xlsx","xls","csv"].includes(ext)){try{const buf=await importFile.arrayBuffer(),wb=XLSX.read(buf,{type:"array",cellDates:true}),sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:""});previewRows(rows.map(r=>({name:String(cell(r,["item","name","product","description"])||"").trim(),category:normalizeCategory(cell(r,["category","type"])),expiry:normalizeDate(cell(r,["expiry","expdate","duedate","due","bestbefore","useby"])),purchase:normalizeDate(cell(r,["purchase","startdate","manufactured","bought"])),notes:String(cell(r,["note","remarks","details","amount"])||"").trim(),reminders:true,done:false})));$("importStatus").textContent=`Read ${rows.length} spreadsheet rows locally.`}catch(err){$("importStatus").textContent="Spreadsheet reading failed."}}else{$("analyzeDocument").hidden=false;$("importStatus").textContent="Ready for AI document analysis."}};
+async function fileToPart(file){const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)});return imagePart(data)}
+$("analyzeDocument").onclick=async()=>{if(!importFile)return;try{$("importStatus").textContent="Gemini is reading the document…";let part;if(importFile.type.startsWith("image/")||importFile.type==="application/pdf")part=await fileToPart(importFile);else{const text=await importFile.text();part={text:`DOCUMENT TEXT:\n${text}`}}const prompt=`Extract expiry, due-date, warranty, renewal, payment and event records from this document. Return ONLY JSON:
+{"items":[{"name":"","category":"Groceries|Cosmetics|Electronics|Payments|Events|Other","expiry":"YYYY-MM-DD","purchase":"YYYY-MM-DD or empty","notes":"","confidence":0}]}
+Include only records with a clearly supported expiry or due date. Do not guess unreadable dates.`;const r=await callGemini([part],prompt),arr=Array.isArray(r.parsed?.items)?r.parsed.items:[];previewRows(arr.map(x=>({name:x.name||"",category:normalizeCategory(x.category),expiry:/^\d{4}-\d{2}-\d{2}$/.test(x.expiry||"")?x.expiry:"",purchase:/^\d{4}-\d{2}-\d{2}$/.test(x.purchase||"")?x.purchase:"",notes:[x.notes,`AI confidence: ${Number(x.confidence)||0}%`].filter(Boolean).join(" · "),reminders:true,done:false})));$("importStatus").textContent=`AI found ${arr.length} potential record(s). Review before import.`}catch(e){console.error(e);$("importStatus").textContent=e.message||"Document analysis failed."}};
+$("confirmImport").onclick=()=>{$("importPreview").querySelectorAll("input[type=checkbox]:checked").forEach(c=>{const r=pendingRows[+c.dataset.i];items.push({...r,id:crypto.randomUUID?.()||String(Date.now()+Math.random()),createdAt:Date.now()})});save();$("importDialog").close();render();checkReminders()};
+
+render();checkReminders();setInterval(checkReminders,3600000);
+})();
+</script>
+</body>
+</html>
