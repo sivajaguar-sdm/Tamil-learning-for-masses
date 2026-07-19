@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2457c5" />
+  <title>Expiry & Reminder Tracker</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#172033;
+      --muted:#69758b;
+      --line:#dfe5ef;
+      --primary:#2457c5;
+      --primary-soft:#e9efff;
+      --success:#16794a;
+      --warning:#b66a00;
+      --danger:#c23b3b;
+      --shadow:0 10px 30px rgba(30,50,90,.09);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#eef3ff 0,#f8fafc 260px);
+      color:var(--text);
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:980px;margin:auto;min-height:100vh;padding:0 14px 88px}
+    header{
+      position:sticky;top:0;z-index:20;
+      margin:0 -14px;padding:18px 18px 14px;
+      background:rgba(245,247,251,.92);backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(220,226,238,.8);
+    }
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{font-size:1.35rem;margin:0}
+    .subtitle{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+    .bell{
+      border:0;background:var(--primary-soft);color:var(--primary);
+      width:44px;height:44px;border-radius:14px;font-size:1.2rem;
+    }
+    .notice{
+      margin:14px 0;padding:12px 14px;border-radius:14px;
+      background:#fff8e8;color:#795300;border:1px solid #f0d99a;font-size:.87rem;
+    }
+    .stats{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;
+    }
+    .stat{
+      background:var(--card);border:1px solid var(--line);border-radius:15px;
+      padding:12px;box-shadow:var(--shadow);
+    }
+    .stat b{display:block;font-size:1.35rem}
+    .stat span{font-size:.78rem;color:var(--muted)}
+    .toolbar{
+      display:grid;grid-template-columns:1fr auto;gap:10px;margin:12px 0;
+    }
+    .search, select, input, textarea{
+      width:100%;border:1px solid var(--line);border-radius:12px;
+      padding:11px 12px;background:#fff;color:var(--text);outline:none;
+    }
+    input:focus,select:focus,textarea:focus{border-color:#8ca9ef;box-shadow:0 0 0 3px #e8efff}
+    .tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 8px}
+    .tab{
+      white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);
+      padding:9px 13px;border-radius:999px;
+    }
+    .tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+    .list{display:grid;gap:12px}
+    .empty{
+      background:#fff;border:1px dashed #bdc7da;border-radius:18px;
+      text-align:center;padding:36px 18px;color:var(--muted);
+    }
+    .item{
+      background:#fff;border:1px solid var(--line);border-radius:18px;
+      padding:15px;box-shadow:var(--shadow);
+    }
+    .item-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .title-row{display:flex;gap:10px;align-items:center}
+    .icon{
+      width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+      background:var(--primary-soft);font-size:1.2rem;flex:0 0 auto;
+    }
+    .item h3{margin:0;font-size:1.03rem}
+    .meta{color:var(--muted);font-size:.84rem;margin-top:3px}
+    .badge{
+      font-size:.76rem;padding:6px 9px;border-radius:999px;font-weight:700;white-space:nowrap;
+    }
+    .ok{background:#e8f7ef;color:var(--success)}
+    .soon{background:#fff3dc;color:var(--warning)}
+    .over{background:#ffe8e8;color:var(--danger)}
+    .done{background:#edf0f5;color:#637083}
+    .progress{height:7px;background:#edf1f7;border-radius:999px;margin:13px 0 10px;overflow:hidden}
+    .bar{height:100%;background:var(--primary);border-radius:999px}
+    .item-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:0;border-radius:11px;padding:9px 12px;font-weight:650;
+      background:#eef2f8;color:#34405a;
+    }
+    .btn.primary{background:var(--primary);color:#fff}
+    .btn.success{background:#e7f7ef;color:var(--success)}
+    .btn.danger{background:#ffeaea;color:var(--danger)}
+    .fab{
+      position:fixed;right:max(18px,calc((100vw - 980px)/2 + 18px));bottom:20px;
+      border:0;border-radius:18px;background:var(--primary);color:#fff;
+      padding:15px 18px;font-size:1rem;font-weight:750;box-shadow:0 14px 30px rgba(36,87,197,.35);
+    }
+    dialog{
+      width:min(620px,calc(100vw - 24px));border:0;border-radius:22px;
+      padding:0;box-shadow:0 25px 80px rgba(0,0,0,.25);
+    }
+    dialog::backdrop{background:rgba(15,23,42,.55)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;padding:17px 18px;border-bottom:1px solid var(--line)}
+    .modal-head h2{font-size:1.1rem;margin:0}
+    .close{border:0;background:#eef2f8;width:36px;height:36px;border-radius:10px}
+    form{padding:16px 18px 20px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:650}
+    .field{margin-bottom:12px}
+    .full{grid-column:1/-1}
+    .camera-box{
+      border:1px dashed #aebbd2;border-radius:15px;padding:12px;background:#f8faff;
+    }
+    video,canvas,.preview{width:100%;border-radius:12px;background:#111;max-height:270px;object-fit:cover}
+    .cam-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+    .help{font-size:.78rem;color:var(--muted);margin:7px 0 0;line-height:1.4}
+    .form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}
+    .switch{display:flex;align-items:center;gap:9px;color:var(--text);font-size:.9rem}
+    .switch input{width:auto}
+    @media(max-width:650px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      .toolbar{grid-template-columns:1fr}
+      .fab{right:18px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="topline">
+      <div>
+        <h1>Expiry & Reminder Tracker</h1>
+        <p class="subtitle">Groceries, cosmetics, electronics, payments and events</p>
+      </div>
+      <button class="bell" id="notifyBtn" title="Enable notifications">🔔</button>
+    </div>
+  </header>
+
+  <div class="notice">
+    Browser notifications are checked when this page is open or reopened. For guaranteed background reminders, install this as a PWA or connect it to a calendar/notification service.
+  </div>
+
+  <section class="stats">
+    <div class="stat"><b id="totalStat">0</b><span>Total active</span></div>
+    <div class="stat"><b id="weekStat">0</b><span>Due in 7 days</span></div>
+    <div class="stat"><b id="overStat">0</b><span>Overdue</span></div>
+    <div class="stat"><b id="doneStat">0</b><span>Taken care</span></div>
+  </section>
+
+  <div class="toolbar">
+    <input id="search" class="search" placeholder="Search items, notes or category…" />
+    <select id="sort">
+      <option value="dateAsc">Nearest expiry first</option>
+      <option value="dateDesc">Latest expiry first</option>
+      <option value="name">Name A–Z</option>
+      <option value="created">Recently added</option>
+    </select>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <main class="list" id="itemList"></main>
+</div>
+
+<button class="fab" id="addBtn">＋ Add item</button>
+
+<dialog id="itemDialog">
+  <div class="modal-head">
+    <h2 id="modalTitle">Add item</h2>
+    <button class="close" type="button" id="closeDialog">✕</button>
+  </div>
+  <form id="itemForm">
+    <input type="hidden" id="itemId" />
+    <div class="grid">
+      <div class="field">
+        <label for="name">Item / payment / event name</label>
+        <input id="name" required placeholder="Example: Milk, Face cream, Insurance" />
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category" required>
+          <option>Groceries</option>
+          <option>Cosmetics</option>
+          <option>Electronics</option>
+          <option>Payments</option>
+          <option>Events</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="expiry">Expiry / due date</label>
+        <input id="expiry" type="date" required />
+      </div>
+      <div class="field">
+        <label for="purchase">Purchase / start date</label>
+        <input id="purchase" type="date" />
+      </div>
+
+      <div class="field full camera-box">
+        <label>Capture expiry date using camera</label>
+        <video id="camera" playsinline hidden></video>
+        <canvas id="snapshot" hidden></canvas>
+        <img id="preview" class="preview" alt="Captured label" hidden />
+        <div class="cam-actions">
+          <button type="button" class="btn" id="startCamera">📷 Open camera</button>
+          <button type="button" class="btn primary" id="captureBtn" hidden>Capture</button>
+          <button type="button" class="btn" id="readDateBtn" hidden>Read date</button>
+          <button type="button" class="btn" id="stopCamera" hidden>Close camera</button>
+        </div>
+        <p class="help" id="cameraHelp">After capture, supported browsers can attempt text recognition. The detected date can always be manually corrected.</p>
+      </div>
+
+      <div class="field full">
+        <label for="notes">Notes</label>
+        <textarea id="notes" rows="3" placeholder="Warranty details, payment amount, location, batch number…"></textarea>
+      </div>
+
+      <div class="field full">
+        <label class="switch">
+          <input type="checkbox" id="reminders" checked />
+          Enable reminders at 7 days, 3 days, 1 day and on the due date
+        </label>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn" id="cancelBtn">Cancel</button>
+      <button type="submit" class="btn primary">Save item</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const STORAGE_KEY = "expiryTracker.items.v1";
+  const ALERT_KEY = "expiryTracker.alerts.v1";
+  const categories = ["All","Groceries","Cosmetics","Electronics","Payments","Events","Other","Taken care"];
+  const icons = {Groceries:"🛒",Cosmetics:"🧴",Electronics:"🔌",Payments:"💳",Events:"📅",Other:"📦"};
+  let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  let sentAlerts = JSON.parse(localStorage.getItem(ALERT_KEY) || "{}");
+  let activeCategory = "All";
+  let cameraStream = null;
+
+  const $ = id => document.getElementById(id);
+  const todayStart = () => {
+    const d = new Date(); d.setHours(0,0,0,0); return d;
+  };
+  const parseDate = value => {
+    const [y,m,d] = value.split("-").map(Number);
+    return new Date(y,m-1,d);
+  };
+  const fmt = value => parseDate(value).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+  const diffDays = value => Math.round((parseDate(value)-todayStart())/86400000);
+  const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  function renderTabs(){
+    $("tabs").innerHTML = categories.map(c =>
+      `<button class="tab ${activeCategory===c?"active":""}" data-cat="${c}">${c}</button>`
+    ).join("");
+    document.querySelectorAll(".tab").forEach(btn => btn.onclick = () => {
+      activeCategory = btn.dataset.cat; render();
+    });
+  }
+
+  function statusFor(item){
+    if(item.done) return {text:"Taken care",cls:"done"};
+    const d = diffDays(item.expiry);
+    if(d < 0) return {text:`${Math.abs(d)} day${Math.abs(d)!==1?"s":""} overdue`,cls:"over"};
+    if(d === 0) return {text:"Due today",cls:"over"};
+    if(d <= 7) return {text:`${d} day${d!==1?"s":""} left`,cls:"soon"};
+    return {text:`${d} days left`,cls:"ok"};
+  }
+
+  function progressFor(item){
+    if(!item.purchase) return Math.max(4, Math.min(100, 100 - Math.max(0,diffDays(item.expiry))));
+    const start = parseDate(item.purchase), end = parseDate(item.expiry), now = todayStart();
+    const total = Math.max(1,end-start), elapsed = now-start;
+    return Math.max(3,Math.min(100,(elapsed/total)*100));
+  }
+
+  function filteredItems(){
+    const q = $("search").value.trim().toLowerCase();
+    let out = items.filter(i => {
+      const catOk = activeCategory==="All" || (activeCategory==="Taken care" ? i.done : i.category===activeCategory && !i.done);
+      const qOk = !q || [i.name,i.category,i.notes].join(" ").toLowerCase().includes(q);
+      return catOk && qOk;
+    });
+    const sort = $("sort").value;
+    out.sort((a,b)=>{
+      if(sort==="dateDesc") return b.expiry.localeCompare(a.expiry);
+      if(sort==="name") return a.name.localeCompare(b.name);
+      if(sort==="created") return (b.createdAt||0)-(a.createdAt||0);
+      return a.expiry.localeCompare(b.expiry);
+    });
+    return out;
+  }
+
+  function render(){
+    renderTabs();
+    const list = filteredItems();
+    $("itemList").innerHTML = list.length ? list.map(i => {
+      const s=statusFor(i);
+      return `<article class="item">
+        <div class="item-top">
+          <div class="title-row">
+            <div class="icon">${icons[i.category]||"📦"}</div>
+            <div>
+              <h3>${escapeHtml(i.name)}</h3>
+              <div class="meta">${escapeHtml(i.category)} · ${fmt(i.expiry)}${i.notes?` · ${escapeHtml(i.notes)}`:""}</div>
+            </div>
+          </div>
+          <span class="badge ${s.cls}">${s.text}</span>
+        </div>
+        <div class="progress"><div class="bar" style="width:${progressFor(i)}%"></div></div>
+        <div class="item-actions">
+          <button class="btn success" onclick="window.markDone('${i.id}')">${i.done?"↩ Reopen":"✓ Taken care"}</button>
+          <button class="btn" onclick="window.editItem('${i.id}')">✎ Edit</button>
+          <button class="btn danger" onclick="window.deleteItem('${i.id}')">Delete</button>
+        </div>
+      </article>`;
+    }).join("") : `<div class="empty">No matching items yet.<br><br>Tap <b>Add item</b> to create your first reminder.</div>`;
+
+    const active = items.filter(i=>!i.done);
+    $("totalStat").textContent = active.length;
+    $("weekStat").textContent = active.filter(i=>{const d=diffDays(i.expiry);return d>=0&&d<=7}).length;
+    $("overStat").textContent = active.filter(i=>diffDays(i.expiry)<0).length;
+    $("doneStat").textContent = items.filter(i=>i.done).length;
+  }
+
+  function escapeHtml(s=""){
+    return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+  }
+
+  function openForm(item=null){
+    $("modalTitle").textContent = item ? "Edit item" : "Add item";
+    $("itemId").value = item?.id || "";
+    $("name").value = item?.name || "";
+    $("category").value = item?.category || "Groceries";
+    $("expiry").value = item?.expiry || "";
+    $("purchase").value = item?.purchase || new Date().toISOString().slice(0,10);
+    $("notes").value = item?.notes || "";
+    $("reminders").checked = item?.reminders !== false;
+    resetCameraUI();
+    $("itemDialog").showModal();
+  }
+
+  $("itemForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const id = $("itemId").value || (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString());
+    const existing = items.find(i=>i.id===id);
+    const data = {
+      id,
+      name:$("name").value.trim(),
+      category:$("category").value,
+      expiry:$("expiry").value,
+      purchase:$("purchase").value,
+      notes:$("notes").value.trim(),
+      reminders:$("reminders").checked,
+      done:existing?.done||false,
+      createdAt:existing?.createdAt||Date.now()
+    };
+    if(existing) Object.assign(existing,data); else items.push(data);
+    save(); $("itemDialog").close(); stopCamera(); render(); checkReminders();
+  });
+
+  window.editItem = id => openForm(items.find(i=>i.id===id));
+  window.markDone = id => {
+    const item=items.find(i=>i.id===id); if(!item)return;
+    item.done=!item.done; save(); render();
+  };
+  window.deleteItem = id => {
+    const item=items.find(i=>i.id===id);
+    if(item && confirm(`Delete "${item.name}"?`)){items=items.filter(i=>i.id!==id);save();render();}
+  };
+
+  $("addBtn").onclick=()=>openForm();
+  $("closeDialog").onclick=()=>{$("itemDialog").close();stopCamera()};
+  $("cancelBtn").onclick=()=>{$("itemDialog").close();stopCamera()};
+  $("search").oninput=render;
+  $("sort").onchange=render;
+
+  async function requestNotifications(){
+    if(!("Notification" in window)){
+      alert("This browser does not support notifications.");
+      return;
+    }
+    const result = await Notification.requestPermission();
+    if(result==="granted"){
+      new Notification("Reminders enabled",{body:"Expiry Tracker can now show reminders while the app is active."});
+      checkReminders();
+    }
+  }
+  $("notifyBtn").onclick=requestNotifications;
+
+  function reminderMessage(days,item){
+    if(days===7) return `${item.name} is due in 1 week.`;
+    if(days===3) return `${item.name} is due in 3 days.`;
+    if(days===1) return `${item.name} is due tomorrow.`;
+    if(days===0) return `${item.name} is due today.`;
+    return "";
+  }
+
+  function checkReminders(){
+    const todayKey = new Date().toISOString().slice(0,10);
+    let changed=false;
+    items.forEach(item=>{
+      if(item.done || !item.reminders) return;
+      const days=diffDays(item.expiry);
+      if(![7,3,1,0].includes(days)) return;
+      const key=`${item.id}:${days}:${todayKey}`;
+      if(sentAlerts[key]) return;
+      const msg=reminderMessage(days,item);
+      if("Notification" in window && Notification.permission==="granted"){
+        new Notification("Expiry Reminder",{body:msg,tag:key});
+      }
+      sentAlerts[key]=true; changed=true;
+    });
+    if(changed) localStorage.setItem(ALERT_KEY,JSON.stringify(sentAlerts));
+  }
+
+  async function startCamera(){
+    try{
+      cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
+      $("camera").srcObject=cameraStream;
+      await $("camera").play();
+      $("camera").hidden=false;$("captureBtn").hidden=false;$("stopCamera").hidden=false;$("startCamera").hidden=true;
+    }catch(err){
+      alert("Camera access was not available. You can still enter the date manually.");
+    }
+  }
+  function stopCamera(){
+    if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+    $("camera").hidden=true;$("captureBtn").hidden=true;$("stopCamera").hidden=true;$("startCamera").hidden=false;
+  }
+  function resetCameraUI(){
+    stopCamera();$("snapshot").hidden=true;$("preview").hidden=true;$("readDateBtn").hidden=true;
+  }
+  function capture(){
+    const v=$("camera"), c=$("snapshot");
+    c.width=v.videoWidth;c.height=v.videoHeight;
+    c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+    $("preview").src=c.toDataURL("image/jpeg",.9);
+    $("preview").hidden=false;$("readDateBtn").hidden=false;
+  }
+
+  function normalizeDetectedDate(text){
+    const patterns=[
+      /(?:EXP|EXPIRY|USE BY|BEST BEFORE|DUE DATE)?\s*[:\-]?\s*(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/i,
+      /(?:EXP|EXPIRY|USE BY|BEST BEFORE|DUE DATE)?\s*[:\-]?\s*(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/i
+    ];
+    for(const p of patterns){
+      const m=text.match(p); if(!m) continue;
+      let y,mo,d;
+      if(m[1].length===4){y=+m[1];mo=+m[2];d=+m[3]}
+      else{d=+m[1];mo=+m[2];y=+m[3];if(y<100)y+=2000}
+      if(y>2000&&mo>=1&&mo<=12&&d>=1&&d<=31)
+        return `${y}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    }
+    return null;
+  }
+
+  async function readCapturedDate(){
+    if(!("TextDetector" in window)){
+      alert("Automatic text recognition is not supported in this browser. Please read the captured label and enter the date manually.");
+      return;
+    }
+    try{
+      const detector=new TextDetector();
+      const blocks=await detector.detect($("preview"));
+      const text=blocks.map(b=>b.rawValue).join(" ");
+      const date=normalizeDetectedDate(text);
+      if(date){
+        $("expiry").value=date;
+        $("cameraHelp").textContent=`Detected: ${date}. Please verify and correct it if necessary.`;
+      }else{
+        alert("A date could not be identified. Please enter it manually.");
+      }
+    }catch(err){
+      alert("Text recognition failed. Please enter the expiry date manually.");
+    }
+  }
+
+  $("startCamera").onclick=startCamera;
+  $("captureBtn").onclick=capture;
+  $("stopCamera").onclick=stopCamera;
+  $("readDateBtn").onclick=readCapturedDate;
+
+  render();
+  checkReminders();
+  setInterval(checkReminders, 60*60*1000);
+})();
+</script>
+</body>
+</html>
