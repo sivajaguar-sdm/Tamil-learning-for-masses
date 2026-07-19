@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2457c5">
+<title>Expiry & Reminder Tracker v1.1</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#69758b;--line:#dfe5ef;--primary:#2457c5;--soft:#e9efff;--success:#16794a;--warning:#a96300;--danger:#c23b3b;--shadow:0 10px 28px rgba(30,50,90,.09)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef3ff,#f8fafc 280px);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1000px;margin:auto;min-height:100vh;padding:0 14px 100px}
+header{position:sticky;top:0;z-index:20;margin:0 -14px;padding:17px 18px 13px;background:rgba(245,247,251,.93);backdrop-filter:blur(14px);border-bottom:1px solid #dce2ee}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.head-actions{display:flex;gap:8px}h1{font-size:1.32rem;margin:0}.sub{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.iconbtn{border:0;background:var(--soft);color:var(--primary);min-width:43px;height:43px;padding:0 11px;border-radius:13px;font-weight:700}
+.notice{margin:13px 0;padding:11px 13px;border-radius:14px;background:#fff8e8;color:#745000;border:1px solid #efd797;font-size:.84rem;line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:13px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px;box-shadow:var(--shadow)}.stat b{display:block;font-size:1.3rem}.stat span{font-size:.76rem;color:var(--muted)}
+.toolbar{display:grid;grid-template-columns:1fr auto;gap:9px;margin:11px 0}.control,input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 11px;background:#fff;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:#8ca9ef;box-shadow:0 0 0 3px #e8efff}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 8px}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 12px;border-radius:999px}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.list{display:grid;gap:11px}.empty{background:#fff;border:1px dashed #b9c4d7;border-radius:18px;text-align:center;padding:35px 18px;color:var(--muted)}
+.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.item-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.title-row{display:flex;gap:9px;align-items:center}.item-icon{width:41px;height:41px;border-radius:12px;display:grid;place-items:center;background:var(--soft);font-size:1.18rem;flex:none}.item h3{margin:0;font-size:1.01rem}.meta{color:var(--muted);font-size:.82rem;margin-top:3px}.remaining{margin:11px 0 5px;font-weight:750;font-size:.91rem}.remaining small{display:block;font-weight:500;color:var(--muted);margin-top:3px}
+.badge{font-size:.73rem;padding:6px 8px;border-radius:999px;font-weight:750;white-space:nowrap}.ok{background:#e8f7ef;color:var(--success)}.soon{background:#fff3dc;color:var(--warning)}.over{background:#ffe8e8;color:var(--danger)}.done{background:#edf0f5;color:#637083}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.btn{border:0;border-radius:10px;padding:8px 11px;font-weight:680;background:#eef2f8;color:#34405a}.btn.primary{background:var(--primary);color:#fff}.btn.success{background:#e7f7ef;color:var(--success)}.btn.danger{background:#ffeaea;color:var(--danger)}
+.fabs{position:fixed;right:max(17px,calc((100vw - 1000px)/2 + 17px));bottom:18px;display:flex;gap:9px}.fab{border:0;border-radius:17px;padding:14px 16px;font-weight:760;box-shadow:0 14px 30px rgba(36,87,197,.28)}.fab.import{background:#fff;color:var(--primary);border:1px solid #cbd7f4}.fab.add{background:var(--primary);color:#fff}
+dialog{width:min(660px,calc(100vw - 22px));max-height:92vh;border:0;border-radius:22px;padding:0;box-shadow:0 25px 80px rgba(0,0,0,.25)}dialog::backdrop{background:rgba(15,23,42,.57)}.modal-head{position:sticky;top:0;z-index:2;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:16px 17px;border-bottom:1px solid var(--line)}.modal-head h2{font-size:1.08rem;margin:0}.close{border:0;background:#eef2f8;width:35px;height:35px;border-radius:10px}form,.modal-body{padding:15px 17px 20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{margin-bottom:11px}.full{grid-column:1/-1}label{display:block;font-size:.81rem;color:var(--muted);margin-bottom:6px;font-weight:680}.switch{display:flex;align-items:center;gap:8px;color:var(--text);font-size:.89rem}.switch input{width:auto}
+.camera-box,.import-box{border:1px dashed #aebbd2;border-radius:15px;padding:11px;background:#f8faff}video,canvas,.preview{width:100%;border-radius:11px;background:#111;max-height:270px;object-fit:contain}.row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.help{font-size:.77rem;color:var(--muted);line-height:1.45;margin:7px 0 0}.ocr-status{font-size:.82rem;font-weight:650;margin:8px 0;color:var(--primary)}.ocr-text{font-family:ui-monospace,monospace;font-size:.78rem;white-space:pre-wrap;max-height:145px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.candidate-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.candidate{border:1px solid #abc0ef;background:#eef3ff;color:#1847aa;border-radius:999px;padding:7px 10px}
+.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-preview{display:grid;gap:8px;margin-top:12px}.import-row{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px}.import-row b{display:block}.import-row span{font-size:.8rem;color:var(--muted)}.raw{width:100%;min-height:130px}
+@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.grid,.toolbar{grid-template-columns:1fr}.full{grid-column:auto}.fabs{right:17px}.fab{padding:13px}.fab span{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div><h1>Expiry & Reminder Tracker</h1><p class="sub">Version 1.1 · OCR and document import</p></div><div class="head-actions"><button class="iconbtn" id="notifyBtn" title="Enable notifications">🔔</button></div></div></header>
+<div class="notice"><b>Reminder note:</b> this web version checks reminders when the app is open or reopened. Camera, OCR and document reading require internet and an HTTPS address such as GitHub Pages.</div>
+<section class="stats"><div class="stat"><b id="totalStat">0</b><span>Total active</span></div><div class="stat"><b id="weekStat">0</b><span>Due in 7 days</span></div><div class="stat"><b id="overStat">0</b><span>Overdue</span></div><div class="stat"><b id="doneStat">0</b><span>Taken care</span></div></section>
+<div class="toolbar"><input id="search" placeholder="Search items, notes or category…"><select id="sort"><option value="dateAsc">Nearest expiry first</option><option value="dateDesc">Latest expiry first</option><option value="name">Name A–Z</option><option value="created">Recently added</option></select></div>
+<div class="tabs" id="tabs"></div><main class="list" id="itemList"></main>
+</div>
+<div class="fabs"><button class="fab import" id="importBtn">📄 <span>Import file</span></button><button class="fab add" id="addBtn">＋ <span>Add item</span></button></div>
+
+<dialog id="itemDialog">
+<div class="modal-head"><h2 id="modalTitle">Add item</h2><button class="close" id="closeItem" type="button">✕</button></div>
+<form id="itemForm">
+<input type="hidden" id="itemId">
+<div class="grid">
+<div class="field"><label>Item / payment / event name</label><input id="name" required placeholder="Milk, cream, warranty, insurance…"></div>
+<div class="field"><label>Category</label><select id="category"><option>Groceries</option><option>Cosmetics</option><option>Electronics</option><option>Payments</option><option>Events</option><option>Other</option></select></div>
+<div class="field"><label>Expiry / due date</label><input id="expiry" type="date" required></div>
+<div class="field"><label>Purchase / start date</label><input id="purchase" type="date"></div>
+<div class="field full camera-box">
+<label>Capture and read expiry date</label>
+<video id="camera" playsinline hidden></video><canvas id="snapshot" hidden></canvas><img id="preview" class="preview" hidden alt="Captured label">
+<div class="row"><button type="button" class="btn" id="startCamera">📷 Open camera</button><button type="button" class="btn primary" id="captureBtn" hidden>Capture</button><button type="button" class="btn primary" id="ocrBtn" hidden>🔎 Read image</button><button type="button" class="btn" id="stopCamera" hidden>Close</button></div>
+<div class="ocr-status" id="ocrStatus"></div><div class="candidate-list" id="dateCandidates"></div><div class="ocr-text" id="ocrText" hidden></div>
+<p class="help">Keep the label flat, fill the frame, avoid glare and focus on “EXP”, “Use by”, “Best before” or “Due date”. Tap a detected date to apply it; you can then override it manually.</p>
+</div>
+<div class="field full"><label>Notes</label><textarea id="notes" rows="3" placeholder="Warranty, amount, batch number or source file…"></textarea></div>
+<div class="field full"><label class="switch"><input id="reminders" type="checkbox" checked> Enable reminders at 7 days, 3 days, 1 day and on the due date</label></div>
+</div>
+<div class="form-actions"><button type="button" class="btn" id="cancelItem">Cancel</button><button class="btn primary" type="submit">Save item</button></div>
+</form>
+</dialog>
+
+<dialog id="importDialog">
+<div class="modal-head"><h2>Import items from a file</h2><button class="close" id="closeImport" type="button">✕</button></div>
+<div class="modal-body">
+<div class="import-box">
+<label>Select Notepad text, CSV, Excel spreadsheet or invoice PDF</label>
+<input id="fileInput" type="file" accept=".txt,.csv,.xlsx,.xls,.pdf,text/plain,text/csv,application/pdf">
+<p class="help">Spreadsheet columns can be named: Item/Name, Category, Expiry/Due Date, Purchase/Start Date and Notes. For text or PDF invoices, the app extracts text and proposes dates for manual review.</p>
+<div class="ocr-status" id="importStatus"></div>
+</div>
+<div id="importTextSection" hidden>
+<label style="margin-top:12px">Extracted text — editable</label><textarea id="importRaw" class="raw"></textarea>
+<div class="candidate-list" id="importCandidates"></div>
+<div class="row"><button class="btn primary" id="createFromText" type="button">Create item from selected date</button></div>
+</div>
+<div class="import-preview" id="importPreview"></div>
+<div class="form-actions"><button class="btn" id="cancelImport" type="button">Close</button><button class="btn primary" id="confirmImport" type="button" hidden>Import selected rows</button></div>
+</div>
+</dialog>
+
+<script type="module">
+import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+window.pdfjsLib=pdfjsLib;
+</script>
+<script>
+(()=>{
+const KEY="expiryTracker.items.v1", ALERT_KEY="expiryTracker.alerts.v1";
+const cats=["All","Groceries","Cosmetics","Electronics","Payments","Events","Other","Taken care"];
+const icons={Groceries:"🛒",Cosmetics:"🧴",Electronics:"🔌",Payments:"💳",Events:"📅",Other:"📦"};
+let items=JSON.parse(localStorage.getItem(KEY)||"[]"), sent=JSON.parse(localStorage.getItem(ALERT_KEY)||"{}"), active="All", stream=null, pendingRows=[], selectedImportDate="";
+const $=id=>document.getElementById(id), save=()=>localStorage.setItem(KEY,JSON.stringify(items));
+const day0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const parseISO=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const fmt=s=>parseISO(s).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+const diff=s=>Math.round((parseISO(s)-day0())/864e5);
+const esc=(s="")=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+
+function remainingParts(dateString){
+ const start=day0(), end=parseISO(dateString);
+ if(end<start)return null;
+ let cursor=new Date(start), years=0,months=0;
+ while(true){let n=new Date(cursor);n.setFullYear(n.getFullYear()+1);if(n<=end){years++;cursor=n}else break}
+ while(true){let n=new Date(cursor);n.setMonth(n.getMonth()+1);if(n<=end){months++;cursor=n}else break}
+ const days=Math.floor((end-cursor)/864e5),weeks=Math.floor(days/7),remainDays=days%7;
+ return {years,months,weeks,days:remainDays,total:Math.floor((end-start)/864e5)};
+}
+function remainingLabel(item){
+ if(item.done)return "Reminder closed";
+ const d=diff(item.expiry);if(d<0)return `Expired ${Math.abs(d)} day${Math.abs(d)!==1?"s":""} ago`;if(d===0)return "Expires today";
+ const p=remainingParts(item.expiry), parts=[];
+ if(p.years)parts.push(`${p.years} year${p.years!==1?"s":""}`);
+ if(p.months)parts.push(`${p.months} month${p.months!==1?"s":""}`);
+ if(p.weeks)parts.push(`${p.weeks} week${p.weeks!==1?"s":""}`);
+ if(p.days||!parts.length)parts.push(`${p.days} day${p.days!==1?"s":""}`);
+ return parts.join(", ");
+}
+function status(i){if(i.done)return{text:"Taken care",cls:"done"};const d=diff(i.expiry);if(d<0)return{text:`${Math.abs(d)}d overdue`,cls:"over"};if(d===0)return{text:"Due today",cls:"over"};if(d<=7)return{text:`${d}d left`,cls:"soon"};return{text:"Active",cls:"ok"}}
+function renderTabs(){$("tabs").innerHTML=cats.map(c=>`<button class="tab ${active===c?"active":""}" data-c="${c}">${c}</button>`).join("");document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{active=b.dataset.c;render()})}
+function list(){const q=$("search").value.trim().toLowerCase();let a=items.filter(i=>(active==="All"||active==="Taken care"?active==="All"||i.done:i.category===active&&!i.done)&&(!q||[i.name,i.category,i.notes].join(" ").toLowerCase().includes(q)));const s=$("sort").value;a.sort((x,y)=>s==="dateDesc"?y.expiry.localeCompare(x.expiry):s==="name"?x.name.localeCompare(y.name):s==="created"?(y.createdAt||0)-(x.createdAt||0):x.expiry.localeCompare(y.expiry));return a}
+function render(){renderTabs();const a=list();$("itemList").innerHTML=a.length?a.map(i=>{const s=status(i),d=diff(i.expiry);return `<article class="item"><div class="item-top"><div class="title-row"><div class="item-icon">${icons[i.category]||"📦"}</div><div><h3>${esc(i.name)}</h3><div class="meta">${esc(i.category)} · ${fmt(i.expiry)}${i.notes?` · ${esc(i.notes)}`:""}</div></div></div><span class="badge ${s.cls}">${s.text}</span></div><div class="remaining">${remainingLabel(i)}<small>${d>0?`${d} total calendar days remaining`:d===0?"Due today":`${Math.abs(d)} total days overdue`}</small></div><div class="actions"><button class="btn success" onclick="markDone('${i.id}')">${i.done?"↩ Reopen":"✓ Taken care"}</button><button class="btn" onclick="editItem('${i.id}')">✎ Edit</button><button class="btn danger" onclick="deleteItem('${i.id}')">Delete</button></div></article>`}).join(""):`<div class="empty">No matching items.<br><br>Use <b>Add item</b> or <b>Import file</b>.</div>`;
+const act=items.filter(i=>!i.done);$("totalStat").textContent=act.length;$("weekStat").textContent=act.filter(i=>diff(i.expiry)>=0&&diff(i.expiry)<=7).length;$("overStat").textContent=act.filter(i=>diff(i.expiry)<0).length;$("doneStat").textContent=items.filter(i=>i.done).length}
+function resetOCR(){$("preview").hidden=true;$("ocrBtn").hidden=true;$("ocrStatus").textContent="";$("ocrText").hidden=true;$("ocrText").textContent="";$("dateCandidates").innerHTML=""}
+function stopCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("camera").hidden=true;$("captureBtn").hidden=true;$("stopCamera").hidden=true;$("startCamera").hidden=false}
+function openForm(i=null){$("modalTitle").textContent=i?"Edit item":"Add item";$("itemId").value=i?.id||"";$("name").value=i?.name||"";$("category").value=i?.category||"Groceries";$("expiry").value=i?.expiry||"";$("purchase").value=i?.purchase||iso(new Date);$("notes").value=i?.notes||"";$("reminders").checked=i?.reminders!==false;stopCamera();resetOCR();$("itemDialog").showModal()}
+window.editItem=id=>openForm(items.find(i=>i.id===id));window.markDone=id=>{const i=items.find(x=>x.id===id);i.done=!i.done;save();render()};window.deleteItem=id=>{const i=items.find(x=>x.id===id);if(i&&confirm(`Delete "${i.name}"?`)){items=items.filter(x=>x.id!==id);save();render()}};
+$("itemForm").onsubmit=e=>{e.preventDefault();const id=$("itemId").value||(crypto.randomUUID?.()||String(Date.now())),old=items.find(i=>i.id===id),data={id,name:$("name").value.trim(),category:$("category").value,expiry:$("expiry").value,purchase:$("purchase").value,notes:$("notes").value.trim(),reminders:$("reminders").checked,done:old?.done||false,createdAt:old?.createdAt||Date.now()};old?Object.assign(old,data):items.push(data);save();$("itemDialog").close();stopCamera();render();checkReminders()};
+$("addBtn").onclick=()=>openForm();$("closeItem").onclick=$("cancelItem").onclick=()=>{$("itemDialog").close();stopCamera()};$("search").oninput=render;$("sort").onchange=render;
+
+$("startCamera").onclick=async()=>{try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});$("camera").srcObject=stream;await $("camera").play();$("camera").hidden=false;$("captureBtn").hidden=false;$("stopCamera").hidden=false;$("startCamera").hidden=true}catch(e){alert("Camera access failed. Open the GitHub Pages HTTPS link and allow camera permission.")}};
+$("stopCamera").onclick=stopCamera;
+$("captureBtn").onclick=()=>{const v=$("camera"),c=$("snapshot");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0,c.width,c.height);$("preview").src=c.toDataURL("image/jpeg",.94);$("preview").hidden=false;$("ocrBtn").hidden=false;$("ocrStatus").textContent="Image captured. Tap Read image.";stopCamera()};
+$("ocrBtn").onclick=async()=>{try{$("ocrStatus").textContent="Loading OCR and reading the label…";const result=await Tesseract.recognize($("preview").src,"eng",{logger:m=>{if(m.status==="recognizing text")$("ocrStatus").textContent=`Reading image… ${Math.round((m.progress||0)*100)}%`}});const text=result.data.text||"";$("ocrText").textContent=text;$("ocrText").hidden=false;$("ocrStatus").textContent="OCR complete. Verify the recognized text and choose a date.";showCandidates(text,$("dateCandidates"),d=>{$("expiry").value=d;$("ocrStatus").textContent=`Applied ${d}. Please verify it before saving.`})}catch(e){$("ocrStatus").textContent="OCR failed. Try a closer, brighter photo or enter the date manually."}};
+
+const months={jan:1,january:1,feb:2,february:2,mar:3,march:3,apr:4,april:4,may:5,jun:6,june:6,jul:7,july:7,aug:8,august:8,sep:9,sept:9,september:9,oct:10,october:10,nov:11,november:11,dec:12,december:12};
+function valid(y,m,d){const x=new Date(y,m-1,d);return y>=2000&&y<=2100&&x.getFullYear()===y&&x.getMonth()===m-1&&x.getDate()===d}
+function extractDates(text){
+ const found=new Set(), add=(y,m,d)=>{y=+y;m=+m;d=+d;if(y<100)y+=2000;if(valid(y,m,d))found.add(`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`)};
+ let r,m;
+ r=/\b(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})\b/g;while((m=r.exec(text)))add(m[3],m[2],m[1]);
+ r=/\b(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})\b/g;while((m=r.exec(text)))add(m[1],m[2],m[3]);
+ r=/\b(\d{1,2})\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{2,4})\b/gi;while((m=r.exec(text)))add(m[3],months[m[2].toLowerCase()],m[1]);
+ r=/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2}),?\s+(\d{2,4})\b/gi;while((m=r.exec(text)))add(m[3],months[m[1].toLowerCase()],m[2]);
+ r=/\b(?:EXP|EXPIRY|BEST BEFORE|USE BY)?\s*:?\s*(\d{1,2})[\/.\-](\d{2,4})\b/gi;while((m=r.exec(text))){let y=+m[2];if(y<100)y+=2000;const mo=+m[1];if(y>=2000&&mo>=1&&mo<=12){const last=new Date(y,mo,0).getDate();add(y,mo,last)}}
+ return [...found].sort();
+}
+function showCandidates(text,el,onPick){const dates=extractDates(text);el.innerHTML=dates.length?dates.map(d=>`<button type="button" class="candidate" data-date="${d}">${fmt(d)}</button>`).join(""):`<span class="help">No reliable date detected. Correct the extracted text or enter the date manually.</span>`;el.querySelectorAll(".candidate").forEach(b=>b.onclick=()=>onPick(b.dataset.date));return dates}
+
+$("notifyBtn").onclick=async()=>{if(!("Notification"in window))return alert("Notifications are not supported.");const p=await Notification.requestPermission();if(p==="granted"){new Notification("Reminders enabled",{body:"Expiry Tracker notifications are enabled."});checkReminders()}};
+function checkReminders(){const td=iso(new Date);let changed=false;items.forEach(i=>{if(i.done||!i.reminders)return;const d=diff(i.expiry);if(![7,3,1,0].includes(d))return;const k=`${i.id}:${d}:${td}`;if(sent[k])return;const msg=d===7?`${i.name} is due in one week.`:d===3?`${i.name} is due in three days.`:d===1?`${i.name} is due tomorrow.`:`${i.name} is due today.`;if("Notification"in window&&Notification.permission==="granted")new Notification("Expiry Reminder",{body:msg,tag:k});sent[k]=1;changed=true});if(changed)localStorage.setItem(ALERT_KEY,JSON.stringify(sent))}
+
+$("importBtn").onclick=()=>{$("fileInput").value="";$("importStatus").textContent="";$("importPreview").innerHTML="";$("importTextSection").hidden=true;$("confirmImport").hidden=true;pendingRows=[];$("importDialog").showModal()};
+$("closeImport").onclick=$("cancelImport").onclick=()=>$("importDialog").close();
+function cell(row,names){const key=Object.keys(row).find(k=>names.some(n=>k.toLowerCase().replace(/[^a-z]/g,"").includes(n)));return key?row[key]:""}
+function dateFromCell(v){if(!v)return"";if(v instanceof Date)return iso(v);if(typeof v==="number"&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);return d?`${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`:""}const s=String(v);return extractDates(s)[0]||(/^20\d\d-\d\d-\d\d$/.test(s)?s:"")}
+function normalizeCategory(v){const s=String(v||"Other").toLowerCase();return s.includes("groc")?"Groceries":s.includes("cos")?"Cosmetics":s.includes("elect")?"Electronics":s.includes("pay")?"Payments":s.includes("event")?"Events":"Other"}
+function previewRows(rows){pendingRows=rows.filter(r=>r.name&&r.expiry);$("importPreview").innerHTML=pendingRows.length?pendingRows.map((r,i)=>`<label class="import-row"><input type="checkbox" data-i="${i}" checked style="width:auto;float:right"><b>${esc(r.name)}</b><span>${esc(r.category)} · ${fmt(r.expiry)}${r.notes?` · ${esc(r.notes)}`:""}</span></label>`).join(""):`<div class="empty">No complete rows with both a name and a valid expiry date were found.</div>`;$("confirmImport").hidden=!pendingRows.length}
+$("fileInput").onchange=async e=>{const file=e.target.files[0];if(!file)return;$("importStatus").textContent=`Reading ${file.name}…`;try{const ext=file.name.split(".").pop().toLowerCase();if(["xlsx","xls","csv"].includes(ext)){const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:"array",cellDates:true}),sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:""});const norm=rows.map(r=>({name:String(cell(r,["item","name","product","description"])||"").trim(),category:normalizeCategory(cell(r,["category","type"])),expiry:dateFromCell(cell(r,["expiry","expdate","duedate","due","bestbefore","useby"])),purchase:dateFromCell(cell(r,["purchase","startdate","bought","purchasedate"])),notes:String(cell(r,["note","remarks","details","amount"])||"").trim(),reminders:true,done:false}));previewRows(norm);$("importStatus").textContent=`Read ${rows.length} spreadsheet row(s). Review the valid rows below.`}
+else if(ext==="pdf"){await readPDF(file)}
+else{const text=await file.text();showTextImport(text,file.name)}
+}catch(err){console.error(err);$("importStatus").textContent="The file could not be read. Check its format and try again."}};
+function showTextImport(text,name){$("importRaw").value=text;$("importTextSection").hidden=false;const ds=showCandidates(text,$("importCandidates"),d=>{selectedImportDate=d;$("importStatus").textContent=`Selected ${fmt(d)}. Edit the text or create the item.`});selectedImportDate=ds[0]||"";$("importStatus").textContent=`Text extracted from ${name}. Select a detected date, then create an item.`}
+async function readPDF(file){if(!window.pdfjsLib){$("importStatus").textContent="PDF reader is still loading. Try selecting the file again.";return}const data=new Uint8Array(await file.arrayBuffer()),pdf=await pdfjsLib.getDocument({data}).promise;let text="";for(let p=1;p<=Math.min(pdf.numPages,20);p++){const page=await pdf.getPage(p),content=await page.getTextContent();text+=content.items.map(x=>x.str).join(" ")+"\n"}if(text.trim().length>20){showTextImport(text,file.name)}else{$("importStatus").textContent="This PDF appears scanned. Running OCR on its first page…";const page=await pdf.getPage(1),viewport=page.getViewport({scale:2}),c=document.createElement("canvas");c.width=viewport.width;c.height=viewport.height;await page.render({canvasContext:c.getContext("2d"),viewport}).promise;const result=await Tesseract.recognize(c,"eng",{logger:m=>{if(m.status==="recognizing text")$("importStatus").textContent=`OCR on PDF… ${Math.round((m.progress||0)*100)}%`}});showTextImport(result.data.text||"",file.name)}}
+$("createFromText").onclick=()=>{const text=$("importRaw").value,dates=extractDates(text),d=selectedImportDate||dates[0];if(!d)return alert("Select or enter a valid date first.");const lines=text.split(/\n/).map(x=>x.trim()).filter(Boolean),candidate=lines.find(x=>!extractDates(x).length&&x.length>2&&x.length<90)||"Imported item";$("importDialog").close();openForm();$("name").value=candidate.slice(0,80);$("expiry").value=d;$("notes").value="Imported from document. Please verify all details."};
+$("confirmImport").onclick=()=>{const checks=$("importPreview").querySelectorAll("input[type=checkbox]:checked");checks.forEach(c=>{const r=pendingRows[+c.dataset.i];items.push({...r,id:crypto.randomUUID?.()||String(Date.now()+Math.random()),createdAt:Date.now()})});save();$("importDialog").close();render();checkReminders()};
+
+render();checkReminders();setInterval(checkReminders,3600000);
+})();
+</script>
+</body>
+</html>
