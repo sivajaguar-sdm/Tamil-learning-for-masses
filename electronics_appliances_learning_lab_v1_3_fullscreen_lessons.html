@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#15395f">
+<title>Electronics & Appliances Learning Lab v1.3</title>
+<style>
+:root{
+  --bg:#eef4f8;--surface:#ffffff;--surface2:#f7fafc;--text:#142235;--muted:#66768b;
+  --primary:#1f5f99;--primary2:#15395f;--accent:#f2a900;--good:#16875f;--bad:#c24a4a;
+  --line:#d8e2ec;--soft:#e9f2fa;--shadow:0 10px 30px rgba(25,54,84,.11);--anim-speed:1
+}
+body.dark{
+  --bg:#101923;--surface:#172431;--surface2:#1b2b39;--text:#edf5fb;--muted:#9fb0c2;
+  --primary:#4b9bd7;--primary2:#0d2235;--accent:#ffc44d;--good:#5ed0a0;--bad:#ff7c7c;
+  --line:#314656;--soft:#203747;--shadow:0 12px 30px rgba(0,0,0,.3)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--soft),var(--bg) 360px);color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1180px;margin:auto;padding:0 14px 100px}
+header{
+  position:sticky;top:0;z-index:30;margin:0 -14px;padding:12px 15px;background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)
+}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.brand h1{font-size:1.16rem;margin:0}.brand p{font-size:.74rem;color:var(--muted);margin:2px 0 0}
+.header-actions{display:flex;align-items:center;gap:7px}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);width:39px;height:39px;border-radius:12px}
+.progress-mini{width:115px}.progress-mini label{display:block;font-size:.68rem;text-align:right;color:var(--muted);margin-bottom:3px}
+.bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#ffd468);width:0;transition:.3s}
+
+.hero{margin:15px 0;background:linear-gradient(135deg,var(--primary2),var(--primary));border-radius:23px;padding:20px;color:white;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.07)}
+.hero:before{width:220px;height:220px;right:-70px;top:-90px}.hero:after{width:130px;height:130px;right:120px;bottom:-85px}
+.hero h2{position:relative;margin:0 0 7px;font-size:1.42rem}.hero p{position:relative;margin:0;max-width:760px;line-height:1.55;color:#e9f4ff}
+.hero-stats{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:13px;padding:10px}
+.stat b{display:block;font-size:1.05rem}.stat span{font-size:.72rem;color:#dcecff}
+.hero-buttons{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:12px;padding:10px 13px;font-weight:750}
+.btn.light{background:white;color:var(--primary2)}.btn.glass{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25)}
+.btn.primary{background:var(--primary);color:white}.btn.soft{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+
+.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:14px 0}
+.toolbar input,.toolbar select{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:11px;border-radius:12px;outline:none}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:5px;margin:10px 0 14px}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:9px 12px;border-radius:999px;font-weight:700;font-size:.84rem}
+.tab.active{background:var(--primary);color:white;border-color:var(--primary)}
+
+.section{display:none}.section.active{display:block}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:20px 0 10px}
+.section-title h2{font-size:1.14rem;margin:0}.section-title p{font-size:.78rem;color:var(--muted);margin:0}
+
+.chapter{background:var(--surface);border:1px solid var(--line);border-radius:20px;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
+.chapter-head{padding:14px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,var(--surface),var(--surface2))}
+.chapter-title{display:flex;align-items:center;gap:10px}.chapter-icon{width:42px;height:42px;border-radius:13px;background:var(--soft);display:grid;place-items:center;font-size:1.35rem}
+.chapter-title h3{margin:0;font-size:1rem}.chapter-title p{margin:3px 0 0;color:var(--muted);font-size:.75rem}
+.chapter-progress{text-align:right;font-size:.72rem;color:var(--muted)}
+.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}
+.lesson-card{position:relative;border:1px solid var(--line);background:var(--surface2);border-radius:15px;padding:12px;min-height:118px;transition:.2s}
+.lesson-card:hover{transform:translateY(-2px)}.lesson-card.done{border-color:#83cbae}.lesson-card.favorite:after{content:"★";position:absolute;right:10px;bottom:8px;color:var(--accent)}
+.lesson-card .status{position:absolute;right:9px;top:9px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:.75rem}
+.lesson-card.done .status{background:#daf3e8;color:var(--good)}
+.lesson-card .emoji{font-size:1.45rem}.lesson-card h4{margin:7px 0 4px;font-size:.94rem}.lesson-card p{margin:0;color:var(--muted);line-height:1.4;font-size:.76rem}
+.test-row{padding:0 12px 12px}.test-btn{width:100%;border:1px dashed var(--primary);background:var(--soft);color:var(--text);padding:10px;border-radius:12px;font-weight:750}
+
+.dashboard-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:1rem}
+.achievement-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.badge{border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;background:var(--surface2);opacity:.42}
+.badge.unlocked{opacity:1;border-color:#e2bd5a}.badge .big{font-size:1.55rem}.badge b{display:block;font-size:.77rem;margin-top:4px}.badge span{font-size:.66rem;color:var(--muted)}
+.recent-list{display:grid;gap:8px}.recent{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:8px 0}.recent:last-child{border-bottom:0}.recent b{font-size:.84rem}.recent span{font-size:.72rem;color:var(--muted)}
+
+.lab-layout{display:grid;grid-template-columns:1.4fr .8fr;gap:12px}
+.lab-canvas{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:15px;min-height:410px;box-shadow:var(--shadow)}
+.lab-controls{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow)}
+.control{margin:12px 0}.control label{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px}.control input[type=range]{width:100%}
+.switch{width:76px;height:38px;border-radius:999px;border:0;background:#8795a4;padding:4px;transition:.2s}.switch span{display:block;width:30px;height:30px;border-radius:50%;background:white;transition:.2s}.switch.on{background:var(--good)}.switch.on span{transform:translateX(38px)}
+.readout{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;line-height:1.6}
+.glossary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.term{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:12px}.term h4{margin:0 0 5px}.term p{margin:0;color:var(--muted);font-size:.8rem;line-height:1.45}
+
+dialog{display:none!important}
+.lesson-page{position:fixed;inset:0;z-index:200;background:var(--bg);color:var(--text);display:none;overflow:auto}
+.lesson-page.active{display:block}
+.lesson-topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:10px 12px;display:flex;align-items:center;gap:9px}
+.lesson-topbar h2{margin:0;font-size:1rem;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-topbar button{border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:11px;min-width:40px;height:40px}
+.lesson-scroll{max-width:900px;margin:0 auto;padding:12px 12px 94px}
+.lesson-content-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow)}
+.lesson-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--surface) 96%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}
+.lesson-bottom-nav button{flex:1;max-width:300px;border:0;border-radius:12px;padding:11px 12px;font-weight:800;background:var(--primary);color:#fff}
+.lesson-bottom-nav button.alt{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.immersive-animation{position:fixed!important;inset:0!important;z-index:500!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#0d1117!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+.immersive-animation svg{width:100vw!important;height:100vh!important;max-width:100vw!important;max-height:100vh!important;object-fit:contain!important}
+.immersive-exit{position:fixed;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:520;border:0;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:10px 14px;font-weight:800;display:none}
+.immersive-exit.show{display:block}
+.lesson-intro{color:var(--muted);line-height:1.55;margin:0}
+.visual{margin:14px 0;border:1px solid var(--line);border-radius:18px;padding:12px;min-height:220px;background:linear-gradient(180deg,var(--surface2),var(--soft));display:flex;align-items:center;justify-content:center;overflow:visible;position:relative}
+.visual svg{display:block;width:100%;height:auto;max-width:100%;max-height:none;overflow:visible;object-fit:contain}
+.animation-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0}
+.animation-toolbar .left,.animation-toolbar .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.animation-toolbar label{font-size:.78rem;color:var(--muted)}
+.animation-toolbar select{border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:10px;padding:8px}
+.speech-controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.speech-btn{border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:11px;padding:9px 11px;font-weight:750}
+.speech-btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.speech-btn.active{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
+.read-section-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.tts-status{font-size:.75rem;color:var(--muted);min-height:1em}
+
+.lesson-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info{border:1px solid var(--line);background:var(--surface2);border-radius:15px;padding:12px}.info h4{margin:0 0 6px}.info p,.info li{font-size:.86rem;line-height:1.5;color:var(--muted)}.info ul{margin:5px 0;padding-left:18px}
+.formula{margin-top:10px;padding:11px;border-radius:13px;background:#fff5d5;color:#66500b;border:1px solid #e7ca73;font-weight:750}
+body.dark .formula{background:#4a3b11;color:#ffe79b;border-color:#7a6420}
+.quiz{margin-top:12px;border:1px solid var(--line);border-radius:15px;padding:12px}.quiz h4{margin:0 0 8px}.option{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface2);color:var(--text);padding:10px;border-radius:11px;margin:7px 0}.option.correct{background:#dff5e9;color:#116a49;border-color:#86cfae}.option.wrong{background:#ffe5e5;color:#a23333;border-color:#e2a2a2}
+.modal-nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}.navbtn{border:0;border-radius:11px;padding:10px 13px;font-weight:750;background:var(--primary);color:white}.navbtn.alt{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.test-score{text-align:center;font-size:2rem;font-weight:850;margin:10px 0}.test-q{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+
+.flow{animation:flow calc(2.1s * var(--anim-speed)) linear infinite}.flow2{animation:flow calc(2.1s * var(--anim-speed)) linear infinite .7s}.flow3{animation:flow calc(2.1s * var(--anim-speed)) linear infinite 1.4s}
+@keyframes flow{0%{transform:translateX(0);opacity:.2}20%{opacity:1}100%{transform:translateX(250px);opacity:.15}}
+.pulse{animation:pulse calc(1.3s * var(--anim-speed)) ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+.wave{stroke-dasharray:12 9;animation:dash calc(1.8s * var(--anim-speed)) linear infinite}@keyframes dash{to{stroke-dashoffset:-42}}
+.spin{transform-origin:center;animation:spin calc(3s * var(--anim-speed)) linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.blink{animation:blink calc(1s * var(--anim-speed)) ease-in-out infinite}@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+
+@media(max-width:850px){.lesson-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid,.lab-layout{grid-template-columns:1fr}.hero-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){
+ .lesson-grid,.glossary-grid,.lesson-columns{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}
+ .progress-mini{display:none}.achievement-grid{grid-template-columns:repeat(2,1fr)}.hero{padding:17px}.hero h2{font-size:1.24rem}
+ .visual{min-height:0;padding:6px;margin:10px 0}.visual svg{width:100%;height:auto}
+ .animation-toolbar{align-items:stretch}.animation-toolbar .left,.animation-toolbar .right{width:100%}.animation-toolbar select,.speech-btn{flex:1}
+ .read-section-row{justify-content:stretch}.read-section-row .speech-btn{flex:1}
+ .lesson-scroll{padding:8px 8px 92px}.lesson-content-card{border-radius:14px;padding:10px}
+ .lesson-topbar{padding:8px}.lesson-topbar h2{font-size:.95rem}
+}
+@media(max-width:390px){
+ .visual{padding:4px}.visual svg text{font-size:14px}.hero-stats{grid-template-columns:1fr 1fr}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="topbar">
+  <div class="brand"><h1>Electronics & Appliances Lab</h1><p>Version 1.3 · Full-screen lessons and immersive animations</p></div>
+  <div class="header-actions">
+   <div class="progress-mini"><label><span id="pct">0</span>% complete</label><div class="bar"><span id="miniBar"></span></div></div>
+   <button class="icon-btn" id="themeBtn" title="Toggle dark mode">🌙</button>
+  </div>
+ </div>
+</header>
+
+<section class="hero">
+ <h2>Learn electronics from zero, then understand real appliances</h2>
+ <p>Follow structured chapters, watch animated concepts, try a virtual circuit, take tests, and build a permanent learning record on your device.</p>
+ <div class="hero-stats">
+  <div class="stat"><b id="completedStat">0</b><span>Lessons completed</span></div>
+  <div class="stat"><b id="scoreStat">0%</b><span>Average quiz score</span></div>
+  <div class="stat"><b id="badgeStat">0</b><span>Badges unlocked</span></div>
+  <div class="stat"><b id="favoriteStat">0</b><span>Bookmarked lessons</span></div>
+ </div>
+ <div class="hero-buttons">
+  <button class="btn light" id="continueBtn">Continue learning</button>
+  <button class="btn glass" data-tab="lab">Open virtual lab</button>
+  <button class="btn glass" id="resetBtn">Reset progress</button>
+ </div>
+</section>
+
+<nav class="tabs">
+ <button class="tab active" data-tab="course">📚 Course</button>
+ <button class="tab" data-tab="dashboard">📊 Dashboard</button>
+ <button class="tab" data-tab="lab">🧪 Virtual Lab</button>
+ <button class="tab" data-tab="glossary">🔎 Glossary</button>
+</nav>
+
+<section id="course" class="section active">
+ <div class="read-section-row"><button class="speech-btn primary read-section" data-read-target="course">🔊 Read Course Screen</button><button class="speech-btn stop-speech">⏹ Stop</button></div>
+ <div class="toolbar">
+  <input id="search" placeholder="Search electricity, resistor, PCB, fuse…">
+  <select id="chapterFilter"><option value="all">All chapters</option></select>
+  <select id="statusFilter"><option value="all">All lessons</option><option value="pending">Not completed</option><option value="done">Completed</option><option value="favorite">Bookmarked</option></select>
+ </div>
+ <div id="courseContent"></div>
+</section>
+
+<section id="dashboard" class="section">
+ <div class="read-section-row"><button class="speech-btn primary read-section" data-read-target="dashboard">🔊 Read Dashboard</button><button class="speech-btn stop-speech">⏹ Stop</button></div>
+ <div class="section-title"><h2>Learning Dashboard</h2><p>Your local progress</p></div>
+ <div class="dashboard-grid">
+  <div class="panel"><h3>Achievements</h3><div class="achievement-grid" id="badges"></div></div>
+  <div class="panel"><h3>Recently opened</h3><div class="recent-list" id="recentList"></div></div>
+ </div>
+</section>
+
+<section id="lab" class="section">
+ <div class="read-section-row"><button class="speech-btn primary read-section" data-read-target="lab">🔊 Read Virtual Lab</button><button class="speech-btn stop-speech">⏹ Stop</button></div>
+ <div class="section-title"><h2>Ohm's Law Virtual Lab</h2><p>Change voltage and resistance</p></div>
+ <div class="lab-layout">
+  <div class="lab-canvas">
+   <svg viewBox="0 0 620 390" preserveAspectRatio="xMidYMid meet" id="labSvg" style="width:100%;height:auto;display:block">
+    <rect x="35" y="45" width="550" height="285" rx="30" fill="var(--surface2)" stroke="var(--line)" stroke-width="4"/>
+    <line x1="110" y1="105" x2="480" y2="105" stroke="#5c6d7e" stroke-width="9" stroke-linecap="round"/>
+    <line x1="480" y1="105" x2="480" y2="285" stroke="#5c6d7e" stroke-width="9"/>
+    <line x1="480" y1="285" x2="110" y2="285" stroke="#5c6d7e" stroke-width="9"/>
+    <line x1="110" y1="285" x2="110" y2="105" stroke="#5c6d7e" stroke-width="9"/>
+    <rect x="75" y="165" width="70" height="75" rx="10" fill="#fff" stroke="#15395f" stroke-width="4"/>
+    <line x1="93" y1="150" x2="125" y2="150" stroke="#15395f" stroke-width="6"/>
+    <line x1="109" y1="134" x2="109" y2="166" stroke="#15395f" stroke-width="6"/>
+    <text x="110" y="210" text-anchor="middle" font-size="20" font-weight="800" fill="#15395f" id="batteryLabel">9 V</text>
+    <rect x="250" y="75" width="120" height="60" rx="14" fill="#d5ad73" stroke="#78522c" stroke-width="4"/>
+    <rect x="275" y="75" width="10" height="60" fill="#5b331b"/><rect x="320" y="75" width="10" height="60" fill="#c34a4a"/>
+    <text x="310" y="57" text-anchor="middle" font-size="18" fill="var(--text)" id="resLabel">470 Ω</text>
+    <path d="M443 275 V220 Q480 165 517 220 V275" fill="#ffd447" stroke="#927310" stroke-width="4" id="bulb" opacity=".25"/>
+    <circle cx="480" cy="217" r="75" fill="#ffd447" opacity="0" id="glow"/>
+    <g id="electrons" style="display:none">
+     <circle cx="120" cy="105" r="9" fill="#2e7eb7" class="flow"/><circle cx="120" cy="105" r="9" fill="#2e7eb7" class="flow2"/><circle cx="120" cy="105" r="9" fill="#2e7eb7" class="flow3"/>
+    </g>
+    <text x="310" y="355" text-anchor="middle" font-size="17" fill="var(--text)" id="labMessage">Close the switch to power the lamp</text>
+   </svg>
+  </div>
+  <div class="lab-controls">
+   <h3 style="margin-top:0">Circuit controls</h3>
+   <div class="control"><label><span>Battery voltage</span><b><span id="voltageOut">9</span> V</b></label><input type="range" id="voltageRange" min="1" max="15" value="9"></div>
+   <div class="control"><label><span>Resistance</span><b><span id="resOut">470</span> Ω</b></label><input type="range" id="resRange" min="100" max="1500" step="10" value="470"></div>
+   <div class="control"><label><span>Circuit switch</span><button class="switch" id="circuitSwitch" aria-label="Toggle circuit"><span></span></button></label></div>
+   <div class="readout" id="readout">Voltage: 9 V<br>Resistance: 470 Ω<br>Current: 0 mA<br>Power: 0 W</div>
+   <p style="font-size:.78rem;color:var(--muted);line-height:1.5">This simplified lab demonstrates Ohm's law. Real LEDs and lamps also have their own electrical characteristics and must be used within rated limits.</p>
+  </div>
+ </div>
+</section>
+
+<section id="glossary" class="section">
+ <div class="read-section-row"><button class="speech-btn primary read-section" data-read-target="glossary">🔊 Read Glossary Screen</button><button class="speech-btn stop-speech">⏹ Stop</button></div>
+ <div class="toolbar" style="grid-template-columns:1fr auto"><input id="glossarySearch" placeholder="Search glossary…"><button class="btn primary" id="clearGlossary">Clear</button></div>
+ <div class="glossary-grid" id="glossaryGrid"></div>
+</section>
+</div>
+
+
+<section id="lessonPage" class="lesson-page" aria-hidden="true">
+ <div class="lesson-topbar">
+  <button id="lessonBackBtn" title="Back">←</button>
+  <h2 id="lessonTitle"></h2>
+  <button id="readLessonTopBtn" title="Read lesson">🔊</button>
+  <button id="favBtn" title="Bookmark">☆</button>
+ </div>
+ <div class="lesson-scroll">
+  <div class="lesson-content-card">
+   <div class="animation-toolbar">
+    <div class="left">
+     <button class="speech-btn primary" id="readLessonBtn">🔊 Read Entire Lesson</button>
+     <button class="speech-btn" id="pauseSpeechBtn">⏸ Pause</button>
+     <button class="speech-btn" id="stopSpeechBtn">⏹ Stop</button>
+    </div>
+    <div class="right">
+     <label for="animationSpeed">Animation</label>
+     <select id="animationSpeed"><option value="1.6">Slow</option><option value="1" selected>Normal</option><option value=".6">Fast</option></select>
+     <button class="speech-btn" id="fullscreenAnimationBtn">⛶ Immersive</button>
+    </div>
+   </div>
+   <div class="tts-status" id="ttsStatus"></div>
+   <p class="lesson-intro" id="lessonIntro"></p>
+   <div class="visual" id="lessonVisual"></div>
+   <div class="lesson-columns">
+    <div class="info"><h4>Key idea</h4><div id="keyIdea"></div></div>
+    <div class="info"><h4>Everyday example</h4><div id="example"></div></div>
+   </div>
+   <div class="formula" id="formula"></div>
+   <div class="quiz"><h4 id="quizQ"></h4><div id="quizOptions"></div><div id="feedback" style="font-size:.83rem;font-weight:750;margin-top:7px"></div></div>
+  </div>
+ </div>
+ <div class="lesson-bottom-nav">
+  <button class="alt" id="prevBtn">← Previous</button>
+  <button id="nextBtn">Next →</button>
+ </div>
+</section>
+<button id="immersiveExitBtn" class="immersive-exit">✕ Exit</button>
+
+<dialog id="testDialog">
+ <div class="modal-head"><h2 id="testTitle">Chapter Test</h2><button class="close" id="closeTest">✕</button></div>
+ <div class="modal-body"><div id="testBody"></div></div>
+</dialog>
+
+<script>
+const chapters=[
+{id:"foundation",icon:"⚡",title:"1. Electricity Foundations",desc:"Start with atoms, charge and electrical flow",lessons:[
+ ["electricity","✨","What is Electricity?","Energy associated with electric charge.","Electricity is a broad term for effects caused by electric charge, whether the charge is stationary or moving.",`<p>Electricity appears as static charge, current in a wire, lightning and electrical energy used by appliances.</p><ul><li>Charge can be positive or negative</li><li>Moving charge forms current</li><li>Voltage provides electrical potential difference</li></ul>`,`<p>A battery-powered torch converts stored chemical energy into electrical energy and then into light.</p>`,"Electricity involves electric charge and energy.","Which statement best describes electricity?",["Only visible lightning","Effects associated with electric charge","Only power from wall sockets"],1,"atom"],
+ ["atom","⚛️","Atoms and Electrons","Matter is built from atoms containing charged particles.","An atom contains protons, neutrons and electrons. Protons are positive, electrons are negative and neutrons have no net charge.",`<p>Electrons occupy regions around the nucleus. In conductors, some outer electrons can move relatively easily.</p><ul><li>Proton: positive</li><li>Electron: negative</li><li>Neutron: neutral</li></ul>`,`<p>Copper is useful for wires because its outer electrons can participate in conduction.</p>`,"Opposite charges attract; like charges repel.","Which particle has a negative charge?",["Electron","Proton","Neutron"],0,"atom"],
+ ["charge","➕","Electric Charge","A basic property of matter measured in coulombs.","Electric charge creates electrical forces. An object can become charged by gaining or losing electrons.",`<p>Charge is conserved: it is transferred, not created from nothing in ordinary circuits.</p><ul><li>Symbol: Q</li><li>Unit: coulomb (C)</li><li>Electron charge is negative</li></ul>`,`<p>Rubbing some materials transfers electrons and may produce a small static shock.</p>`,"Charge is measured in coulombs (C).","What is the unit of electric charge?",["Volt","Coulomb","Watt"],1,"charge"],
+ ["static","🧲","Static Electricity","Electric charge accumulated on a surface.","Static electricity occurs when charge remains concentrated instead of continuously flowing through a circuit.",`<p>A sudden discharge can create a spark. Sensitive ICs can be damaged by electrostatic discharge.</p><ul><li>Common in dry conditions</li><li>Can attract light objects</li><li>Use ESD protection when handling electronics</li></ul>`,`<p>A balloon rubbed on hair may attract tiny paper pieces.</p>`,"Static charge is stationary until discharged.","Why is an ESD wrist strap used?",["To heat components","To reduce static damage","To measure voltage"],1,"static"]
+]},
+{id:"concepts",icon:"🔌",title:"2. Core Electrical Concepts",desc:"Current, voltage, resistance, power and energy",lessons:[
+ ["current","➡️","Electric Current","The rate of flow of electric charge.","Electric current describes how much charge passes a point per unit time. A closed conducting path is required.",`<p>In metal wires, electron motion produces current. Conventional current direction is defined opposite to electron movement.</p><ul><li>Symbol: I</li><li>Unit: ampere (A)</li><li>Ammeter connects in series</li></ul>`,`<p>More current through a lamp usually means more heating and light, within safe limits.</p>`,"I = Q ÷ t","What is needed for continuous current?",["Closed path","Broken wire","Only an insulator"],0,"current"],
+ ["voltage","⚡","Voltage","The electrical potential difference between two points.","Voltage supplies the electrical push that can move charge through a closed circuit.",`<p>Voltage may exist even when current is not flowing.</p><ul><li>Symbol: V</li><li>Unit: volt (V)</li><li>Voltmeter connects in parallel</li></ul>`,`<p>A 9 V battery provides a greater potential difference than a 1.5 V cell.</p>`,"V = Energy ÷ Charge","Voltage is measured using a:",["Voltmeter","Ammeter","Compass"],0,"voltage"],
+ ["ampere","🔢","Ampere and Milliampere","Units that express the amount of current.","One ampere equals one coulomb of charge passing a point each second.",`<p>Electronic circuits commonly use milliamperes.</p><ul><li>1 A = 1000 mA</li><li>1 mA = 0.001 A</li><li>High current needs suitable wiring</li></ul>`,`<p>An indicator LED may use roughly tens of milliamperes, whereas a heater can draw several amperes.</p>`,"1 A = 1000 mA","500 mA equals:",["0.5 A","5 A","50 A"],0,"meter"],
+ ["resistance","🧱","Resistance","Opposition to electric current.","Resistance limits current and converts some electrical energy into heat.",`<p>For the same voltage, more resistance produces less current.</p><ul><li>Symbol: R</li><li>Unit: ohm (Ω)</li><li>Measured using an ohmmeter</li></ul>`,`<p>A resistor protects an LED by limiting the current through it.</p>`,"R = V ÷ I","At fixed voltage, increasing resistance makes current:",["Increase","Decrease","Reverse"],1,"resistor"],
+ ["ohms","📐","Ohm's Law","The relationship among voltage, current and resistance.","Ohm's law states that current is proportional to voltage and inversely proportional to resistance for an ohmic component.",`<p>Use the formula triangle to rearrange the equation.</p><ul><li>V = I × R</li><li>I = V ÷ R</li><li>R = V ÷ I</li></ul>`,`<p>With 10 V across 5 Ω, current is 2 A.</p>`,"V = I × R","With 12 V and 6 Ω, current is:",["2 A","6 A","72 A"],0,"ohm"],
+ ["power","🔥","Electrical Power","The rate at which electrical energy is used.","Power indicates how quickly a device converts electrical energy into heat, light, motion or another form.",`<p>Higher power means more energy used per second.</p><ul><li>Symbol: P</li><li>Unit: watt (W)</li><li>1 watt = 1 joule per second</li></ul>`,`<p>A 1000 W heater uses energy faster than a 10 W lamp.</p>`,"P = V × I","A 12 V device drawing 2 A uses:",["6 W","14 W","24 W"],2,"power"],
+ ["energy","🔋","Electrical Energy","The total electrical work used over time.","Energy depends on both power and operating time.",`<p>Utilities commonly bill household energy in kilowatt-hours.</p><ul><li>Energy = Power × Time</li><li>1 kWh = 1000 W used for 1 hour</li></ul>`,`<p>A 100 W device used for 10 hours consumes 1 kWh.</p>`,"E = P × t","A 500 W appliance used for 2 hours consumes:",["1 kWh","2 kWh","500 kWh"],0,"energy"]
+]},
+{id:"circuits",icon:"🛤️",title:"3. Circuits and Supply Types",desc:"AC, DC, frequency, series, parallel and faults",lessons:[
+ ["acdc","〰️","AC and DC","Two different patterns of current flow.","Direct current maintains one main direction. Alternating current repeatedly reverses direction.",`<p>Electronic circuits usually operate internally on DC, while household supply is AC.</p><ul><li>Battery: DC</li><li>Wall outlet: AC</li><li>Adapter converts AC to DC</li></ul>`,`<p>Your phone charger converts mains AC into regulated low-voltage DC.</p>`,"DC: one direction | AC: changing direction","Which source normally supplies DC?",["Battery","Wall socket","Alternator output only"],0,"ac"],
+ ["frequency","⏱️","Frequency and Hertz","How often a repeating waveform cycles each second.","Frequency is the number of complete cycles that occur per second.",`<p>Alternating current and electronic signals have frequency.</p><ul><li>Symbol: f</li><li>Unit: hertz (Hz)</li><li>1 kHz = 1000 Hz</li></ul>`,`<p>A 50 Hz AC waveform completes 50 cycles each second.</p>`,"f = cycles ÷ time","1000 Hz equals:",["1 kHz","10 kHz","100 kHz"],0,"frequency"],
+ ["series","🔗","Series Circuits","Components connected along one current path.","In a series circuit, the same current flows through every component.",`<p>Total series resistance is the sum of individual resistances.</p><ul><li>One current path</li><li>Voltages divide</li><li>One break stops the entire circuit</li></ul>`,`<p>Old decorative lamp strings sometimes went completely dark when one lamp failed open.</p>`,"R total = R1 + R2 + ...","In series, current is:",["Same through all components","Always zero","Different at every point"],0,"series"],
+ ["parallel","🪜","Parallel Circuits","Components connected across common nodes.","Each parallel branch receives the same voltage, while current divides among branches.",`<p>Total current is the sum of branch currents.</p><ul><li>Multiple current paths</li><li>Same voltage across branches</li><li>One branch can fail while others work</li></ul>`,`<p>Household appliances are connected in parallel so they can operate independently.</p>`,"I total = I1 + I2 + ...","Parallel branches have the same:",["Voltage","Resistance always","Current always"],0,"parallel"],
+ ["open","🚪","Open Circuit","A broken path that prevents current flow.","An open circuit has a gap, disconnected wire or open switch.",`<p>Voltage may exist across the open section even though current is zero.</p>`,`<p>Turning a switch off intentionally opens the circuit.</p>`,"Open path → no continuous current","An open switch normally causes:",["No current","Maximum current","A short circuit"],0,"open"],
+ ["short","⚠️","Short Circuit","An unintended very-low-resistance path.","A short circuit can allow dangerously high current, producing heat, damage or fire.",`<p>Protection devices should disconnect the supply quickly.</p><ul><li>Do not bypass fuses</li><li>Use correct wire insulation</li><li>Disconnect power before repair</li></ul>`,`<p>Two exposed conductors touching directly can create a short circuit.</p>`,"Low resistance + voltage → potentially high current","Why is a short circuit dangerous?",["It may cause very high current","It stores data","It improves insulation"],0,"short"],
+ ["ground","🌍","Ground and Earth","A reference point and a safety connection.","Ground can mean a circuit reference. Protective earth is a safety connection intended to carry fault current away from exposed metal.",`<p>Circuit ground and protective earth are related concepts but are not always identical.</p>`,`<p>A metal appliance enclosure may be connected to protective earth.</p>`,"Protective earth helps reduce electric-shock risk.","What is protective earth mainly for?",["Safety","Making sound","Storing charge"],0,"ground"],
+ ["polarity","➕","Polarity","Correct positive and negative orientation.","Some components and supplies must be connected with the correct polarity.",`<p>Reverse polarity can prevent operation or damage electrolytic capacitors, LEDs and ICs.</p>`,`<p>A diode conducts mainly in its forward direction.</p>`,"Observe + and − markings.","Which component is polarity-sensitive?",["LED","Plain wire","Mechanical screw"],0,"polarity"]
+]},
+{id:"materials",icon:"🧪",title:"4. Materials and Basic Components",desc:"Conductors, semiconductors and common parts",lessons:[
+ ["materials","🧱","Conductors, Semiconductors and Insulators","Materials differ in how easily charge moves through them.","Conductors allow current easily, semiconductors can be controlled, and insulators strongly resist current.",`<ul><li>Copper: conductor</li><li>Silicon: semiconductor</li><li>Plastic: insulator</li></ul>`,`<p>A cable uses copper to carry current and plastic to keep users isolated from the conductor.</p>`,"Conductivity: conductor > semiconductor > insulator","Which is a semiconductor?",["Silicon","Rubber","Glass"],0,"materials"],
+ ["resistor","🟫","Resistors","Components designed to provide resistance.","Resistors limit current, divide voltage, set transistor bias and protect components.",`<p>Types include fixed resistors, variable resistors, potentiometers and trimmers.</p><ul><li>Unit: ohm</li><li>Power rating matters</li><li>Color bands indicate values</li></ul>`,`<p>A volume control is usually a potentiometer that changes resistance ratio.</p>`,"V = I × R","A resistor mainly:",["Limits current","Generates fuel","Stores software"],0,"resistor"],
+ ["capacitor","🔋","Capacitors","Components that store energy in an electric field.","A capacitor uses two conductors separated by an insulating dielectric.",`<p>Capacitors charge and discharge, block steady DC after charging and respond to changing signals.</p><ul><li>Unit: farad</li><li>Electrolytic types are polarized</li><li>Used for filtering and timing</li></ul>`,`<p>Power supplies use capacitors to smooth rectified voltage.</p>`,"Q = C × V","A capacitor stores energy in an:",["Electric field","Exhaust pipe","Wooden frame"],0,"capacitor"],
+ ["inductor","🌀","Inductors","Coils that store energy in a magnetic field.","Current through an inductor creates a magnetic field. An inductor resists rapid changes in current.",`<p>Used in filters, converters, chokes and transformers.</p><ul><li>Unit: henry</li><li>Wire resistance and core material matter</li></ul>`,`<p>A choke can reduce high-frequency noise in a power line.</p>`,"V = L × rate of current change","An inductor stores energy in a:",["Magnetic field","Light beam","Plastic layer"],0,"inductor"],
+ ["pcb","🟩","Printed Circuit Board","A board that supports and interconnects components.","A PCB uses copper traces, pads and vias to replace many individual wires.",`<ul><li>Substrate provides strength</li><li>Copper carries signals and power</li><li>Solder mask protects copper</li><li>Silkscreen labels parts</li></ul>`,`<p>Televisions, chargers and appliances use PCBs for compact, repeatable construction.</p>`,"PCB = substrate + copper + pads + components","What carries current on a PCB?",["Copper traces","Silkscreen ink only","Plastic case"],0,"pcb"],
+ ["led","💡","LED","A diode that emits light when forward biased.","LED means Light Emitting Diode. It is efficient, fast and polarity-sensitive.",`<p>A series resistor or current driver is normally required.</p><ul><li>Anode: positive side</li><li>Cathode: negative side</li><li>Available in many colors</li></ul>`,`<p>LEDs are used in indicators, displays, bulbs and TV backlights.</p>`,"Correct polarity + controlled current","Why is a resistor used with an LED?",["To limit current","To make AC","To store data"],0,"led"],
+ ["ldr","🌞","LDR","A light-sensitive resistor.","An LDR changes resistance according to light intensity. More light usually lowers its resistance.",`<p>Also called a photoresistor.</p><ul><li>Simple light sensor</li><li>Useful in automatic lighting</li><li>Response is slower than a photodiode</li></ul>`,`<p>A night lamp can switch on when an LDR detects darkness.</p>`,"More light → lower resistance","Bright light usually makes LDR resistance:",["Lower","Higher","Exactly infinite"],0,"ldr"],
+ ["ic","⬛","Integrated Circuit","Many electronic elements built on one semiconductor chip.","ICs can amplify, calculate, store, regulate, communicate or control.",`<p>Pin functions depend on the IC.</p><ul><li>Made mainly from silicon</li><li>Packages include DIP, SOIC and QFN</li><li>Observe supply voltage and pinout</li></ul>`,`<p>A microcontroller in a washing machine reads sensors and operates the motor and valves.</p>`,"IC = miniaturized electronic system","IC chips are commonly made from:",["Silicon","Paper","Rubber"],0,"ic"]
+]},
+{id:"safety",icon:"🛡️",title:"5. Protection and Safety",desc:"Fuses, breakers and safe working habits",lessons:[
+ ["fuse","🧯","Fuse","A sacrificial overcurrent protection device.","A fuse contains a calibrated element that melts when current exceeds a safe level for sufficient time.",`<p>A blown fuse must be replaced with the correct type and rating.</p>`,`<p>Many adapters and appliances contain a fuse near the mains input.</p>`,"Never replace a fuse with wire or a higher rating.","What should replace a blown fuse?",["Correctly rated fuse","Copper wire","Any larger fuse"],0,"fuse"],
+ ["breaker","🔘","Circuit Breaker","A resettable protection switch.","A circuit breaker automatically disconnects a circuit during overload or short-circuit conditions.",`<p>Unlike a fuse, many breakers can be reset after the fault is removed.</p>`,`<p>Household distribution boards use breakers to protect branch circuits.</p>`,"Find and repair the fault before resetting.","A circuit breaker is usually:",["Resettable","A battery","A light sensor"],0,"breaker"],
+ ["safety","🥽","Electronics Safety","Procedures that reduce shock, fire and component damage.","Mains electricity and charged capacitors can remain dangerous even after a device is switched off.",`<ul><li>Unplug before opening equipment</li><li>Verify absence of voltage</li><li>Discharge capacitors safely</li><li>Use insulated tools</li><li>Do not work alone on hazardous circuits</li></ul>`,`<p>Begin learning with low-voltage battery circuits rather than mains-powered equipment.</p>`,"Treat unknown circuits as energized until verified safe.","What is the safest beginner supply?",["Low-voltage battery","Exposed mains wiring","Unknown transformer output"],0,"safety"]
+]}
+];
+
+const visuals={
+atom:`<svg viewBox="0 0 420 230"><circle cx="210" cy="115" r="30" fill="#f2a900"/><circle cx="200" cy="110" r="8" fill="#c24a4a"/><circle cx="220" cy="120" r="8" fill="#75879a"/><ellipse cx="210" cy="115" rx="145" ry="58" fill="none" stroke="#3c81b5" stroke-width="3"/><ellipse cx="210" cy="115" rx="58" ry="145" fill="none" stroke="#3c81b5" stroke-width="3" transform="rotate(55 210 115)"/><circle cx="70" cy="115" r="10" fill="#3c81b5" class="spin"/><circle cx="210" cy="25" r="10" fill="#3c81b5" class="pulse"/><text x="210" y="220" text-anchor="middle">Atoms contain charged particles</text></svg>`,
+charge:`<svg viewBox="0 0 420 230"><circle cx="130" cy="105" r="58" fill="#ffe2e2" stroke="#c24a4a" stroke-width="4"/><text x="130" y="120" text-anchor="middle" font-size="44" fill="#c24a4a">+</text><circle cx="290" cy="105" r="58" fill="#dfefff" stroke="#2775ab" stroke-width="4"/><text x="290" y="120" text-anchor="middle" font-size="44" fill="#2775ab">−</text><path d="M185 105 H235" stroke="#f2a900" stroke-width="6" marker-end="url(#a)"/><defs><marker id="a" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#f2a900"/></marker></defs><text x="210" y="205" text-anchor="middle">Opposite charges attract</text></svg>`,
+static:`<svg viewBox="0 0 420 230"><ellipse cx="135" cy="105" rx="80" ry="58" fill="#ff8080"/><path d="M215 105 C260 90 290 70 340 85" stroke="#67788a" stroke-width="7" fill="none"/><g fill="#f2a900" class="blink"><circle cx="215" cy="90" r="7"/><circle cx="240" cy="82" r="7"/><circle cx="265" cy="75" r="7"/></g><path d="M325 85 l18 -20 l-5 18 l20 -5 l-22 30 l5 -19 z" fill="#ffd44a" class="pulse"/><text x="210" y="205" text-anchor="middle">Accumulated charge can suddenly discharge</text></svg>`,
+current:`<svg viewBox="0 0 420 220"><line x1="65" y1="110" x2="350" y2="110" stroke="#3f6e90" stroke-width="11" stroke-linecap="round"/><circle cx="75" cy="110" r="9" fill="#f2a900" class="flow"/><circle cx="75" cy="110" r="9" fill="#f2a900" class="flow2"/><circle cx="75" cy="110" r="9" fill="#f2a900" class="flow3"/><text x="210" y="190" text-anchor="middle">Moving charge produces current</text></svg>`,
+voltage:`<svg viewBox="0 0 420 220"><rect x="90" y="60" width="65" height="100" rx="10" fill="#fff" stroke="#15395f" stroke-width="4"/><line x1="107" y1="47" x2="138" y2="47" stroke="#15395f" stroke-width="6"/><line x1="122" y1="32" x2="122" y2="62" stroke="#15395f" stroke-width="6"/><path d="M170 110 H330" stroke="#2775ab" stroke-width="9" marker-end="url(#b)"/><defs><marker id="b" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#2775ab"/></marker></defs><text x="240" y="180" text-anchor="middle">Voltage provides electrical push</text></svg>`,
+meter:`<svg viewBox="0 0 420 220"><circle cx="210" cy="105" r="75" fill="#fff" stroke="#15395f" stroke-width="5"/><path d="M155 125 A60 60 0 0 1 265 125" fill="none" stroke="#9db0c2" stroke-width="5"/><line x1="210" y1="125" x2="255" y2="85" stroke="#c24a4a" stroke-width="6" class="pulse"/><text x="210" y="155" text-anchor="middle" font-size="26" font-weight="800">A</text><text x="210" y="205" text-anchor="middle">Current is measured in amperes</text></svg>`,
+resistor:`<svg viewBox="0 0 420 220"><line x1="45" y1="110" x2="125" y2="110" stroke="#66788a" stroke-width="8"/><rect x="125" y="78" width="170" height="64" rx="15" fill="#d9b27a" stroke="#79532e" stroke-width="4"/><rect x="155" y="78" width="12" height="64" fill="#5b331b"/><rect x="205" y="78" width="12" height="64" fill="#c24a4a"/><rect x="255" y="78" width="12" height="64" fill="#f2a900"/><line x1="295" y1="110" x2="375" y2="110" stroke="#66788a" stroke-width="8"/><text x="210" y="190" text-anchor="middle">Resistance limits current</text></svg>`,
+ohm:`<svg viewBox="0 0 420 240"><polygon points="210,35 75,205 345,205" fill="#fff5d5" stroke="#d6ad3b" stroke-width="4"/><text x="210" y="100" text-anchor="middle" font-size="36" font-weight="900">V</text><line x1="120" y1="135" x2="300" y2="135" stroke="#d6ad3b" stroke-width="4"/><text x="155" y="185" text-anchor="middle" font-size="34" font-weight="900">I</text><text x="265" y="185" text-anchor="middle" font-size="34" font-weight="900">R</text></svg>`,
+power:`<svg viewBox="0 0 420 220"><path d="M210 35 C160 95 175 120 145 150 C175 205 250 210 280 150 C260 115 250 85 210 35Z" fill="#ff9d39" class="pulse"/><path d="M210 85 C190 120 195 150 175 165 C200 190 235 188 250 160 C235 135 230 110 210 85Z" fill="#ffd44a"/><text x="210" y="215" text-anchor="middle">Power is energy used per second</text></svg>`,
+energy:`<svg viewBox="0 0 420 220"><rect x="95" y="55" width="210" height="110" rx="18" fill="#fff" stroke="#15395f" stroke-width="5"/><rect x="305" y="90" width="22" height="40" rx="5" fill="#15395f"/><rect x="112" y="72" width="145" height="76" rx="10" fill="#62c798" class="pulse"/><text x="210" y="205" text-anchor="middle">Energy accumulates over operating time</text></svg>`,
+ac:`<svg viewBox="0 0 420 230"><text x="45" y="55" font-weight="800">DC</text><line x1="80" y1="50" x2="365" y2="50" stroke="#2775ab" stroke-width="6"/><text x="45" y="145" font-weight="800">AC</text><path d="M80 150 C110 95 140 205 170 150 S230 95 260 150 S320 205 355 150" fill="none" stroke="#c24a4a" stroke-width="6" class="wave"/><text x="210" y="215" text-anchor="middle">DC is steady; AC alternates</text></svg>`,
+frequency:`<svg viewBox="0 0 420 230"><path d="M35 120 C60 65 85 175 110 120 S160 65 185 120 S235 175 260 120 S310 65 335 120 S375 175 395 120" fill="none" stroke="#2775ab" stroke-width="6" class="wave"/><line x1="110" y1="55" x2="110" y2="185" stroke="#999" stroke-dasharray="6 6"/><line x1="185" y1="55" x2="185" y2="185" stroke="#999" stroke-dasharray="6 6"/><text x="147" y="205" text-anchor="middle">One cycle</text></svg>`,
+series:`<svg viewBox="0 0 420 220"><line x1="50" y1="110" x2="110" y2="110" stroke="#66788a" stroke-width="7"/><rect x="110" y="88" width="80" height="44" rx="10" fill="#d8b076"/><line x1="190" y1="110" x2="230" y2="110" stroke="#66788a" stroke-width="7"/><rect x="230" y="88" width="80" height="44" rx="10" fill="#d8b076"/><line x1="310" y1="110" x2="370" y2="110" stroke="#66788a" stroke-width="7"/><circle cx="55" cy="110" r="8" fill="#2775ab" class="flow"/><text x="210" y="190" text-anchor="middle">One current path</text></svg>`,
+parallel:`<svg viewBox="0 0 420 230"><line x1="80" y1="45" x2="80" y2="185" stroke="#66788a" stroke-width="7"/><line x1="340" y1="45" x2="340" y2="185" stroke="#66788a" stroke-width="7"/><line x1="80" y1="80" x2="340" y2="80" stroke="#66788a" stroke-width="7"/><line x1="80" y1="150" x2="340" y2="150" stroke="#66788a" stroke-width="7"/><rect x="175" y="58" width="70" height="44" rx="10" fill="#d8b076"/><rect x="175" y="128" width="70" height="44" rx="10" fill="#d8b076"/><text x="210" y="215" text-anchor="middle">Multiple current paths</text></svg>`,
+open:`<svg viewBox="0 0 420 220"><line x1="60" y1="120" x2="180" y2="120" stroke="#66788a" stroke-width="8"/><circle cx="180" cy="120" r="10" fill="#15395f"/><circle cx="275" cy="120" r="10" fill="#15395f"/><line x1="180" y1="120" x2="255" y2="72" stroke="#c24a4a" stroke-width="8"/><line x1="275" y1="120" x2="360" y2="120" stroke="#66788a" stroke-width="8"/><text x="210" y="195" text-anchor="middle">The gap stops current</text></svg>`,
+short:`<svg viewBox="0 0 420 220"><path d="M65 80 H350 V150 H65 Z" fill="none" stroke="#66788a" stroke-width="8"/><path d="M80 80 Q210 190 335 80" fill="none" stroke="#c24a4a" stroke-width="10" class="pulse"/><path d="M220 100 l20 -30 l-5 25 l25 -8 l-30 42 l7 -28 z" fill="#ffd44a"/><text x="210" y="205" text-anchor="middle">A low-resistance bypass can draw high current</text></svg>`,
+ground:`<svg viewBox="0 0 420 220"><line x1="210" y1="40" x2="210" y2="125" stroke="#2775ab" stroke-width="8"/><line x1="145" y1="125" x2="275" y2="125" stroke="#2775ab" stroke-width="8"/><line x1="165" y1="150" x2="255" y2="150" stroke="#2775ab" stroke-width="8"/><line x1="185" y1="175" x2="235" y2="175" stroke="#2775ab" stroke-width="8"/><text x="210" y="210" text-anchor="middle">Ground provides a reference or safety path</text></svg>`,
+polarity:`<svg viewBox="0 0 420 220"><circle cx="130" cy="105" r="58" fill="#ffe2e2" stroke="#c24a4a" stroke-width="4"/><text x="130" y="122" text-anchor="middle" font-size="46">+</text><circle cx="290" cy="105" r="58" fill="#dfefff" stroke="#2775ab" stroke-width="4"/><text x="290" y="122" text-anchor="middle" font-size="46">−</text><text x="210" y="205" text-anchor="middle">Observe positive and negative orientation</text></svg>`,
+materials:`<svg viewBox="0 0 420 230"><rect x="22" y="55" width="118" height="120" rx="18" fill="#dff5e9"/><rect x="151" y="55" width="118" height="120" rx="18" fill="#fff2c9"/><rect x="280" y="55" width="118" height="120" rx="18" fill="#ffe3e3"/><text x="81" y="85" text-anchor="middle" font-size="14" font-weight="800">Conductor</text><text x="210" y="85" text-anchor="middle" font-size="14" font-weight="800">Semiconductor</text><text x="339" y="85" text-anchor="middle" font-size="14" font-weight="800">Insulator</text><g fill="#2775ab"><circle cx="40" cy="125" r="7" class="flow"/><circle cx="40" cy="145" r="7" class="flow2"/></g><g fill="#f2a900" class="blink"><circle cx="190" cy="125" r="8"/><circle cx="230" cy="145" r="8"/></g><path d="M322 120 l34 34 M356 120 l-34 34" stroke="#c24a4a" stroke-width="7"/></svg>`,
+capacitor:`<svg viewBox="0 0 420 220"><line x1="50" y1="110" x2="165" y2="110" stroke="#66788a" stroke-width="8"/><line x1="175" y1="55" x2="175" y2="165" stroke="#15395f" stroke-width="10"/><line x1="245" y1="55" x2="245" y2="165" stroke="#15395f" stroke-width="10"/><line x1="255" y1="110" x2="370" y2="110" stroke="#66788a" stroke-width="8"/><g fill="#f2a900" class="blink"><circle cx="195" cy="80" r="7"/><circle cx="225" cy="105" r="7"/><circle cx="195" cy="135" r="7"/></g><text x="210" y="205" text-anchor="middle">Charge is stored between two plates</text></svg>`,
+inductor:`<svg viewBox="0 0 420 220"><path d="M55 110 H90 q20 -45 40 0 q20 -45 40 0 q20 -45 40 0 q20 -45 40 0 q20 -45 40 0 q20 -45 40 0 H370" fill="none" stroke="#af682d" stroke-width="9"/><ellipse cx="210" cy="110" rx="130" ry="70" fill="none" stroke="#2775ab" stroke-width="3" stroke-dasharray="8 8" class="spin"/><text x="210" y="205" text-anchor="middle">Current creates a magnetic field</text></svg>`,
+pcb:`<svg viewBox="0 0 420 230"><rect x="45" y="35" width="330" height="165" rx="18" fill="#2d9964" stroke="#175e3e" stroke-width="5"/><path d="M80 75 H175 V110 H275 V70 H340" fill="none" stroke="#f0c656" stroke-width="8" class="wave"/><path d="M80 165 H150 V135 H240 V170 H340" fill="none" stroke="#f0c656" stroke-width="8"/><rect x="175" y="93" width="70" height="55" rx="8" fill="#26333e"/></svg>`,
+led:`<svg viewBox="0 0 420 220"><path d="M165 160 V95 Q210 40 255 95 V160" fill="#ffd447" stroke="#91720f" stroke-width="5" class="blink"/><line x1="185" y1="90" x2="185" y2="180" stroke="#777" stroke-width="6"/><line x1="235" y1="90" x2="235" y2="180" stroke="#777" stroke-width="6"/><path d="M270 75 l42 -28 M285 100 l42 -28" stroke="#f2a900" stroke-width="6" class="pulse"/><text x="210" y="210" text-anchor="middle">Forward current produces light</text></svg>`,
+ldr:`<svg viewBox="0 0 420 220"><circle cx="95" cy="65" r="30" fill="#ffd447" class="spin"/><path d="M125 80 L180 110 M125 55 L185 80" stroke="#f2a900" stroke-width="6" class="pulse"/><circle cx="270" cy="120" r="68" fill="#e5c890" stroke="#806431" stroke-width="5"/><path d="M225 120 q20 -30 40 0 q20 30 40 0" fill="none" stroke="#5a421f" stroke-width="8"/></svg>`,
+ic:`<svg viewBox="0 0 420 230"><rect x="125" y="45" width="170" height="140" rx="18" fill="#26333e"/><g stroke="#9baab8" stroke-width="9"><line x1="125" y1="75" x2="70" y2="75"/><line x1="125" y1="110" x2="70" y2="110"/><line x1="125" y1="145" x2="70" y2="145"/><line x1="295" y1="75" x2="350" y2="75"/><line x1="295" y1="110" x2="350" y2="110"/><line x1="295" y1="145" x2="350" y2="145"/></g><circle cx="148" cy="68" r="8" fill="#ddd"/><g fill="#f2a900" class="blink"><circle cx="180" cy="100" r="8"/><circle cx="235" cy="135" r="8"/></g><text x="210" y="215" text-anchor="middle">Many circuits inside one chip</text></svg>`,
+fuse:`<svg viewBox="0 0 420 220"><line x1="45" y1="110" x2="115" y2="110" stroke="#66788a" stroke-width="8"/><rect x="115" y="78" width="190" height="64" rx="20" fill="#dff4ff" stroke="#5a829d" stroke-width="4"/><path d="M130 110 H290" stroke="#c24a4a" stroke-width="5" class="pulse"/><line x1="305" y1="110" x2="375" y2="110" stroke="#66788a" stroke-width="8"/><text x="210" y="195" text-anchor="middle">The fuse element melts during excess current</text></svg>`,
+breaker:`<svg viewBox="0 0 420 220"><rect x="135" y="40" width="150" height="145" rx="22" fill="#fff" stroke="#15395f" stroke-width="5"/><rect x="180" y="75" width="60" height="75" rx="18" fill="#2775ab" class="pulse"/><text x="210" y="205" text-anchor="middle">A breaker trips and can usually be reset</text></svg>`,
+safety:`<svg viewBox="0 0 420 230"><path d="M210 25 L345 70 V120 C345 175 290 205 210 220 C130 205 75 175 75 120 V70 Z" fill="#dff5e9" stroke="#16875f" stroke-width="6"/><path d="M150 120 l40 40 l85 -95" fill="none" stroke="#16875f" stroke-width="12" stroke-linecap="round"/><text x="210" y="205" text-anchor="middle" font-weight="800">Safety first</text></svg>`
+};
+
+const glossary=[
+["AC","Alternating current; current that periodically changes direction."],["Ampere","The SI unit of electric current."],["Capacitance","A measure of a capacitor's ability to store charge."],["Circuit","A connected path through which electric current may flow."],["Conductor","A material that allows charge to move relatively easily."],["Current","Rate of flow of electric charge."],["DC","Direct current; current that flows mainly in one direction."],["Diode","A semiconductor device that conducts mainly in one direction."],["Energy","Capacity to do work; electrical energy is often measured in joules or kilowatt-hours."],["ESD","Electrostatic discharge, a sudden transfer of static charge."],["Frequency","Number of repeating cycles per second, measured in hertz."],["Fuse","A protection device that melts during excessive current."],["Ground","A circuit reference or a protective safety connection, depending on context."],["IC","Integrated circuit containing many miniaturized electronic elements."],["Inductance","A property associated with magnetic energy storage and opposition to changing current."],["Insulator","A material that strongly resists current flow."],["LDR","Light dependent resistor."],["LED","Light emitting diode."],["Ohm","The SI unit of electrical resistance."],["PCB","Printed circuit board."],["Polarity","Positive and negative orientation of a supply or component."],["Power","Rate of energy transfer, measured in watts."],["Resistance","Opposition to electric current."],["Semiconductor","A controllable-conductivity material used in diodes, transistors and ICs."],["Short circuit","An unintended low-resistance connection that may cause high current."],["Voltage","Electrical potential difference, measured in volts."],["Watt","The SI unit of power."],["Watt-hour","A unit of energy equal to one watt used for one hour."]
+];
+
+const allLessons=chapters.flatMap(c=>c.lessons.map(x=>({...toObj(x),chapterId:c.id,chapterTitle:c.title})));
+function toObj(a){return {id:a[0],icon:a[1],title:a[2],summary:a[3],intro:a[4],key:a[5],example:a[6],formula:a[7],question:a[8],options:a[9],answer:a[10],visual:a[11]}}
+const K="electronicsLab.v1_3";
+const state=JSON.parse(localStorage.getItem(K)||'{"completed":[],"favorites":[],"scores":{},"recent":[],"dark":false}');
+const completed=new Set(state.completed), favorites=new Set(state.favorites);
+let currentIndex=0,testAnswers=[],testChapter=null;
+const $=id=>document.getElementById(id);
+function save(){state.completed=[...completed];state.favorites=[...favorites];localStorage.setItem(K,JSON.stringify(state))}
+function switchTab(id){document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+
+function renderCourse(){
+ const q=$("search").value.toLowerCase().trim(), cf=$("chapterFilter").value, sf=$("statusFilter").value;
+ $("courseContent").innerHTML=chapters.filter(c=>cf==="all"||c.id===cf).map(c=>{
+   let ls=c.lessons.map(toObj).filter(l=>{
+     const text=(l.title+" "+l.summary+" "+l.intro).toLowerCase();
+     const status=sf==="all"||(sf==="done"&&completed.has(l.id))||(sf==="pending"&&!completed.has(l.id))||(sf==="favorite"&&favorites.has(l.id));
+     return (!q||text.includes(q))&&status;
+   });
+   if(!ls.length)return "";
+   const done=c.lessons.filter(x=>completed.has(x[0])).length;
+   return `<section class="chapter"><div class="chapter-head"><div class="chapter-title"><div class="chapter-icon">${c.icon}</div><div><h3>${c.title}</h3><p>${c.desc}</p></div></div><div class="chapter-progress">${done}/${c.lessons.length}<br>complete</div></div>
+   <div class="lesson-grid">${ls.map(l=>`<article class="lesson-card ${completed.has(l.id)?"done":""} ${favorites.has(l.id)?"favorite":""}" data-id="${l.id}"><div class="status">${completed.has(l.id)?"✓":"○"}</div><div class="emoji">${l.icon}</div><h4>${l.title}</h4><p>${l.summary}</p></article>`).join("")}</div>
+   <div class="test-row"><button class="test-btn" data-test="${c.id}">📝 Take ${c.title.split(". ")[1]} test</button></div></section>`;
+ }).join("")||`<div class="panel"><h3>No lessons found</h3><p style="color:var(--muted)">Change the search or filter.</p></div>`;
+ document.querySelectorAll(".lesson-card").forEach(x=>x.onclick=()=>openLesson(x.dataset.id));
+ document.querySelectorAll("[data-test]").forEach(x=>x.onclick=()=>openTest(x.dataset.test));
+ updateStats();
+}
+function updateStats(){
+ const pct=Math.round(completed.size/allLessons.length*100), scores=Object.values(state.scores||{});
+ const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
+ $("pct").textContent=pct;$("miniBar").style.width=pct+"%";$("completedStat").textContent=`${completed.size}/${allLessons.length}`;$("scoreStat").textContent=avg+"%";$("favoriteStat").textContent=favorites.size;
+ const badgeCount=getBadges().filter(b=>b.ok).length;$("badgeStat").textContent=badgeCount;
+ renderDashboard();
+}
+function getBadges(){return[
+ {icon:"🎬",name:"First Step",desc:"Complete 1 lesson",ok:completed.size>=1},
+ {icon:"⚡",name:"Electric Explorer",desc:"Complete 5 lessons",ok:completed.size>=5},
+ {icon:"🧠",name:"Foundation Builder",desc:"Complete 10 lessons",ok:completed.size>=10},
+ {icon:"🏅",name:"Course Champion",desc:"Complete all lessons",ok:completed.size===allLessons.length},
+ {icon:"⭐",name:"Collector",desc:"Bookmark 3 lessons",ok:favorites.size>=3},
+ {icon:"🧪",name:"Lab Learner",desc:"Use virtual lab",ok:state.labUsed===true},
+ {icon:"💯",name:"Perfect Test",desc:"Score 100% in a test",ok:Object.values(state.scores||{}).some(s=>s===100)},
+ {icon:"🛡️",name:"Safety First",desc:"Complete safety lesson",ok:completed.has("safety")}
+]}
+function renderDashboard(){
+ $("badges").innerHTML=getBadges().map(b=>`<div class="badge ${b.ok?"unlocked":""}"><div class="big">${b.icon}</div><b>${b.name}</b><span>${b.desc}</span></div>`).join("");
+ $("recentList").innerHTML=(state.recent||[]).slice(0,7).map(id=>{const l=allLessons.find(x=>x.id===id);return l?`<div class="recent"><b>${l.icon} ${l.title}</b><span>${completed.has(id)?"Completed":"Opened"}</span></div>`:""}).join("")||`<p style="color:var(--muted);font-size:.82rem">Open a lesson to build your recent list.</p>`;
+}
+function openLesson(id){
+ currentIndex=allLessons.findIndex(l=>l.id===id);const l=allLessons[currentIndex];
+ $("lessonTitle").textContent=l.icon+" "+l.title;$("lessonIntro").textContent=l.intro;$("lessonVisual").innerHTML=visuals[l.visual]||visuals.electricity||visuals.atom;
+ const lessonSvg=$("lessonVisual").querySelector("svg");
+ if(lessonSvg){lessonSvg.setAttribute("preserveAspectRatio","xMidYMid meet");lessonSvg.removeAttribute("height");lessonSvg.removeAttribute("width");}
+ $("keyIdea").innerHTML=l.key;$("example").innerHTML=l.example;$("formula").innerHTML=l.formula;$("quizQ").textContent=l.question;$("feedback").textContent="";
+ $("quizOptions").innerHTML=l.options.map((o,i)=>`<button class="option" data-i="${i}">${o}</button>`).join("");
+ document.querySelectorAll(".option").forEach(b=>b.onclick=()=>answer(+b.dataset.i));$("favBtn").textContent=favorites.has(id)?"★":"☆";
+ $("prevBtn").disabled=currentIndex===0;$("nextBtn").textContent=currentIndex===allLessons.length-1?"Finish":"Next →";
+ state.recent=[id,...(state.recent||[]).filter(x=>x!==id)].slice(0,10);save();renderDashboard();$("lessonPage").classList.add("active");
+ $("lessonPage").setAttribute("aria-hidden","false");
+ document.body.style.overflow="hidden";
+ $("lessonPage").scrollTop=0;
+}
+function answer(i){
+ const l=allLessons[currentIndex];document.querySelectorAll(".option").forEach((b,n)=>{b.disabled=true;if(n===l.answer)b.classList.add("correct");else if(n===i)b.classList.add("wrong")});
+ if(i===l.answer){$("feedback").textContent="Correct. This lesson is now complete.";completed.add(l.id)}else $("feedback").textContent="Review the highlighted correct answer.";
+ save();renderCourse();
+}
+$("favBtn").onclick=()=>{const id=allLessons[currentIndex].id;favorites.has(id)?favorites.delete(id):favorites.add(id);$("favBtn").textContent=favorites.has(id)?"★":"☆";save();renderCourse()};
+function closeLessonPage(){
+ stopSpeech();
+ exitImmersive();
+ $("lessonPage").classList.remove("active");
+ $("lessonPage").setAttribute("aria-hidden","true");
+ document.body.style.overflow="";
+}
+$("lessonBackBtn").onclick=closeLessonPage;$("prevBtn").onclick=()=>currentIndex>0&&openLesson(allLessons[currentIndex-1].id);$("nextBtn").onclick=()=>currentIndex<allLessons.length-1?openLesson(allLessons[currentIndex+1].id):closeLessonPage();
+
+function openTest(chapterId){
+ testChapter=chapters.find(c=>c.id===chapterId);testAnswers=Array(testChapter.lessons.length).fill(null);$("testTitle").textContent=testChapter.title+" Test";
+ $("testBody").innerHTML=`<p style="color:var(--muted)">Answer all ${testChapter.lessons.length} questions.</p>`+testChapter.lessons.map((a,qi)=>{const l=toObj(a);return `<div class="test-q"><b>${qi+1}. ${l.question}</b>${l.options.map((o,i)=>`<button class="option test-opt" data-q="${qi}" data-i="${i}">${o}</button>`).join("")}</div>`}).join("")+`<button class="btn primary" id="submitTest" style="width:100%;margin-top:14px">Submit test</button>`;
+ document.querySelectorAll(".test-opt").forEach(b=>b.onclick=()=>{const q=+b.dataset.q;testAnswers[q]=+b.dataset.i;document.querySelectorAll(`.test-opt[data-q="${q}"]`).forEach(x=>x.style.outline="none");b.style.outline="3px solid var(--accent)"});
+ $("submitTest").onclick=submitTest;$("testDialog").showModal();
+}
+function submitTest(){
+ if(testAnswers.some(x=>x===null)){alert("Please answer every question.");return}
+ let correct=0;testChapter.lessons.forEach((a,i)=>{if(testAnswers[i]===toObj(a).answer)correct++});
+ const score=Math.round(correct/testChapter.lessons.length*100);state.scores[testChapter.id]=score;save();updateStats();
+ $("testBody").innerHTML=`<div class="test-score">${score}%</div><p style="text-align:center;color:var(--muted)">You answered ${correct} of ${testChapter.lessons.length} correctly.</p><button class="btn primary" style="width:100%" onclick="document.getElementById('testDialog').close()">Close</button>`;
+}
+$("closeTest").onclick=()=>$("testDialog").close();
+
+function renderGlossary(q=""){q=q.toLowerCase();$("glossaryGrid").innerHTML=glossary.filter(x=>!q||(x[0]+" "+x[1]).toLowerCase().includes(q)).map(x=>`<article class="term"><h4>${x[0]}</h4><p>${x[1]}</p></article>`).join("")}
+$("glossarySearch").oninput=e=>renderGlossary(e.target.value);$("clearGlossary").onclick=()=>{$("glossarySearch").value="";renderGlossary()};
+
+let circuitOn=false;
+function updateLab(){
+ const V=+$("voltageRange").value,R=+$("resRange").value,I=circuitOn?V/R:0,P=circuitOn?V*I:0,brightness=Math.min(1,P/0.25);
+ $("voltageOut").textContent=V;$("resOut").textContent=R;$("batteryLabel").textContent=V+" V";$("resLabel").textContent=R+" Ω";
+ $("readout").innerHTML=`Voltage: ${V} V<br>Resistance: ${R} Ω<br>Current: ${(I*1000).toFixed(1)} mA<br>Power: ${P.toFixed(3)} W`;
+ $("bulb").style.opacity=circuitOn?Math.max(.25,brightness):.2;$("glow").style.opacity=circuitOn?Math.min(.32,brightness*.32):0;$("electrons").style.display=circuitOn?"block":"none";
+ $("labMessage").textContent=circuitOn?`Current flows: ${(I*1000).toFixed(1)} mA`:"Close the switch to power the lamp";
+}
+$("circuitSwitch").onclick=()=>{circuitOn=!circuitOn;$("circuitSwitch").classList.toggle("on",circuitOn);state.labUsed=true;save();updateLab();updateStats()};
+$("voltageRange").oninput=updateLab;$("resRange").oninput=updateLab;
+
+$("themeBtn").onclick=()=>{state.dark=!state.dark;document.body.classList.toggle("dark",state.dark);$("themeBtn").textContent=state.dark?"☀️":"🌙";save()};
+$("continueBtn").onclick=()=>openLesson(allLessons.find(l=>!completed.has(l.id))?.id||allLessons[0].id);
+$("resetBtn").onclick=()=>{if(confirm("Reset all course progress, scores and bookmarks?")){localStorage.removeItem(K);location.reload()}};
+$("search").oninput=renderCourse;$("chapterFilter").onchange=renderCourse;$("statusFilter").onchange=renderCourse;
+
+// ---------- Responsive animation and narration controls ----------
+let speechQueue = [];
+let speechIndex = 0;
+let speechPaused = false;
+let activeSpeechButton = null;
+
+function cleanSpeechText(text){
+ return text
+   .replace(/[✓○★☆←→⛶🔊⏸⏹]/g," ")
+   .replace(/\s+/g," ")
+   .trim();
+}
+function bestEnglishVoice(){
+ const voices = speechSynthesis.getVoices();
+ const english = voices.filter(v => /^en[-_]/i.test(v.lang));
+ return english.find(v => /Google|Microsoft|Samsung|Natural|Neural/i.test(v.name)) || english[0] || voices[0] || null;
+}
+function stopSpeech(){
+ speechSynthesis.cancel();
+ speechQueue=[]; speechIndex=0; speechPaused=false;
+ document.querySelectorAll(".speech-btn").forEach(b=>b.classList.remove("active"));
+ if($("ttsStatus")) $("ttsStatus").textContent="";
+}
+function speakChunks(text, button=null){
+ stopSpeech();
+ if(!("speechSynthesis" in window)){
+   alert("Text-to-speech is not supported by this browser.");
+   return;
+ }
+ activeSpeechButton=button;
+ if(button) button.classList.add("active");
+ const cleaned=cleanSpeechText(text);
+ const sentences=cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[cleaned];
+ let chunk="";
+ speechQueue=[];
+ sentences.forEach(s=>{
+   if((chunk+" "+s).length>220){
+     if(chunk.trim()) speechQueue.push(chunk.trim());
+     chunk=s;
+   }else chunk+=" "+s;
+ });
+ if(chunk.trim()) speechQueue.push(chunk.trim());
+ speechIndex=0;
+ speakNextChunk();
+}
+function speakNextChunk(){
+ if(speechIndex>=speechQueue.length){
+   if(activeSpeechButton) activeSpeechButton.classList.remove("active");
+   if($("ttsStatus")) $("ttsStatus").textContent="Narration complete.";
+   speechPaused=false;
+   return;
+ }
+ const utter=new SpeechSynthesisUtterance(speechQueue[speechIndex]);
+ utter.lang="en-IN";
+ utter.rate=0.92;
+ utter.pitch=1;
+ utter.volume=1;
+ const v=bestEnglishVoice(); if(v) utter.voice=v;
+ utter.onstart=()=>{ if($("ttsStatus")) $("ttsStatus").textContent=`Reading part ${speechIndex+1} of ${speechQueue.length}…`; };
+ utter.onend=()=>{ speechIndex++; if(!speechPaused) speakNextChunk(); };
+ utter.onerror=e=>{ if(e.error!=="canceled" && $("ttsStatus")) $("ttsStatus").textContent="Narration could not continue."; };
+ speechSynthesis.speak(utter);
+}
+function pauseResumeSpeech(){
+ if(!speechSynthesis.speaking && !speechPaused) return;
+ if(speechPaused){
+   speechSynthesis.resume(); speechPaused=false;
+   $("pauseSpeechBtn").textContent="⏸ Pause";
+   if($("ttsStatus")) $("ttsStatus").textContent="Narration resumed.";
+ }else{
+   speechSynthesis.pause(); speechPaused=true;
+   $("pauseSpeechBtn").textContent="▶ Resume";
+   if($("ttsStatus")) $("ttsStatus").textContent="Narration paused.";
+ }
+}
+function visibleTextForSection(id){
+ const el=document.getElementById(id);
+ if(!el) return "";
+ const clone=el.cloneNode(true);
+ clone.querySelectorAll("button,input,select,svg,script,style,.read-section-row").forEach(n=>n.remove());
+ return `${document.querySelector(".brand h1")?.textContent||""}. ${clone.innerText}`;
+}
+function lessonSpeechText(){
+ const l=allLessons[currentIndex];
+ return `${l.title}. ${l.intro}. Key idea. ${cleanSpeechText($("keyIdea").innerText)}. Everyday example. ${cleanSpeechText($("example").innerText)}. Formula or key rule. ${l.formula}. Quiz question. ${l.question}. Options. ${l.options.join(". ")}.`;
+}
+document.querySelectorAll(".read-section").forEach(btn=>{
+ btn.addEventListener("click",()=>speakChunks(visibleTextForSection(btn.dataset.readTarget),btn));
+});
+document.querySelectorAll(".stop-speech").forEach(btn=>btn.addEventListener("click",stopSpeech));
+$("readLessonBtn").onclick=()=>speakChunks(lessonSpeechText(),$("readLessonBtn"));
+$("readLessonTopBtn").onclick=()=>speakChunks(lessonSpeechText(),$("readLessonTopBtn"));
+$("pauseSpeechBtn").onclick=pauseResumeSpeech;
+$("stopSpeechBtn").onclick=stopSpeech;
+$("animationSpeed").onchange=e=>document.documentElement.style.setProperty("--anim-speed",e.target.value);
+function enterImmersive(){
+ const v=$("lessonVisual");
+ v.classList.add("immersive-animation");
+ $("immersiveExitBtn").classList.add("show");
+ document.body.style.overflow="hidden";
+}
+function exitImmersive(){
+ const v=$("lessonVisual");
+ if(v) v.classList.remove("immersive-animation");
+ $("immersiveExitBtn").classList.remove("show");
+ if($("lessonPage").classList.contains("active")) document.body.style.overflow="hidden";
+ else document.body.style.overflow="";
+}
+$("fullscreenAnimationBtn").onclick=enterImmersive;
+$("immersiveExitBtn").onclick=exitImmersive;
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"){
+   if($("immersiveExitBtn").classList.contains("show")) exitImmersive();
+   else if($("lessonPage").classList.contains("active")) closeLessonPage();
+ }
+});
+window.addEventListener("beforeunload",()=>speechSynthesis.cancel());
+document.addEventListener("visibilitychange",()=>{if(document.hidden) speechSynthesis.cancel()});
+if("speechSynthesis" in window) speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+
+$("chapterFilter").innerHTML+=chapters.map(c=>`<option value="${c.id}">${c.title}</option>`).join("");
+if(state.dark){document.body.classList.add("dark");$("themeBtn").textContent="☀️"}
+renderCourse();renderGlossary();updateLab();
+</script>
+</body>
+</html>
